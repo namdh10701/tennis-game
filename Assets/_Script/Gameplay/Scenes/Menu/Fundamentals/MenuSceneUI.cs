@@ -31,7 +31,7 @@ namespace Gameplay
 
         public void OnPlayCick()
         {
-            _sceneManager.StartMatch();
+            //_sceneManager.StartMatch();
         }
     }
 }

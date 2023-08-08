@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using static MatchEvent;
+using static Gameplay.MatchEvent;
 
 namespace Gameplay
 {

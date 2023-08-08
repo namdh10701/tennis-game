@@ -1,5 +1,5 @@
 ﻿using System;
-using static MatchSetting;
+using static Gameplay.MatchSetting;
 
 namespace Gameplay
 {

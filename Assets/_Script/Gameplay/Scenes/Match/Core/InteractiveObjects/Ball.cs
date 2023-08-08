@@ -2,8 +2,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using static MatchEvent;
-using static MatchSetting;
+using static Gameplay.MatchEvent;
+using static Gameplay.MatchSetting;
 
 namespace Gameplay
 {
