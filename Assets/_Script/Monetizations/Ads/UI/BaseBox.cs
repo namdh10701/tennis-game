@@ -1,4 +1,4 @@
-namespace Monetization.Ads.UI
+namespace Monetization.Ads
 {
     public class BaseBox
     {

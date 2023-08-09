@@ -14,7 +14,6 @@ namespace Services.FirebaseService.Analytics
         {
             if (Enviroment.ENV == Enviroment.Env.PROD)
             {
-
                 Firebase.Analytics.FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
                 Firebase.Analytics.FirebaseAnalytics.SetSessionTimeoutDuration(new TimeSpan(0, 30, 0));
             }
@@ -24,7 +23,7 @@ namespace Services.FirebaseService.Analytics
             }
         }
 
-        public void LogEventWithParam(string valueLog, params Parameter[] parameters)
+        public void PushEvent(string valueLog, params Parameter[] parameters)
         {
             if (Enviroment.ENV == Enviroment.Env.PROD)
             {
@@ -39,7 +38,7 @@ namespace Services.FirebaseService.Analytics
             }
         }
 
-        public void LogEventWithName(string eventName)
+        public void PushEvent(string eventName)
         {
             if (Enviroment.ENV == Enviroment.Env.PROD)
             {

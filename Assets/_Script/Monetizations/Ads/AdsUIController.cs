@@ -1,5 +1,5 @@
 using UnityEngine;
-using Monetization.Ads.UI;
+using Monetization.Ads;
 
 namespace Monetization.Ads
 {
@@ -7,13 +7,20 @@ namespace Monetization.Ads
     {
         public BaseBox WaitingBox;
 
-        void Start()
+        public void ShowWaitingBox()
+        {
+
+        }
+        public void CloseWaitingBox()
         {
 
         }
 
-        // Update is called once per frame
-        void Update()
+        public void ShowRewardUnavailableBox()
+        {
+
+        }
+        public void CloseRewardUnavailableBox()
         {
 
         }
