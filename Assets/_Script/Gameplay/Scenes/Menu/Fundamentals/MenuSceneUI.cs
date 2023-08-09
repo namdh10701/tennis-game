@@ -1,5 +1,7 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Playables;
+using static Gameplay.MatchSetting;
 
 namespace Gameplay
 {
@@ -8,30 +10,57 @@ namespace Gameplay
     public class MenuSceneUI : MonoBehaviour
     {
         private MenuSceneManager _sceneManager;
+        private MatchSetting _matchSetting;
 
-        public TextMeshProUGUI incrementalText;
-        public TextMeshProUGUI sportText;
+        //ToDo optional
+        private GameDataManager _gameDataManager;
 
-        public void Init(MenuSceneManager sceneManager)
+        [SerializeField] private TextMeshProUGUI _highScore;
+        [SerializeField] private TextMeshProUGUI _incrementalText;
+
+
+        [SerializeField] private GameObject _FootballAdLock;
+        [SerializeField] private GameObject _BaseballAdLock;
+        [SerializeField] private GameObject _VolleyballAdLock;
+
+        public void Init(MenuSceneManager sceneManager,
+            MatchSetting matchSetting,
+            GameDataManager gameDataManager)
         {
             _sceneManager = sceneManager;
-        }
-
-        private void Awake()
-        {
-            incrementalText.text = "Speed: x" + _sceneManager.GameManager.MatchSetting.Incremental;
-            sportText.text = _sceneManager.GameManager.MatchSetting.GetCurrentSportNameToString();
+            _matchSetting = matchSetting;
+            _gameDataManager = gameDataManager;
+            InitUIContent();
+            void InitUIContent()
+            {
+                _incrementalText.text = "X" + _matchSetting.Incremental;
+                _highScore.text = _gameDataManager.GameDatas.HighScore.ToString();
+            }
         }
 
         public void OnIncrementalClick()
         {
-            _sceneManager.GameManager.MatchSetting.ChangeIncremental();
-            incrementalText.text = "Speed: x" + _sceneManager.GameManager.MatchSetting.Incremental;
+            _matchSetting.ChangeIncremental();
+            _incrementalText.text = "X" + _matchSetting.Incremental;
+        }
+        public void OnSportClick(Sport sport)
+        {
+            if (_gameDataManager.GameDatas.UnlockedSports.Contains(sport))
+            {
+                //ToDo: start match here
+            }
+            else
+            {
+                //ToDo: show reward ad to unlock sport
+                //unlock game => destroy adlock
+            }
         }
 
-        public void OnPlayCick()
+        //ToDo: change to leaderboard scene here
+        public void OnRankClick()
         {
-            //_sceneManager.StartMatch();
+
         }
+
     }
 }

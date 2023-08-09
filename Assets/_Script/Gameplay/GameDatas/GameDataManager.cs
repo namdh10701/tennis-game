@@ -11,14 +11,14 @@ namespace Gameplay
             GameDatas = new GameData();
         }
 
-        public void SaveSettings()
+        public void SaveDatas()
         {
             string json = JsonUtility.ToJson(GameDatas);
             PlayerPrefs.SetString("GameDatas", json);
             PlayerPrefs.Save();
         }
 
-        public void LoadSettings()
+        public void LoadDatas()
         {
             if (PlayerPrefs.HasKey("GameDatas"))
             {
@@ -27,11 +27,11 @@ namespace Gameplay
             }
             else
             {
-                CreateDefaultSettings();
+                CreateDefaultDatas();
             }
         }
 
-        private void CreateDefaultSettings()
+        private void CreateDefaultDatas()
         {
             GameDatas.HighScore = 0;
             GameDatas.HighTime = 0;

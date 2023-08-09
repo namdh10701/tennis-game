@@ -13,7 +13,7 @@ namespace Gameplay
         [SerializeField] private MenuSceneUI _menuSceneUI;
         private void Awake()
         {
-            _menuSceneUI.Init(this);
+            _menuSceneUI.Init(this, GameManager.MatchSetting, GameManager.GameDataManager);
         }
 
         public void StartMatch(Sport sportName)
