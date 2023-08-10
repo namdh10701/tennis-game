@@ -9,6 +9,7 @@ namespace Gameplay
         public SettingManager()
         {
             GameSettings = new GameSetting();
+            Debug.Log(GameSettings.GetHashCode());
         }
 
         public void SaveSettings()

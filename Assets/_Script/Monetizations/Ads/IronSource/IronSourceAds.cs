@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 using Common;
 using Services.FirebaseService.Analytics;
 using Services.Adjust;
@@ -284,4 +284,4 @@ namespace Monetization.Ads
         }
         #endregion
     }
-}
+}*/

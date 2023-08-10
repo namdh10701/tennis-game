@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 using System;
 using System.Collections;
 using Common;
@@ -68,11 +68,11 @@ namespace Monetization.Ads
         #region OpenAd
         public void ShowOpenAd()
         {
-            /*if (admob.OpenAdReady)
+            *//*if (admob.OpenAdReady)
             {
                 admob.ShowOpen();
             }
-            // else if (other ad source)*/
+            // else if (other ad source)*//*
         }
         #endregion
         #region Reward
@@ -139,4 +139,4 @@ namespace Monetization.Ads
         }
         #endregion
     }
-}
+}*/

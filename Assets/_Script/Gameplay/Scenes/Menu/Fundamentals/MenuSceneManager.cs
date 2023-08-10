@@ -8,17 +8,25 @@ namespace Gameplay
     //Handle UI Interact here
     public class MenuSceneManager : MonoBehaviour
     {
-        public GameManager GameManager;
+        private GameManager _gameManager;
+        [SerializeField] private SettingPopup settingPopup;
 
         [SerializeField] private MenuSceneUI _menuSceneUI;
         private void Awake()
         {
-            _menuSceneUI.Init(this, GameManager.MatchSetting, GameManager.GameDataManager);
+            _gameManager = FindObjectOfType<GameManager>();
         }
+        private void Start()
+        {
+            settingPopup.Init(_gameManager.SettingManager);
+            _menuSceneUI.Init(this, _gameManager.MatchSetting, _gameManager.GameDataManager);
+        }
+
+
 
         public void StartMatch(Sport sportName)
         {
-            GameManager.MatchSetting.SportName = sportName;
+            _gameManager.MatchSetting.SportName = sportName;
             SceneManager.LoadScene("MatchScene");
         }
     }

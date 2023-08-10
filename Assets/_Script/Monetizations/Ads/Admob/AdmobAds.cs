@@ -1,4 +1,4 @@
-﻿using GoogleMobileAds.Api;
+﻿/*using GoogleMobileAds.Api;
 using Services.Adjust;
 using Services.FirebaseService.Analytics;
 using System;
@@ -143,4 +143,4 @@ namespace Monetization.Ads
 
         #endregion
     }
-}
+}*/
