@@ -1,4 +1,4 @@
-﻿/*using GoogleMobileAds.Api;
+﻿using GoogleMobileAds.Api;
 using Services.Adjust;
 using Services.FirebaseService.Analytics;
 using System;
@@ -7,6 +7,7 @@ using UnityEngine;
 using Enviroments;
 using Common;
 using GoogleMobileAds.Common;
+using Monetization.Ads.UI;
 
 namespace Monetization.Ads
 {
@@ -16,32 +17,41 @@ namespace Monetization.Ads
         private DateTime appOpenExpireTime;
 
         private AppOpenAd appOpenAd;
-        public bool isRequestingAd = false;
-        public bool initilized = false;
+        public bool _isRequestingAd = false;
+        public bool _initilized = false;
 
-        private string admobId = "";
-        private string appOpenAdId = "";
-        private string nativeAdId1 = "";
-        private string nativeAdId2 = "";
+        [SerializeField] private string _admobId = "";
+        [SerializeField] private string _appOpenAdId = "";
+        [SerializeField] private string _nativeAdId1 = "";
+        [SerializeField] private string _nativeAdId2 = "";
 
-        #region UNITY MONOBEHAVIOR METHODS
         public void Init()
         {
             MobileAds.Initialize(HandleInitCompleteAction);
             if (Enviroment.ENV != Enviroment.Env.PROD)
             {
                 string appOpenAdTestId = "ca-app-pub-3940256099942544/3419835294";
-                appOpenAdId = appOpenAdTestId;
+                string nativeAdTestId = "ca-app-pub-3940256099942544/2247696110";
+                _nativeAdId1 = nativeAdTestId;
+                _nativeAdId2 = nativeAdTestId;
+                _appOpenAdId = appOpenAdTestId;
             }
         }
         private void HandleInitCompleteAction(InitializationStatus initstatus)
         {
+            _initilized = true;
             LoadAppOpenAd();
-            initilized = true;
+            LoadNativeAd();
         }
-        #endregion
-
-        #region APPOPEN ADS
+        void HandleAdPaid(AppOpenAd ad)
+        {
+            ad.OnAdPaid += (AdValue adValue) =>
+            {
+                Adjust.TrackAdmobRevenue(adValue);
+                FirebaseAnalytics.TrackAdmobRevenue(adValue);
+            };
+        }
+        #region APPOPEN
         public bool IsAppOpenAdAvailable
         {
             get
@@ -57,11 +67,16 @@ namespace Monetization.Ads
             }
         }
 
+        public void RegisterNativePanel()
+        {
+            throw new NotImplementedException();
+        }
+
         public void LoadAppOpenAd()
         {
-            if (!initilized || !AdsController.Instance.HasInternet)
+            if (!_initilized || !AdsController.Instance.HasInternet)
                 return;
-            if (isRequestingAd)
+            if (_isRequestingAd)
                 return;
 
             if (appOpenAd != null)
@@ -77,70 +92,92 @@ namespace Monetization.Ads
                 }
             }
             FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
-            AppOpenAd.Load(
-                appOpenAdId,
-                new AdRequest(),
+            _isRequestingAd = true;
+            AppOpenAd.Load(_appOpenAdId, new AdRequest(),
                 (AppOpenAd ad, LoadAdError loadError) => HandleLoadedAppOpenAd(ad, loadError)
             );
 
             void HandleLoadedAppOpenAd(AppOpenAd ad, LoadAdError loadError)
             {
+                _isRequestingAd = false;
                 if (loadError != null || ad == null)
                     return;
                 appOpenAd = ad;
                 appOpenExpireTime = DateTime.Now + APPOPEN_TIMEOUT;
 
-                ad.OnAdFullScreenContentOpened += () =>
-                {
-                    AdsController.Instance.IsShowingAd = true;
-                    FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST_SUCCEED);
-                    FirebaseAnalytics.Instance.PushEvent(Constant.APP_OPEN_SHOW);
-                };
-                ad.OnAdFullScreenContentClosed += () =>
-                {
-                    MobileAdsEventExecutor.ExecuteInUpdate(() =>
-                    {
-                        AdsController.Instance.SetInterval(AdsController.AdType.OPEN);
-                        LoadAppOpenAd();
-                    });
-                    AdsController.Instance.IsShowingAd = false;
-                };
-                ad.OnAdFullScreenContentFailed += (AdError error) =>
-                    LoadAppOpenAd();
-                {
-                };
-                ad.OnAdPaid += (AdValue adValue) =>
-                {
-                    Adjust.TrackAdmobRevenue(adValue);
-                    TrackRevenueOnFirebase(adValue);
-                };
+                HandleOpenAdOpened(ad);
+                HandleOpenAdClosed(ad);
+                HandleOpenAdShowFailed(ad);
+                HandleAdPaid(ad);
 
-                void TrackRevenueOnFirebase(AdValue adValue)
+                void HandleOpenAdOpened(AppOpenAd ad)
                 {
-                    Firebase.Analytics.Parameter[] LTVParameters = {
-                        new Firebase.Analytics.Parameter("ad_platform", "adMob"),
-                        new Firebase.Analytics.Parameter("ad_source", "adMob"),
-                        new Firebase.Analytics.Parameter("value", adValue.Value / 1000000f),
-                        new Firebase.Analytics.Parameter("currency", adValue.CurrencyCode),
-                        new Firebase.Analytics.Parameter("precision", (int)adValue.Precision)
+                    ad.OnAdFullScreenContentOpened += () =>
+                    {
+                        _isRequestingAd = false;
+                        AdsController.Instance.IsShowingAd = true;
+                        FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST_SUCCEED);
+                        FirebaseAnalytics.Instance.PushEvent(Constant.APP_OPEN_SHOW);
                     };
-                    FirebaseAnalytics.Instance.PushEvent("ad_impression", LTVParameters);
+                }
+                void HandleOpenAdClosed(AppOpenAd ad)
+                {
+                    ad.OnAdFullScreenContentClosed += () =>
+                    {
+                        MobileAdsEventExecutor.ExecuteInUpdate(() =>
+                        {
+                            AdsController.Instance.SetInterval(AdsController.AdType.OPEN);
+                            LoadAppOpenAd();
+                        });
+                        AdsController.Instance.IsShowingAd = false;
+                    };
+                }
+                void HandleOpenAdShowFailed(AppOpenAd ad)
+                {
+                    ad.OnAdFullScreenContentFailed += (AdError error) => LoadAppOpenAd();
                 }
             }
         }
 
-
         public void ShowAppOpenAd()
         {
-            StartCoroutine(DelayFrameShowAds());
-        }
-        IEnumerator DelayFrameShowAds()
-        {
-            yield return new WaitForEndOfFrame();
+            if (!IsAppOpenAdAvailable)
+            {
+                return;
+            }
             AdsController.Instance.IsShowingAd = true;
             appOpenAd.Show();
         }
-
         #endregion
+        #region Native
+
+        private void LoadNativeAd()
+        {
+            FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
+            AdLoader adLoader = new AdLoader.Builder(_nativeAdId1).ForNativeAd().Build();
+            adLoader.OnNativeAdLoaded += HandleNativeAdLoaded;
+            adLoader.OnAdFailedToLoad += HandleAdFailedToLoad;
+            adLoader.LoadAd(new AdRequest());
+        }
+
+        private void HandleAdFailedToLoad(object sender, AdFailedToLoadEventArgs e)
+        {
+            Debug.Log(e.LoadAdError);
+        }
+
+        private void HandleNativeAdLoaded(object sender, NativeAdEventArgs e)
+        {
+            AdsController.Instance.OnNativeAdLoaded(e.nativeAd);
+            e.nativeAd.OnPaidEvent += NativeAd_OnPaidEvent;
+            FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST_SUCCEED);
+        }
+
+        private void NativeAd_OnPaidEvent(object sender, AdValueEventArgs e)
+        {
+            Adjust.TrackAdmobRevenue(e.AdValue);
+            FirebaseAnalytics.TrackAdmobRevenue(e.AdValue);
+        }
+        #endregion
+
     }
-}*/
+}

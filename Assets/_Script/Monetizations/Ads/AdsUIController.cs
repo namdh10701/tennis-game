@@ -1,11 +1,11 @@
 using UnityEngine;
-using Monetization.Ads;
+using Monetization.Ads.UI;
 
 namespace Monetization.Ads
 {
     public class AdsUIController : MonoBehaviour
     {
-        public BaseBox WaitingBox;
+        public BasePopup WaitingBox;
 
         public void ShowWaitingBox()
         {

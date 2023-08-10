@@ -2,14 +2,17 @@ using Gameplay;
 using UI;
 using UnityEngine;
 using static UI.ToggleButton;
+using Monetization.Ads.UI;
+using Monetization.Ads;
 
-public class SettingPopup : MonoBehaviour
+public class SettingPanel : InterPopup
 {
     private SettingManager _settingManager;
     [SerializeField] private ToggleButton _musicButton;
     [SerializeField] private ToggleButton _soundButton;
     [SerializeField] private ToggleButton _vibrateButton;
 
+    [SerializeField] private NativeAdPanel _nativeAdPanel;
     public void Init(SettingManager settingManager)
     {
         _settingManager = settingManager;
@@ -32,6 +35,11 @@ public class SettingPopup : MonoBehaviour
     {
         _settingManager.GameSettings.IsVibrationOn = isOn;
         _settingManager.SaveSettings();
+    }
+
+    private void OnEnable()
+    {
+        AdsController.Instance.ShowNativeAd(_nativeAdPanel);
     }
 }
 

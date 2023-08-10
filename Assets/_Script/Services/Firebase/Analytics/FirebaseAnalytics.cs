@@ -5,6 +5,7 @@ using System;
 using Firebase.Analytics;
 using Enviroments;
 using System.Security.Cryptography;
+using GoogleMobileAds.Api;
 
 namespace Services.FirebaseService.Analytics
 {
@@ -51,6 +52,31 @@ namespace Services.FirebaseService.Analytics
             {
                 Debug.Log("event: " + eventName);
             }
+        }
+
+        public static void TrackAdmobRevenue(AdValue adValue)
+        {
+            Parameter[] LTVParameters = {
+                new Parameter("ad_platform", "adMob"),
+                new Parameter("ad_source", "adMob"),
+                new Parameter("value", adValue.Value / 1000000f),
+                new Parameter("currency", adValue.CurrencyCode),
+                new Parameter("precision", (int)adValue.Precision)
+             };
+            Instance.PushEvent("ad_impression", LTVParameters);
+        }
+
+        public static void TrackIronSourceRevenue(IronSourceImpressionData impressionData)
+        {
+            Parameter[] AdParameters = {
+               new Parameter("ad_platform", "ironSource"),
+                new Parameter("ad_source", impressionData.adNetwork),
+                new Parameter("ad_unit_name", impressionData.adUnit),
+                new Parameter("ad_format", impressionData.instanceName),
+                new Parameter("currency","USD"),
+                new Parameter("value", (double)impressionData.revenue)
+            };
+            Instance.PushEvent("ad_impression", AdParameters);
         }
     }
 }

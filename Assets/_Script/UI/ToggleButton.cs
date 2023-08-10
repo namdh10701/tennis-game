@@ -56,13 +56,13 @@ namespace UI
         {
             if (state == State.ON)
             {
+                _onImage.gameObject.SetActive(true);
                 _offImage.gameObject.SetActive(false);
-                _onImage.transform.DOMoveX(_onImageOriginalPosX, 0);
             }
             else
             {
+                _offImage.gameObject.SetActive(true);
                 _onImage.gameObject.SetActive(false);
-                _offImage.transform.DOMoveX(_offImageOriginalPosX, 0);
             }
         }
 

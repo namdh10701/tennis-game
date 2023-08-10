@@ -1,7 +1,10 @@
-/*using UnityEngine;
+using UnityEngine;
 using System;
 using System.Collections;
 using Common;
+using Monetization.Ads.UI;
+using System.Collections.Generic;
+using GoogleMobileAds.Api;
 
 namespace Monetization.Ads
 {
@@ -19,6 +22,7 @@ namespace Monetization.Ads
         }
 
         [SerializeField] private IronSourceAds ironsource;
+        [SerializeField] private AdmobAds admob;
 
         public RewardType rewardType;
         public Action onInterClosed;
@@ -26,6 +30,9 @@ namespace Monetization.Ads
         public Action onOpenAdClosed;
 
         public AdsUIController adsUIController;
+
+        private List<NativeAdPanel> _nativeAdPanels = new List<NativeAdPanel>();
+
         public bool HasBanner { get; set; }
         public bool IsShowingAd { get; set; }
         public bool HasInternet
@@ -65,14 +72,46 @@ namespace Monetization.Ads
             }
             return ret;
         }
-        #region OpenAd
-        public void ShowOpenAd()
+
+        #region NativeAd
+        public void RegisterNativeAdPanel(NativeAdPanel nativeAdPanel)
         {
-            *//*if (admob.OpenAdReady)
+            _nativeAdPanels.Add(nativeAdPanel);
+        }
+        public void UnRegisterNativeAdPanel(NativeAdPanel nativeAdPanel)
+        {
+            if (_nativeAdPanels.Contains(nativeAdPanel))
+                _nativeAdPanels.Remove(nativeAdPanel);
+        }
+        public void OnNativeAdLoaded(NativeAd nativeAd)
+        {
+            foreach (NativeAdPanel nativeAdPanel in _nativeAdPanels)
             {
-                admob.ShowOpen();
+                if (nativeAdPanel.NativeAd == null)
+                {
+                    nativeAdPanel.NativeAd = nativeAd;
+                }
             }
-            // else if (other ad source)*//*
+        }
+        public void ShowNativeAd(NativeAdPanel nativeAdPanel)
+        {
+            if (_nativeAdPanels.Contains(nativeAdPanel))
+                nativeAdPanel.Show();
+        }
+        public void HideNativeAd(NativeAdPanel nativeAdPanel)
+        {
+            if (_nativeAdPanels.Contains(nativeAdPanel))
+                nativeAdPanel.Hide();
+        }
+        #endregion
+        #region OpenAd
+        public void ShowAppOpenAd()
+        {
+            if (admob.IsAppOpenAdAvailable)
+            {
+                admob.ShowAppOpenAd();
+            }
+            // else if (other ad source)
         }
         #endregion
         #region Reward
@@ -120,7 +159,7 @@ namespace Monetization.Ads
         #region Banner
         public void ShowBanner()
         {
-            ironsource.ShowBanner();
+            ironsource.LoadBanner();
         }
         public void ToggleBanner(bool visible)
         {
@@ -139,4 +178,4 @@ namespace Monetization.Ads
         }
         #endregion
     }
-}*/
+}

@@ -9,7 +9,7 @@ namespace Gameplay
     public class MenuSceneManager : MonoBehaviour
     {
         private GameManager _gameManager;
-        [SerializeField] private SettingPopup settingPopup;
+        [SerializeField] private SettingPanel settingPopup;
 
         [SerializeField] private MenuSceneUI _menuSceneUI;
         private void Awake()

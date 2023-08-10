@@ -1,4 +1,4 @@
-/*using UnityEngine;
+using UnityEngine;
 using Common;
 using Services.FirebaseService.Analytics;
 using Services.Adjust;
@@ -10,6 +10,10 @@ namespace Monetization.Ads
     public class IronSourceAds : MonoBehaviour
     {
         [SerializeField] private string appkey;
+        private bool _isRequestingBanner;
+        private bool _isRequestingInter;
+        private bool _isRequestingReward;
+
         public bool Initilized { get; private set; }
         public bool IsInterReady
         {
@@ -71,31 +75,17 @@ namespace Monetization.Ads
             IronSourceRewardedVideoEvents.onAdRewardedEvent += Reward_onReward;
             #endregion
             IronSourceEvents.onImpressionDataReadyEvent += Impression_onDataReady;
-            IronSourceEvents.onSdkInitializationCompletedEvent += PostInit;
+            IronSourceEvents.onSdkInitializationCompletedEvent += OnInitilized;
             IronSource.Agent.init(appkey);
         }
 
         private void Impression_onDataReady(IronSourceImpressionData impressionData)
         {
             Adjust.TrackIronsourceRevenue(impressionData);
-            TrackRevenueOnFirebase(impressionData);
+            FirebaseAnalytics.TrackIronSourceRevenue(impressionData);
         }
 
-        private void TrackRevenueOnFirebase(IronSourceImpressionData impressionData)
-        {
-            Firebase.Analytics.Parameter[] AdParameters = {
-                 new Firebase.Analytics.Parameter("ad_platform", "ironSource"),
-                  new Firebase.Analytics.Parameter("ad_source", impressionData.adNetwork),
-                  new Firebase.Analytics.Parameter("ad_unit_name", impressionData.adUnit),
-                new Firebase.Analytics.Parameter("ad_format", impressionData.instanceName),
-                  new Firebase.Analytics.Parameter("currency","USD"),
-                new Firebase.Analytics.Parameter("value", (double)impressionData.revenue)
-            };
-            FirebaseAnalytics.Instance.PushEvent("ad_impression", AdParameters);
-
-        }
-
-        private void PostInit()
+        private void OnInitilized()
         {
             Initilized = true;
             LoadInter();
@@ -116,26 +106,17 @@ namespace Monetization.Ads
         }
         private void Banner_onLoadFailed(IronSourceError obj)
         {
-            if (!AdsController.Instance.HasBanner && AdsController.Instance.HasInternet)
-            {
                 LoadBanner();
-            }
         }
-        private void LoadBanner()
+        public void LoadBanner()
         {
-            if (!Initilized)
+
+            if (!Initilized || !AdsController.Instance.HasInternet || _isRequestingBanner
+                || AdsController.Instance.HasBanner)
                 return;
 
             FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
             IronSource.Agent.loadBanner(IronSourceBannerSize.SMART, IronSourceBannerPosition.BOTTOM);
-        }
-        public void ShowBanner()
-        {
-            if (!AdsController.Instance.HasBanner && AdsController.Instance.HasInternet && Initilized)
-            {
-                FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
-                IronSource.Agent.loadBanner(IronSourceBannerSize.SMART, IronSourceBannerPosition.BOTTOM);
-            }
         }
 
         public void ToggleBanner(bool visible)
@@ -190,9 +171,9 @@ namespace Monetization.Ads
 
         public void LoadInter()
         {
-            if (!Initilized || !AdsController.Instance.HasInternet)
+            if (!Initilized || !AdsController.Instance.HasInternet || _isRequestingInter)
                 return;
-
+            _isRequestingInter = true;
             IronSource.Agent.loadInterstitial();
             FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST_SUCCEED);
         }
@@ -284,4 +265,4 @@ namespace Monetization.Ads
         }
         #endregion
     }
-}*/
+}
