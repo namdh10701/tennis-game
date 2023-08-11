@@ -5,11 +5,12 @@ using Common;
 using Monetization.Ads.UI;
 using System.Collections.Generic;
 using GoogleMobileAds.Api;
-
+using ListExtensions;
+using Enviroments;
 namespace Monetization.Ads
 {
 
-    public class AdsController : Singleton<AdsController>
+    public class AdsController : SingletonPersistent<AdsController>
     {
         public enum AdType
         {
@@ -21,13 +22,14 @@ namespace Monetization.Ads
 
         }
 
-        [SerializeField] private IronSourceAds ironsource;
-        [SerializeField] private AdmobAds admob;
+        private IronSourceAds _ironsource;
+        private AdmobAds _admob;
 
         public RewardType rewardType;
         public Action onInterClosed;
         public Action<bool> onRewardClosed;
         public Action onOpenAdClosed;
+        public Action OnRemoveAdsPurchased;
 
         public AdsUIController adsUIController;
 
@@ -39,11 +41,20 @@ namespace Monetization.Ads
         {
             get { return Application.internetReachability != NetworkReachability.NotReachable; }
         }
+        public bool RemoveAds { get; set; }
 
         protected override void Awake()
         {
             base.Awake();
+            _ironsource = GetComponent<IronSourceAds>();
+            _admob = GetComponent<AdmobAds>();
+            if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
+                return;
+
+            CachedNativeAds = new List<CachedNativeAd>();
             IsShowingAd = false;
+            _ironsource.Init();
+            _admob.Init();
         }
 
         public void SetInterval(AdType type)
@@ -74,27 +85,94 @@ namespace Monetization.Ads
         }
 
         #region NativeAd
+
+        private const int NATIVE_AD_CACHED_TIMEOUT_MINUTES = 30;
+        public const int MAX_NATIVE_AD_CACHE_SIZE = 4;
+
+        public List<CachedNativeAd> CachedNativeAds { get; private set; }
         public void RegisterNativeAdPanel(NativeAdPanel nativeAdPanel)
         {
+            if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
+                return;
             _nativeAdPanels.Add(nativeAdPanel);
-        }
-        public void UnRegisterNativeAdPanel(NativeAdPanel nativeAdPanel)
-        {
-            if (_nativeAdPanels.Contains(nativeAdPanel))
-                _nativeAdPanels.Remove(nativeAdPanel);
-        }
-        public void OnNativeAdLoaded(NativeAd nativeAd)
-        {
-            foreach (NativeAdPanel nativeAdPanel in _nativeAdPanels)
+            CachedNativeAd cachedNativeAd;
+            if (CachedNativeAds.GetFirst(out cachedNativeAd))
             {
-                if (nativeAdPanel.NativeAd == null)
+                if (IsCachedNativeAdTimeout(cachedNativeAd))
+                    cachedNativeAd.Disolve();
+                else
                 {
-                    nativeAdPanel.NativeAd = nativeAd;
+                    nativeAdPanel.CachedNativeAd = cachedNativeAd;
                 }
             }
         }
+        public void UnRegisterNativeAdPanel(NativeAdPanel nativeAdPanel)
+        {
+            if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
+                return;
+            if (_nativeAdPanels.Contains(nativeAdPanel))
+                _nativeAdPanels.Remove(nativeAdPanel);
+            if (!nativeAdPanel.IsNativeAdShowed)
+            {
+                if (IsCachedNativeAdTimeout(nativeAdPanel.CachedNativeAd))
+                {
+                    nativeAdPanel.CachedNativeAd.Disolve();
+                }
+                else
+                {
+                    TryCacheNativeAd(nativeAdPanel.CachedNativeAd);
+                }
+            }
+        }
+
+        private void TryCacheNativeAd(CachedNativeAd cachedNativeAd)
+        {
+            if (CachedNativeAds.Count < MAX_NATIVE_AD_CACHE_SIZE)
+            {
+                CachedNativeAds.AddFirst(cachedNativeAd);
+            }
+            else
+            {
+                cachedNativeAd.Disolve();
+            }
+        }
+
+        public bool IsCachedNativeAdTimeout(CachedNativeAd cachedNativeAd)
+        {
+            return DateTime.Now > cachedNativeAd.CachedTime + TimeSpan.FromMinutes(NATIVE_AD_CACHED_TIMEOUT_MINUTES);
+        }
+
+        public void OnNativeAdLoaded(NativeAd nativeAd)
+        {
+            CachedNativeAd cachedNativeAd = new CachedNativeAd(nativeAd);
+            if (!AssignToAvailablePanel(cachedNativeAd))
+                CachedNativeAds.AddLast(cachedNativeAd);
+        }
+
+        private bool AssignToAvailablePanel(CachedNativeAd cachedNativeAd)
+        {
+            bool isAssigned = false;
+            foreach (NativeAdPanel nativeAdPanel in _nativeAdPanels)
+            {
+                if (nativeAdPanel.CachedNativeAd == null)
+                {
+                    nativeAdPanel.CachedNativeAd = cachedNativeAd;
+                    isAssigned = true;
+                }
+            }
+            return isAssigned;
+        }
+
+        public void LoadNativeAds()
+        {
+            if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
+                return;
+            _admob.LoadNativeAds();
+        }
         public void ShowNativeAd(NativeAdPanel nativeAdPanel)
         {
+            if (RemoveAds)
+                return;
             if (_nativeAdPanels.Contains(nativeAdPanel))
                 nativeAdPanel.Show();
         }
@@ -107,9 +185,11 @@ namespace Monetization.Ads
         #region OpenAd
         public void ShowAppOpenAd()
         {
-            if (admob.IsAppOpenAdAvailable)
+            if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
+                return;
+            if (_admob.IsAppOpenAdAvailable)
             {
-                admob.ShowAppOpenAd();
+                _admob.ShowAppOpenAd();
             }
             // else if (other ad source)
         }
@@ -118,10 +198,11 @@ namespace Monetization.Ads
         public void ShowReward(Action<bool> watched)
         {
             onRewardClosed = watched;
-
-            if (ironsource.IsRewardReady)
+            if (Enviroment.ENV == Enviroment.Env.DEV)
+                onRewardClosed.Invoke(true);
+            if (_ironsource.IsRewardReady)
             {
-                ironsource.ShowReward();
+                _ironsource.ShowReward();
             }
             //else if(other ad source)
             else if (!HasInternet)
@@ -136,14 +217,14 @@ namespace Monetization.Ads
 
             IEnumerator WaitForRewardVideo()
             {
-                ironsource.LoadReward();
+                _ironsource.LoadReward();
                 //load ad here 
                 adsUIController.ShowWaitingBox();
                 yield return new WaitForSeconds(3f);
                 adsUIController.CloseWaitingBox();
-                if (ironsource.IsRewardReady)
+                if (_ironsource.IsRewardReady)
                 {
-                    ironsource.ShowReward();
+                    _ironsource.ShowReward();
                 }
                 //else if(other ad source)
                 else
@@ -159,20 +240,27 @@ namespace Monetization.Ads
         #region Banner
         public void ShowBanner()
         {
-            ironsource.LoadBanner();
+            if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
+                return;
+            _ironsource.LoadBanner();
         }
         public void ToggleBanner(bool visible)
         {
-            ironsource.ToggleBanner(visible);
+            _ironsource.ToggleBanner(visible);
         }
         #endregion
         #region Inter
         public void ShowInter(Action onInterClosed)
         {
-            this.onInterClosed = onInterClosed;
-            if (ironsource.IsInterReady)
+            if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
             {
-                ironsource.ShowInter();
+                onInterClosed.Invoke();
+                return;
+            }
+            this.onInterClosed = onInterClosed;
+            if (_ironsource.IsInterReady)
+            {
+                _ironsource.ShowInter();
             }
             // else if (other.isInterReady)
         }

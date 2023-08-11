@@ -1,4 +1,5 @@
 ﻿using GoogleMobileAds.Api;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,32 +7,43 @@ namespace Monetization.Ads.UI
 {
     public class NativeAdPanel : MonoBehaviour
     {
+        private CachedNativeAd _cachedNativeAd;
         private NativeAd _nativeAd;
         [SerializeField] private GameObject loadingObject;
         [SerializeField] private GameObject loadedObject;
         [SerializeField] private RawImage icon;
         [SerializeField] private RawImage image;
         [SerializeField] private RawImage adChoices;
-        [SerializeField] private GameObject rateStar;
+        [SerializeField] private Image rateStar;
         [SerializeField] private Text headline;
         [SerializeField] private Text body;
         [SerializeField] private Text callToAction;
 
-        public NativeAd NativeAd
+        public bool IsNativeAdShowed { get; private set; }
+
+        public CachedNativeAd CachedNativeAd
         {
             get
             {
-                return _nativeAd;
+                return _cachedNativeAd;
             }
             set
             {
-                _nativeAd = value;
-                SetData(_nativeAd);
+                _cachedNativeAd = value;
+                SetData(_cachedNativeAd);
+                IsNativeAdShowed = false;
             }
         }
         public void Show()
         {
+            StartCoroutine(HandleShow());
+        }
+
+        private IEnumerator HandleShow()
+        {
+            yield return new WaitUntil(() => _cachedNativeAd != null);
             gameObject.SetActive(true);
+            IsNativeAdShowed = true;
         }
 
         public void Hide()
@@ -39,41 +51,52 @@ namespace Monetization.Ads.UI
             gameObject.SetActive(false);
         }
 
-        #region HandleNativeAdData
-        public void SetData(NativeAd nativeAd)
+        private void Awake()
         {
-            List<Texture2D> imageTexture2DList = nativeAd.GetImageTextures();
+            AdsController.Instance.RegisterNativeAdPanel(this);
+        }
+
+        private void OnDestroy()
+        {
+            AdsController.Instance.UnRegisterNativeAdPanel(this);
+        }
+
+        #region HandleNativeAdData
+        public void SetData(CachedNativeAd nativeAd)
+        {
+            _nativeAd = nativeAd.NativeAd;
+            List<Texture2D> imageTexture2DList = _nativeAd.GetImageTextures();
             if (imageTexture2DList != null)
             {
                 HandleImageTexture2D(imageTexture2DList);
             }
 
-            Texture2D iconTexture = nativeAd.GetIconTexture();
+            Texture2D iconTexture = _nativeAd.GetIconTexture();
             if (iconTexture != null)
             {
                 HandleIconTexture(iconTexture);
             }
-            Texture2D adChoicesTexture = nativeAd.GetAdChoicesLogoTexture();
+            Texture2D adChoicesTexture = _nativeAd.GetAdChoicesLogoTexture();
             if (adChoicesTexture != null)
             {
                 HandleAdChoiceTexture(adChoicesTexture);
             }
-            string headline = nativeAd.GetHeadlineText();
+            string headline = _nativeAd.GetHeadlineText();
             if (headline != null && headline != "")
             {
                 HandleHeadline(headline);
             }
-            string body = nativeAd.GetBodyText();
+            string body = _nativeAd.GetBodyText();
             if (body != null && body != "")
             {
                 HandleBody(body);
             }
-            string callToAction = nativeAd.GetCallToActionText();
+            string callToAction = _nativeAd.GetCallToActionText();
             if (callToAction != null && callToAction != "")
             {
                 HandleCallToAction(callToAction);
             }
-            double starRating = nativeAd.GetStarRating();
+            double starRating = _nativeAd.GetStarRating();
             if (starRating != 0)
             {
                 HandleStarRating(starRating);

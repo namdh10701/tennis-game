@@ -16,19 +16,12 @@ namespace Gameplay
         }
 
         public MatchState CurrentState = MatchState.PRE_START;
-        public Action CountdownToStart;
-        public Action<float> RemainingTimeToStart;
         public Action MatchStart;
         public Action BallServed;
         public Action MatchEnd;
 
-        public Action TimeUpdate;
-        public Action ScoreUpdate;
-        public Action Increment;
-        public Action DifficultyIncreased;
 
         public Action<Side> BallHit;
-        public Action<Side> BallHitSuccess;
-        public Action BallMove;
+        public Action<Vector3> BallMove;
     }
 }

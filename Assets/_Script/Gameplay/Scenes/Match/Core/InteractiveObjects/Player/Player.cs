@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using static Gameplay.MatchEvent;
 
 namespace Gameplay
@@ -8,7 +9,7 @@ namespace Gameplay
     {
         private MatchEvent _matchEvent;
         [SerializeField] private InputManager _inputManager;
-        public void Init(MatchEvent matchEvent)
+        public void Init(MatchEvent matchEvent, MatchSetting matchSettings)
         {
             _inputManager.Init(_matchEvent, transform);
             _matchEvent = matchEvent;
@@ -21,23 +22,19 @@ namespace Gameplay
                 _matchEvent.BallHit.Invoke(Side.Player);
             }
         }
+        private void HandleFlipCharacter(Vector3 newBallPos)
+        {
+            //throw new NotImplementedException();
+        }
 
         private void OnEnable()
         {
-            _matchEvent.BallHitSuccess += (side) =>
-             {
-                 if (side == Side.Player)
-                     transform.localScale = new Vector3(-1 * transform.localScale.x, transform.localScale.y, transform.localScale.z);
-             };
+            _matchEvent.BallMove += HandleFlipCharacter;
         }
 
         private void OnDisable()
         {
-            _matchEvent.BallHitSuccess -= (side) =>
-            {
-                if (side == Side.Player)
-                    transform.localScale = new Vector3(-1 * transform.localScale.x, transform.localScale.y, transform.localScale.z);
-            };
+            _matchEvent.BallMove -= HandleFlipCharacter;
         }
     }
 }

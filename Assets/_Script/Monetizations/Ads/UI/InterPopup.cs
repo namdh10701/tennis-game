@@ -5,7 +5,18 @@ namespace Monetization.Ads.UI
 {
     public class InterPopup : BasePopup
     {
-        public Tween Open(bool showAd = true)
+        [SerializeField] protected bool _isShowAd;
+
+        protected override void Awake()
+        {
+            _panel.GetComponent<Button>().onClick.AddListener(
+               () =>
+               {
+                   Close(_isShowAd);
+               }
+               );
+        }
+        public void Open(bool showAd = true)
         {
             if (showAd)
             {
@@ -16,10 +27,9 @@ namespace Monetization.Ads.UI
             {
                 base.Open();
             }
-            return openTween;
         }
 
-        public Tween Close(bool showAd = true)
+        public void Close(bool showAd = true)
         {
             if (showAd)
             {
@@ -30,7 +40,6 @@ namespace Monetization.Ads.UI
             {
                 base.Close();
             }
-            return closeTween;
         }
     }
 }

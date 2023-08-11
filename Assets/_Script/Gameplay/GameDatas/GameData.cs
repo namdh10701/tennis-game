@@ -7,10 +7,17 @@ namespace Gameplay
     [Serializable]
     public class GameData
     {
+        public enum TextType
+        {
+            COOL, EXCELLENT, NICE, PERFECT, WONDERFUL, WOW, YAY
+        }
+
         public float HighTime;
         public int HighScore;
         public MatchData LastGamePlayed;
         public List<Sport> UnlockedSports;
+        public List<TextType> UnlockedTexts;
+
         /* List<Skin> UnlockedSkin;
          List<Skin> LockedSkin;*/
     }

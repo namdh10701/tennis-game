@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using static Gameplay.MatchEvent;
 
 namespace Gameplay
@@ -7,35 +8,19 @@ namespace Gameplay
 
     public class ScoreManager : MonoBehaviour
     {
-        private MatchEvent _matchEvent;
         private MatchData _matchData;
+        [SerializeField] private TextMeshProUGUI scoreText;
 
-        public void Init(MatchEvent matchEvent, MatchData matchData)
+
+        public void Init(MatchData matchData)
         {
-            _matchEvent = matchEvent;
             _matchData = matchData;
         }
 
-        public void Increase(Side side)
+        public void Increase()
         {
-            if (side == Side.Player)
-            {
-                _matchData.Score++;
-                _matchEvent.ScoreUpdate.Invoke();
-            }
-        }
-
-        private void OnEnable()
-        {
-            if (_matchEvent != null)
-            {
-                _matchEvent.BallHitSuccess += (side) => Increase(side);
-            }
-        }
-
-        private void OnDisable()
-        {
-            _matchEvent.BallHitSuccess -= (side) => Increase(side);
+            _matchData.Score++;
+            scoreText.text = _matchData.Score.ToString();
         }
     }
 }

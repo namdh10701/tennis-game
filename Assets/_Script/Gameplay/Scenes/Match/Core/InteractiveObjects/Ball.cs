@@ -23,14 +23,15 @@ namespace Gameplay
         private bool _explosed;
         private bool _isHanging;
         private Side _lastHitBy;
-
+        private MatchManager _matchManager;
         public void SetCurrentState(State newState)
         {
             CurrentState = newState;
         }
 
-        public void Init(MatchEvent matchEvent, Transform aimingTarget)
+        public void Init(MatchEvent matchEvent, Transform aimingTarget, MatchSetting matchSettings, MatchManager matchManager)
         {
+            _matchManager = matchManager;
             _matchEvent = matchEvent;
             AimingTarget = aimingTarget;
             IsAbleToBeHitByCPU = true;
@@ -47,14 +48,14 @@ namespace Gameplay
                     _lastHitBy = side;
                     Debug.Log(side);
                     MoveToOpositeSite();
-                    _matchEvent.BallHitSuccess.Invoke(side);
+                    _matchManager.OnBallHitSuccess(side);
                 }
                 if (side == Side.CPU && IsAbleToBeHitByCPU)
                 {
                     _lastHitBy = side;
                     IsAbleToBeHitByPlayer = false;
                     MoveToPlayerSide();
-                    _matchEvent.BallHitSuccess.Invoke(side);
+                    _matchManager.OnBallHitSuccess(side);
                 }
             }
         }
@@ -72,11 +73,11 @@ namespace Gameplay
                 switch (CurrentState)
                 {
                     case State.GOING_UP:
-                        transform.localScale += new Vector3(1.5f, 1.5f, 1.5f) * Time.deltaTime;
+                       // transform.localScale += new Vector3(1.5f, 1.5f, 1.5f) * Time.deltaTime;
                         transform.Rotate(axis: Vector3.forward, 120 * Time.deltaTime);
                         break;
                     case State.FALLING:
-                        if (transform.localScale.x > 3) { transform.localScale -= new Vector3(1.5f, 1.5f, 1.5f) * Time.deltaTime; }
+                        //if (transform.localScale.x > 3) { transform.localScale -= new Vector3(1.5f, 1.5f, 1.5f) * Time.deltaTime; }
                         transform.Rotate(axis: Vector3.forward, -120 * Time.deltaTime);
                         break;
                     case State.NONE:
@@ -95,7 +96,7 @@ namespace Gameplay
         {
 
             AimingTarget.position = GetRandomCPUSidePos();
-            _matchEvent.BallMove.Invoke();
+            _matchEvent.BallMove.Invoke(AimingTarget.position);
             CurrentState = State.FALLING;
             MoveToAimingTarget();
         }

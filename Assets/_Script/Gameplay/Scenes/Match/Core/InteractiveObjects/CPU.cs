@@ -19,7 +19,7 @@ namespace Gameplay
             _animator.Play("Idle");
         }
 
-        public void Init(MatchEvent matchEvent, Ball ball)
+        public void Init(MatchEvent matchEvent, MatchSetting matchSettings, Ball ball)
         {
             _ball = ball;
             _matchEvent = matchEvent;
@@ -36,21 +36,20 @@ namespace Gameplay
         private void Hit()
         {
             _animator.SetTrigger("Hit");
-            _matchEvent.BallHit.Invoke(Side.CPU);
-
-            if (_matchEvent.CurrentState == MatchState.PRE_START)
-            {
-                _matchEvent.BallServed.Invoke();
-            }
         }
 
-        private void MoveToBall()
+        public void ProcessHit()
+        {
+            _matchEvent.BallHit.Invoke(Side.CPU);
+        }
+
+        private void MoveToBall(Vector3 ballPos)
         {
             if (_moveCoroutine != null)
             {
                 StopCoroutine(_moveCoroutine);
             }
-            _moveCoroutine = StartCoroutine(MoveToPosition(_ball.AimingTarget.position));
+            _moveCoroutine = StartCoroutine(MoveToPosition(ballPos));
         }
 
         private IEnumerator MoveToPosition(Vector3 targetPosition)
@@ -63,7 +62,7 @@ namespace Gameplay
             }
         }
 
-        private void ServeBall()
+        public void ServeBall()
         {
             StartCoroutine(ServeBallCoroutine());
         }
@@ -75,12 +74,13 @@ namespace Gameplay
             _ball.SetCurrentState(Ball.State.GOING_UP);
             yield return new WaitForSeconds(0.5f);
             _ball.SetCurrentState(Ball.State.FALLING);
+            yield return new WaitForSeconds(0.5f);
+            _matchEvent.BallServed.Invoke();
         }
         private void OnEnable()
         {
             if (_matchEvent != null)
             {
-                _matchEvent.MatchStart += ServeBall;
                 _matchEvent.BallMove += MoveToBall;
             }
         }
@@ -88,7 +88,6 @@ namespace Gameplay
         {
             if (_matchEvent != null)
             {
-                _matchEvent.MatchStart -= ServeBall;
                 _matchEvent.BallMove -= MoveToBall;
             }
         }

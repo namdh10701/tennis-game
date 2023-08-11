@@ -2,6 +2,7 @@
 
 using Services.FirebaseService;
 using Services.FirebaseService.Remote;
+using Enviroments;
 namespace Gameplay
 {
     public class GameManager : MonoBehaviour
@@ -13,8 +14,11 @@ namespace Gameplay
         public MatchSetting MatchSetting = new MatchSetting();
 
         [SerializeField] private FirebaseManager _firebaseManager;
+        [SerializeField] private Enviroment.Env env;
         private void Awake()
         {
+            Enviroment.ENV = env;
+
             Debug.Log("game manager awake");
             GameManager instance = FindObjectOfType<GameManager>();
             if (instance != null && instance != this)

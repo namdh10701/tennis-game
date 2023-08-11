@@ -12,6 +12,7 @@ namespace Gameplay
         private MatchSetting _matchSetting;
         private MatchEvent _matchEvent;
         private MatchData _matchData;
+        private GameDataManager _gameDataManager;
 
         [SerializeField] private TextMeshProUGUI countdowntext;
         private void Awake()
@@ -20,20 +21,15 @@ namespace Gameplay
 
             _matchEvent = new MatchEvent();
             _matchData = new MatchData(_matchSetting);
-            _matchManager.Init(_matchEvent, _matchData);
-            _matchSceneUI.Init(_matchEvent, _matchData);
+            _matchManager.Init(_matchEvent, _matchData, _gameDataManager);
+            _matchSceneUI.Init(_matchData, _gameDataManager.GameDatas);
         }
 
         private void InitGameSetting()
         {
             GameManager gameManager = FindObjectOfType<GameManager>();
             _matchSetting = gameManager.MatchSetting;
+            _gameDataManager = gameManager.GameDataManager;
         }
-        private void Start()
-        {
-            _matchManager.StartCountdown();
-        }
-
-
     }
 }

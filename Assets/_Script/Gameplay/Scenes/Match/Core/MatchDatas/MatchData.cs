@@ -1,4 +1,6 @@
-﻿namespace Gameplay
+﻿using System;
+
+namespace Gameplay
 {
     public class MatchData
     {
@@ -9,6 +11,12 @@
         public MatchData(MatchSetting matchSettings)
         {
             MatchSettings = matchSettings;
+            ElapsedTime = 0;
+            Score = 0;
+        }
+
+        public void ResetMatchData()
+        {
             ElapsedTime = 0;
             Score = 0;
         }

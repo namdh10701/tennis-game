@@ -6,25 +6,34 @@ namespace Monetization.Ads.UI
 {
     public class BasePopup : MonoBehaviour
     {
+        [SerializeField] protected Image _panel;
+        [SerializeField] protected Transform _contents;
         protected Tween openTween;
         protected Tween closeTween;
-
-        public virtual Tween Open()
+        protected virtual void Awake()
+        {
+            _panel?.GetComponent<Button>().onClick.AddListener(
+               () =>
+               {
+                   Close();
+               }
+               );
+        }
+        public virtual void Open()
         {
 
             gameObject.SetActive(true);
-            transform.localScale = Vector3.zero;
-            openTween = transform.DOScale(1, .2f).SetEase(Ease.OutBack);
-            return openTween;
+            _contents.transform.localScale = Vector3.zero;
+            openTween = _contents.transform.DOScale(1, .2f).SetEase(Ease.OutBack);
         }
-        public virtual Tween Close()
+        public virtual void Close()
         {
-            closeTween = transform.DOScale(0, .2f).SetEase(Ease.InBack).OnComplete(
+            _contents.transform.localScale = Vector3.one;
+            closeTween = _contents.transform.DOScale(0, .2f).SetEase(Ease.InBack).OnComplete(
                 () =>
                 {
                     gameObject.SetActive(false);
                 });
-            return closeTween;
         }
 
         private void OnDestroy()

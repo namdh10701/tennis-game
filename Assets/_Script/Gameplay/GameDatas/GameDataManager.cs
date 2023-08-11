@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using static Gameplay.MatchSetting;
 
 namespace Gameplay
 {
@@ -35,6 +37,8 @@ namespace Gameplay
         {
             GameDatas.HighScore = 0;
             GameDatas.HighTime = 0;
+            GameDatas.LastGamePlayed = null;
+            GameDatas.UnlockedSports = new List<Sport>();
         }
     }
 }

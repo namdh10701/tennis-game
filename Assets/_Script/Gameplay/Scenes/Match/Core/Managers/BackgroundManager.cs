@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay
@@ -10,13 +10,12 @@ namespace Gameplay
         [SerializeField] SpriteRenderer _background;
         List<Sprite> availableBackgrounds;
 
-        public void Init(MatchEvent matchEvent)
+        public void Init()
         {
-            _matchEvent = matchEvent;
             availableBackgrounds = new List<Sprite>();
         }
 
-        private void ChangeBackground()
+        public void ChangeBackground()
         {
 
         }

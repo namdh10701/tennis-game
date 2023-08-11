@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Gameplay
 {
+    //ToDo
     public class TimeManager : MonoBehaviour
     {
         private MatchEvent _matchEvent;
@@ -39,11 +40,6 @@ namespace Gameplay
             {
                 yield return new WaitForSecondsRealtime(1);
                 _matchData.ElapsedTime++;
-                _matchEvent.TimeUpdate.Invoke();
-                if (_matchData.ElapsedTime % 7 == 0)
-                {
-                    _matchEvent.Increment.Invoke();
-                }
             }
         }
 

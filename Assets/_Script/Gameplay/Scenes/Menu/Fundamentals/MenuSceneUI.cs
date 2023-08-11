@@ -1,6 +1,10 @@
+using JetBrains.Annotations;
+using Monetization.Ads.UI;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.UI;
 using static Gameplay.MatchSetting;
 
 namespace Gameplay
@@ -23,6 +27,11 @@ namespace Gameplay
         [SerializeField] private GameObject _BaseballAdLock;
         [SerializeField] private GameObject _VolleyballAdLock;
 
+        [SerializeField] private Button _tennisBtn;
+        [SerializeField] private RewardButton _unlockFootballBtn;
+        [SerializeField] private RewardButton _unlockBaseballBtn;
+        [SerializeField] private RewardButton _unlockVolleyballBtn;
+
         public void Init(MenuSceneManager sceneManager,
             MatchSetting matchSetting,
             GameDataManager gameDataManager)
@@ -35,6 +44,17 @@ namespace Gameplay
             {
                 _incrementalText.text = "X" + _matchSetting.Incremental;
                 _highScore.text = _gameDataManager.GameDatas.HighScore.ToString();
+
+                foreach (Sport sport in _gameDataManager.GameDatas.UnlockedSports)
+                {
+                    UnlockSportUI(sport);
+                }
+                _tennisBtn.onClick.AddListener(
+                    () =>
+                    {
+                        _sceneManager.StartMatch(Sport.TENNIS);
+                    }
+                    );
             }
         }
 
@@ -43,24 +63,43 @@ namespace Gameplay
             _matchSetting.ChangeIncremental();
             _incrementalText.text = "X" + _matchSetting.Incremental;
         }
-        public void OnSportClick(Sport sport)
+
+        private void UnlockSportUI(Sport sport)
         {
-            if (_gameDataManager.GameDatas.UnlockedSports.Contains(sport))
+            switch (sport)
             {
-                //ToDo: start match here
-            }
-            else
-            {
-                //ToDo: show reward ad to unlock sport
-                //unlock game => destroy adlock
+                case Sport.FOOTBALL:
+                    _unlockFootballBtn.IsButtonActive = false;
+                    _unlockFootballBtn.GetComponent<Button>().onClick.AddListener(() => _sceneManager.StartMatch(sport));
+                    break;
+                case Sport.BASEBALL:
+                    _unlockBaseballBtn.IsButtonActive = false;
+                    _unlockBaseballBtn.GetComponent<Button>().onClick.AddListener(() => _sceneManager.StartMatch(sport));
+                    break;
+                case Sport.VOLLEYBALL:
+                    _unlockVolleyballBtn.IsButtonActive = false;
+                    _unlockVolleyballBtn.GetComponent<Button>().onClick.AddListener(() => _sceneManager.StartMatch(sport));
+                    break;
             }
         }
+
+        public void OnReward(string sportName)
+        {
+            Sport sport = (Sport)System.Enum.Parse(typeof(Sport), sportName);
+            UnlockSportUI(sport);
+            if (!_gameDataManager.GameDatas.UnlockedSports.Contains(sport))
+                _gameDataManager.GameDatas.UnlockedSports.Add(sport);
+            _gameDataManager.SaveDatas();
+
+        }
+
+
+
 
         //ToDo: change to leaderboard scene here
         public void OnRankClick()
         {
 
         }
-
     }
 }

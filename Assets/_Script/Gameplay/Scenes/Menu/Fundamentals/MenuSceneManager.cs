@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static Gameplay.MatchSetting;
@@ -9,7 +10,7 @@ namespace Gameplay
     public class MenuSceneManager : MonoBehaviour
     {
         private GameManager _gameManager;
-        [SerializeField] private SettingPanel settingPopup;
+        [SerializeField] private SettingPanel settingPanel;
 
         [SerializeField] private MenuSceneUI _menuSceneUI;
         private void Awake()
@@ -18,7 +19,7 @@ namespace Gameplay
         }
         private void Start()
         {
-            settingPopup.Init(_gameManager.SettingManager);
+            settingPanel.Init(_gameManager.SettingManager);
             _menuSceneUI.Init(this, _gameManager.MatchSetting, _gameManager.GameDataManager);
         }
 
@@ -28,6 +29,11 @@ namespace Gameplay
         {
             _gameManager.MatchSetting.SportName = sportName;
             SceneManager.LoadScene("MatchScene");
+        }
+
+        public void OpenSetting()
+        {
+            settingPanel.Open(true);
         }
     }
 }
