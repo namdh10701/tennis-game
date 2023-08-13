@@ -155,17 +155,18 @@ namespace Monetization.Ads.UI
 
         private void HandleAdChoiceTexture(Texture2D adChoicesTexture)
         {
-            throw new System.NotImplementedException();
+            adChoices.texture = adChoicesTexture;
         }
 
         private void HandleIconTexture(Texture2D iconTexture)
         {
-            icon.GetComponent<MeshRenderer>().material.mainTexture = iconTexture;
+            icon.texture = iconTexture;
         }
 
         private void HandleImageTexture2D(List<Texture2D> imageTexture2DList)
         {
             Texture2D imageTexture = GetRandom(imageTexture2DList);
+            image.texture = imageTexture;
         }
 
         private Texture2D GetRandom(List<Texture2D> imageTexture2dList)

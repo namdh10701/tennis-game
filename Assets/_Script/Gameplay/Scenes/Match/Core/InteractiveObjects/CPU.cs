@@ -7,13 +7,12 @@ namespace Gameplay
     public class CPU : MonoBehaviour
     {
         [SerializeField] private Transform _cat;
-        [SerializeField] private Transform _serveBallPoint;
         [SerializeField] private Animator _animator;
 
         private Ball _ball;
         private MatchEvent _matchEvent;
         private Coroutine _moveCoroutine;
-
+        private Vector3 _originalPos;
         private void Start()
         {
             _animator.Play("Idle");
@@ -21,9 +20,16 @@ namespace Gameplay
 
         public void Init(MatchEvent matchEvent, MatchSetting matchSettings, Ball ball)
         {
+            _originalPos = _cat.position;
             _ball = ball;
             _matchEvent = matchEvent;
         }
+
+        public void Prepare()
+        {
+            _cat.position = _originalPos;
+        }
+
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
@@ -69,13 +75,11 @@ namespace Gameplay
 
         private IEnumerator ServeBallCoroutine()
         {
-            _animator.SetTrigger("Hit");
-            _ball.MoveToServePoint(_serveBallPoint);
+            Hit();
             _ball.SetCurrentState(Ball.State.GOING_UP);
             yield return new WaitForSeconds(0.5f);
             _ball.SetCurrentState(Ball.State.FALLING);
             yield return new WaitForSeconds(0.5f);
-            _matchEvent.BallServed.Invoke();
         }
         private void OnEnable()
         {

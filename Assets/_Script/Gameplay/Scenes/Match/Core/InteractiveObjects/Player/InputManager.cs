@@ -20,7 +20,12 @@ namespace Gameplay
         void Update()
         {
             //ToDo: switch state here 
-            HandleTouchInput();
+            switch (_matchEvent?.CurrentState)
+            {
+                case MatchEvent.MatchState.PLAYING:
+                    HandleTouchInput();
+                    break;
+            }
         }
 
         private void HandleTouchInput()

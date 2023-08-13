@@ -19,14 +19,15 @@ namespace Monetization.Ads.UI
                }
                );
         }
-        public virtual void Open()
+        public virtual Tween Open()
         {
 
             gameObject.SetActive(true);
             _contents.transform.localScale = Vector3.zero;
             openTween = _contents.transform.DOScale(1, .2f).SetEase(Ease.OutBack);
+            return openTween;
         }
-        public virtual void Close()
+        public virtual Tween Close()
         {
             _contents.transform.localScale = Vector3.one;
             closeTween = _contents.transform.DOScale(0, .2f).SetEase(Ease.InBack).OnComplete(
@@ -34,6 +35,7 @@ namespace Monetization.Ads.UI
                 {
                     gameObject.SetActive(false);
                 });
+            return closeTween;
         }
 
         private void OnDestroy()

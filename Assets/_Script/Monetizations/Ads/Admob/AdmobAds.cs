@@ -8,6 +8,7 @@ using Enviroments;
 using Common;
 using GoogleMobileAds.Common;
 using Monetization.Ads.UI;
+using static Monetization.Ads.AdsController;
 
 namespace Monetization.Ads
 {
@@ -40,7 +41,7 @@ namespace Monetization.Ads
         private void HandleInitCompleteAction(InitializationStatus initstatus)
         {
             _initilized = true;
-            Debug.Log("admob here");
+            Debug.Log("Admob initilized");
             LoadAppOpenAd();
             LoadNativeAds();
         }
@@ -69,14 +70,8 @@ namespace Monetization.Ads
             }
         }
 
-        public void RegisterNativePanel()
-        {
-            throw new NotImplementedException();
-        }
-
         public void LoadAppOpenAd()
         {
-            Debug.Log("get called 2");
             if (!_initilized || !AdsController.Instance.HasInternet)
                 return;
             if (_isRequestingAppOpenAd)
@@ -85,14 +80,6 @@ namespace Monetization.Ads
             if (appOpenAd != null)
             {
                 DestroyAppOpenAd();
-            }
-            void DestroyAppOpenAd()
-            {
-                if (appOpenAd != null)
-                {
-                    appOpenAd.Destroy();
-                    appOpenAd = null;
-                }
             }
             FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
             _isRequestingAppOpenAd = true;
@@ -112,7 +99,6 @@ namespace Monetization.Ads
                 HandleOpenAdClosed(ad);
                 HandleOpenAdShowFailed(ad);
                 HandleAdPaid(ad);
-
                 void HandleOpenAdOpened(AppOpenAd ad)
                 {
                     ad.OnAdFullScreenContentOpened += () =>
@@ -129,7 +115,7 @@ namespace Monetization.Ads
                     {
                         MobileAdsEventExecutor.ExecuteInUpdate(() =>
                         {
-                            AdsController.Instance.SetInterval(AdsController.AdType.OPEN);
+                            AdsIntervalValidator.SetInterval(AdsController.AdType.OPEN);
                             LoadAppOpenAd();
                         });
                         AdsController.Instance.IsShowingAd = false;
@@ -141,10 +127,17 @@ namespace Monetization.Ads
                 }
             }
         }
-
+        void DestroyAppOpenAd()
+        {
+            if (appOpenAd != null)
+            {
+                appOpenAd.Destroy();
+                appOpenAd = null;
+            }
+        }
         public void ShowAppOpenAd()
         {
-            if (!IsAppOpenAdAvailable)
+            if (!AdsIntervalValidator.IsValidInterval(AdType.INTER))
             {
                 return;
             }
@@ -158,7 +151,6 @@ namespace Monetization.Ads
 
         public void LoadNativeAds()
         {
-            Debug.Log("get called 1");
             if (!_initilized)
             {
                 return;
@@ -175,7 +167,6 @@ namespace Monetization.Ads
             adLoader1.OnNativeAdLoaded += (sender, e) => HandleNativeAdLoaded(sender, e, _nativeAdId1);
             adLoader1.OnAdFailedToLoad += (sender, e) => HandleAdFailedToLoad(sender, e, _nativeAdId1);
             adLoader1.LoadAd(new AdRequest());
-
 
             if (_isNativeAdKey2Requesting)
                 return;

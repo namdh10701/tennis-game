@@ -28,6 +28,8 @@ namespace Gameplay
         [SerializeField] private Transform _ballAimingTarget;
         [SerializeField] private TextMeshProUGUI _countdownText;
 
+        public int ReTryCount { get; private set; }
+
 
         private float _remainingTimeToStart;
         public void Init(MatchEvent matchEvent, MatchData matchData, GameDataManager gameDataManager)
@@ -35,6 +37,7 @@ namespace Gameplay
             _gameDataManager = gameDataManager;
             _matchEvent = matchEvent;
             _matchData = matchData;
+            ReTryCount = 0;
 
             InitManagers();
             InitInteractiveObjects();
@@ -42,7 +45,7 @@ namespace Gameplay
             void InitManagers()
             {
 
-                _timeManager.Init(_matchEvent, _matchData);
+                _timeManager.Init(_matchData);
                 _scoreManager.Init(_matchData);
                 _backgroundManager.Init();
                 _difficultyManager.Init(_matchData);
@@ -52,10 +55,23 @@ namespace Gameplay
             {
                 _player.Init(_matchEvent, matchData.MatchSettings);
                 _cpu.Init(_matchEvent, matchData.MatchSettings, _ball);
-                _ball.Init(_matchEvent, _ballAimingTarget, matchData.MatchSettings, this);
+                _ball.Init(_matchEvent, matchData.MatchSettings);
             }
 
+            PrepareMatch();
             StartCoroutine(CountdownCoroutine());
+        }
+
+        private void PrepareMatch()
+        {
+            _matchEvent.CurrentState = MatchState.PRE_START;
+            _matchData.ResetMatchData();
+            _textManager.Prepare();
+            _timeManager.Prepare();
+            _scoreManager.Prepare();
+            _backgroundManager.Prepare();
+            _cpu.Prepare();
+            _ball.Prepare();
         }
 
         public IEnumerator CountdownCoroutine()
@@ -77,24 +93,39 @@ namespace Gameplay
         {
             _matchEvent.CurrentState = MatchState.PLAYING;
             _difficultyManager.ApplyDifficulty();
+            _timeManager.StartTime();
         }
 
         private void EndMatch()
         {
-            StartCoroutine(EndMatchCoroutine());
-        }
-
-        private IEnumerator EndMatchCoroutine()
-        {
-
+            _timeManager.StopTime();
             _matchEvent.CurrentState = MatchState.STOPPED;
             if (_matchData.Score > _gameDataManager.GameDatas.HighScore)
             {
                 _gameDataManager.GameDatas.HighScore = _matchData.Score;
                 _gameDataManager.SaveDatas();
             }
-            yield return new WaitForSecondsRealtime(1);
-            _sceneUI.OpenGameOverPanel();
+            if (ReTryCount == 0)
+            {
+                _sceneUI.OpenRevivePanel();
+            }
+            else
+            {
+                _sceneUI.OpenGameOverPanel();
+            }
+        }
+
+        public void RestartMatch()
+        {
+            PrepareMatch();
+            StartCoroutine(CountdownCoroutine());
+        }
+
+        public void Revive()
+        {
+            _matchEvent.CurrentState = MatchState.PRE_START;
+            _cpu.Prepare();
+            _ball.Prepare();
         }
 
         public void OnBallHitSuccess(Side side)
@@ -110,22 +141,8 @@ namespace Gameplay
                     _difficultyManager.IncreaseDifficulty();
                     _backgroundManager.ChangeBackground();
                 }
-
             }
         }
-
-        public void RestartMatch()
-        {
-            _matchData.ResetMatchData();
-            _matchEvent.CurrentState = MatchState.PRE_START;
-            StartCoroutine(CountdownCoroutine());
-        }
-
-        public void Home()
-        {
-
-        }
-
 
         private void OnEnable()
         {

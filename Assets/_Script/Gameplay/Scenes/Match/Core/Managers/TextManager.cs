@@ -22,5 +22,10 @@ namespace Gameplay
                 text.DOFade(0, .3f);
             };
         }
+
+        public void Prepare()
+        {
+            
+        }
     }
 }

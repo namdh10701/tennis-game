@@ -22,7 +22,7 @@ namespace Gameplay
             _matchEvent = new MatchEvent();
             _matchData = new MatchData(_matchSetting);
             _matchManager.Init(_matchEvent, _matchData, _gameDataManager);
-            _matchSceneUI.Init(_matchData, _gameDataManager.GameDatas);
+            _matchSceneUI.Init(_matchData, _gameDataManager.GameDatas, _matchManager);
         }
 
         private void InitGameSetting()

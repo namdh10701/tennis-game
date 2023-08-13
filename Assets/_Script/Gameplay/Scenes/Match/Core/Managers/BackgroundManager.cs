@@ -19,5 +19,9 @@ namespace Gameplay
         {
 
         }
+        public void Prepare()
+        {
+
+        }
     }
 }

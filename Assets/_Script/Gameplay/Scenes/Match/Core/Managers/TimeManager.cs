@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using TMPro;
 using UnityEngine;
 
 namespace Gameplay
@@ -6,30 +8,16 @@ namespace Gameplay
     //ToDo
     public class TimeManager : MonoBehaviour
     {
-        private MatchEvent _matchEvent;
+        [SerializeField] private TextMeshProUGUI time;
         private MatchData _matchData;
         private Coroutine timecount;
 
-        public void Init(MatchEvent matchEvent, MatchData matchData)
+        public void Init(MatchData matchData)
         {
-            _matchEvent = matchEvent;
             _matchData = matchData;
         }
-        private void OnEnable()
-        {
-            if (_matchEvent != null)
-            {
-                _matchEvent.MatchStart += () => StartTime();
-                _matchEvent.MatchEnd += () => StopTime();
-            }
-        }
-        private void OnDisable()
-        {
-            _matchEvent.MatchStart -= () => StartTime();
-            _matchEvent.MatchEnd -= () => StopTime();
-        }
 
-        private void StartTime()
+        public void StartTime()
         {
             timecount = StartCoroutine(TimeCount());
         }
@@ -40,13 +28,19 @@ namespace Gameplay
             {
                 yield return new WaitForSecondsRealtime(1);
                 _matchData.ElapsedTime++;
+                time.text = $"{((int)_matchData.ElapsedTime / 60).ToString("00")}:{(_matchData.ElapsedTime % 60).ToString("00")}";
             }
         }
 
-        private void StopTime()
+        public void StopTime()
         {
             if (timecount != null)
                 StopCoroutine(timecount);
+        }
+
+        public void Prepare()
+        {
+            time.text = "00:00";
         }
     }
 }

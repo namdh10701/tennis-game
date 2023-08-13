@@ -9,14 +9,14 @@ namespace Monetization.Ads.UI
 
         protected override void Awake()
         {
-            _panel.GetComponent<Button>().onClick.AddListener(
+            _panel?.GetComponent<Button>().onClick.AddListener(
                () =>
                {
                    Close(_isShowAd);
                }
                );
         }
-        public void Open(bool showAd = true)
+        public Tween Open(bool showAd = true)
         {
             if (showAd)
             {
@@ -27,9 +27,10 @@ namespace Monetization.Ads.UI
             {
                 base.Open();
             }
+            return openTween;
         }
 
-        public void Close(bool showAd = true)
+        public Tween Close(bool showAd = true)
         {
             if (showAd)
             {
@@ -40,6 +41,7 @@ namespace Monetization.Ads.UI
             {
                 base.Close();
             }
+            return closeTween;
         }
     }
 }

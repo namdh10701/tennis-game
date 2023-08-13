@@ -7,7 +7,7 @@ namespace Monetization.Ads.UI
 {
     public class RewardButton : MonoBehaviour
     {
-        [SerializeField] private InterPopup popup;
+        [SerializeField] private BasePopup popup;
         [SerializeField] private UnityEvent reward;
         [SerializeField] private GameObject adImage;
         private Button button;
@@ -24,7 +24,8 @@ namespace Monetization.Ads.UI
         }
         private void Awake()
         {
-            button = GetComponent<Button>();
+            _isButtonActive = true;
+               button = GetComponent<Button>();
             button.onClick.AddListener(() => OnClicked());
         }
         public void OnClicked()
@@ -35,7 +36,7 @@ namespace Monetization.Ads.UI
             }
             if (popup)
             {
-                popup.Close(false).onComplete += ()
+                popup.Close().onComplete += ()
                  =>
                 {
                     HandleShowRewardAd();

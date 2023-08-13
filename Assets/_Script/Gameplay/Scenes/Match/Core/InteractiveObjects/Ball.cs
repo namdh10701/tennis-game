@@ -16,27 +16,40 @@ namespace Gameplay
         }
         public bool IsAbleToBeHitByPlayer { get; private set; }
         public bool IsAbleToBeHitByCPU { get; private set; }
-        public Transform AimingTarget { get; private set; }
+        [SerializeField] private Transform _aimingTarget;
         public State CurrentState { get; private set; }
         public float hangingTimer;
         private Coroutine moveCoroutrine;
-        private bool _explosed;
         private bool _isHanging;
         private Side _lastHitBy;
-        private MatchManager _matchManager;
+        [SerializeField] private MatchManager _matchManager;
+        [SerializeField] private Transform _serveBallPoint;
+        private bool served;
+        public void SetServeBallPoint(Transform point)
+        {
+            _serveBallPoint = point;
+        }
         public void SetCurrentState(State newState)
         {
             CurrentState = newState;
         }
 
-        public void Init(MatchEvent matchEvent, Transform aimingTarget, MatchSetting matchSettings, MatchManager matchManager)
+        public void Init(MatchEvent matchEvent, MatchSetting matchSettings)
         {
-            _matchManager = matchManager;
             _matchEvent = matchEvent;
-            AimingTarget = aimingTarget;
+        }
+
+        public void Prepare()
+        {
+            _lastHitBy = Side.Player;
             IsAbleToBeHitByCPU = true;
-            IsAbleToBeHitByPlayer = true;
-            _explosed = false;
+            IsAbleToBeHitByPlayer = false;
+            served = false;
+            hangingTimer = 0;
+            _isHanging = false;
+            gameObject.SetActive(true);
+            _aimingTarget.gameObject.SetActive(true);
+            MoveToServePoint();
         }
 
         public void HitBy(Side side)
@@ -52,6 +65,11 @@ namespace Gameplay
                 }
                 if (side == Side.CPU && IsAbleToBeHitByCPU)
                 {
+                    if (!served)
+                    {
+                        served = true;
+                        _matchEvent.BallServed.Invoke();
+                    }
                     _lastHitBy = side;
                     IsAbleToBeHitByPlayer = false;
                     MoveToPlayerSide();
@@ -60,10 +78,10 @@ namespace Gameplay
             }
         }
 
-        public void MoveToServePoint(Transform serveBallPoint)
+        public void MoveToServePoint()
         {
-            transform.position = serveBallPoint.position;
-            AimingTarget.position = serveBallPoint.position;
+            transform.position = _serveBallPoint.position;
+            _aimingTarget.position = _serveBallPoint.position;
         }
 
         private void Update()
@@ -73,7 +91,7 @@ namespace Gameplay
                 switch (CurrentState)
                 {
                     case State.GOING_UP:
-                       // transform.localScale += new Vector3(1.5f, 1.5f, 1.5f) * Time.deltaTime;
+                        // transform.localScale += new Vector3(1.5f, 1.5f, 1.5f) * Time.deltaTime;
                         transform.Rotate(axis: Vector3.forward, 120 * Time.deltaTime);
                         break;
                     case State.FALLING:
@@ -95,15 +113,15 @@ namespace Gameplay
         private void MoveToOpositeSite()
         {
 
-            AimingTarget.position = GetRandomCPUSidePos();
-            _matchEvent.BallMove.Invoke(AimingTarget.position);
+            _aimingTarget.position = GetRandomCPUSidePos();
+            _matchEvent.BallMove.Invoke(_aimingTarget.position);
             CurrentState = State.FALLING;
             MoveToAimingTarget();
         }
 
         private void MoveToPlayerSide()
         {
-            AimingTarget.position = GetRandomPlayerSidePos();
+            _aimingTarget.position = GetRandomPlayerSidePos();
             CurrentState = State.GOING_UP;
             MoveToAimingTarget();
         }
@@ -119,10 +137,10 @@ namespace Gameplay
         {
             _isHanging = false;
             hangingTimer = 0;
-            while (transform.position != AimingTarget.position)
+            while (transform.position != _aimingTarget.position)
             {
                 float step = 3 * Time.deltaTime;
-                transform.position = Vector3.MoveTowards(transform.position, AimingTarget.position, step);
+                transform.position = Vector3.MoveTowards(transform.position, _aimingTarget.position, step);
                 yield return null;
             }
             _isHanging = true;
@@ -131,8 +149,8 @@ namespace Gameplay
         private void Explose()
         {
             //ToDo:
-            Destroy(gameObject);
-            Destroy(AimingTarget.gameObject);
+            gameObject.SetActive(false);
+            _aimingTarget.gameObject.SetActive(false);
             _matchEvent.MatchEnd.Invoke();
         }
 
@@ -170,7 +188,7 @@ namespace Gameplay
         }
         private void OnDisable()
         {
-            _matchEvent.BallHit += side => HitBy(side);
+            _matchEvent.BallHit -= side => HitBy(side);
         }
 
     }

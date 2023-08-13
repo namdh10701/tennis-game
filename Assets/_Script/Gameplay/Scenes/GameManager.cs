@@ -3,6 +3,8 @@
 using Services.FirebaseService;
 using Services.FirebaseService.Remote;
 using Enviroments;
+using Monetization.Ads;
+
 namespace Gameplay
 {
     public class GameManager : MonoBehaviour
@@ -18,28 +20,17 @@ namespace Gameplay
         private void Awake()
         {
             Enviroment.ENV = env;
-
-            Debug.Log("game manager awake");
-            GameManager instance = FindObjectOfType<GameManager>();
-            if (instance != null && instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            DontDestroyOnLoad(gameObject);
-
             SettingManager.LoadSettings();
-
             GameDataManager.LoadDatas();
             RemoteVariableManager.LoadDatas();
 
             _firebaseManager.RemoteVariableCollection = RemoteVariableManager.MyRemoteVariables;
             _firebaseManager.Init();
-
         }
 
         private void Start()
         {
+            AdsController.Instance.Init();
             _firebaseManager.FirebaseRemote.OnFetchedCompleted += () => SaveRemoteVariable();
         }
 

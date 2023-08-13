@@ -12,7 +12,7 @@ public class GameOverPanel : InterPopup
 
     public void Init(MatchData matchData, GameData gameData)
     {
-        _time.text = $"Time: {matchData.ElapsedTime}";
+        _time.text = $"Time: {((int)matchData.ElapsedTime / 60).ToString("00")}:{(matchData.ElapsedTime % 60).ToString("00")}";
         _score.text = $"Score: {matchData.Score}";
         _highScore.text = $"High Score: {gameData.HighScore}";
     }

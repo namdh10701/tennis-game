@@ -11,7 +11,7 @@ namespace Gameplay
         [SerializeField] private InputManager _inputManager;
         public void Init(MatchEvent matchEvent, MatchSetting matchSettings)
         {
-            _inputManager.Init(_matchEvent, transform);
+            _inputManager.Init(matchEvent, transform);
             _matchEvent = matchEvent;
         }
 

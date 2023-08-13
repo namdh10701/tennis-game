@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using static Gameplay.MatchEvent;
 
@@ -21,6 +22,11 @@ namespace Gameplay
         {
             _matchData.Score++;
             scoreText.text = _matchData.Score.ToString();
+        }
+
+        public void Prepare()
+        {
+            scoreText.text = "0";
         }
     }
 }
