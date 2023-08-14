@@ -20,6 +20,7 @@ namespace Gameplay
         private void Awake()
         {
             Enviroment.ENV = env;
+            Application.targetFrameRate = 60;
             SettingManager.LoadSettings();
             GameDataManager.LoadDatas();
             RemoteVariableManager.LoadDatas();
@@ -53,6 +54,10 @@ namespace Gameplay
             {
                 _firebaseManager.FirebaseRemote.OnFetchedCompleted -= () => SaveRemoteVariable();
             }
+        }
+        public void ResetMatchSetting()
+        {
+            MatchSetting = new MatchSetting();
         }
     }
 }

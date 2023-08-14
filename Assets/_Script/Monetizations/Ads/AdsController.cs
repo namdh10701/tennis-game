@@ -215,8 +215,7 @@ namespace Monetization.Ads
             //else if(other ad source)
             else if (!HasInternet)
             {
-                _onRewardClosed.Invoke(false);
-                _onRewardClosed = null;
+                adsUIController.ShowRewardUnavailableBox();
             }
             else
             {
@@ -238,14 +237,14 @@ namespace Monetization.Ads
                         else
                         {
                             adsUIController.ShowRewardUnavailableBox();
-                            _onRewardClosed.Invoke(false);
-                            _onRewardClosed = null;
                         }
                     };
             }
         }
         public void InvokeOnRewarded(bool rewarded)
         {
+            Debug.Log("reward false");
+            Debug.Log(_onRewardClosed == null);
             _onRewardClosed.Invoke(rewarded);
             _onRewardClosed = null;
         }
@@ -266,6 +265,7 @@ namespace Monetization.Ads
         #region Inter
         public void ShowInter(Action onInterClosed)
         {
+            _onInterClosed = onInterClosed;
             if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
             {
                 onInterClosed.Invoke();
@@ -273,6 +273,7 @@ namespace Monetization.Ads
             }
             if (!AdsIntervalValidator.IsValidInterval(AdType.INTER))
             {
+                onInterClosed.Invoke();
                 return;
             }
             if (IsShowingAd)
@@ -280,7 +281,6 @@ namespace Monetization.Ads
                 Debug.LogWarning("Another ad is being displayed");
                 return;
             }
-            _onInterClosed = onInterClosed;
             if (_ironsource.IsInterReady)
             {
                 _ironsource.ShowInter();
@@ -289,7 +289,6 @@ namespace Monetization.Ads
             {
                 onInterClosed.Invoke();
             }
-            // else if (other.isInterReady)
         }
         #endregion
     }

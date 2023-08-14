@@ -28,7 +28,6 @@ namespace Services.FirebaseService.Remote
                 }
                 _remoteVariableCollection = remoteVariableCollection;
                 _remoteVariableCollection.AddToFetchQueue();
-
                 FetchDataAsync();
             }
             else

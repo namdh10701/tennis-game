@@ -24,13 +24,13 @@ namespace Monetization.Ads.UI
 
             gameObject.SetActive(true);
             _contents.transform.localScale = Vector3.zero;
-            openTween = _contents.transform.DOScale(1, .2f).SetEase(Ease.OutBack);
+            openTween = _contents.transform.DOScale(1, .2f).SetEase(Ease.OutBack).SetUpdate(true);
             return openTween;
         }
         public virtual Tween Close()
         {
             _contents.transform.localScale = Vector3.one;
-            closeTween = _contents.transform.DOScale(0, .2f).SetEase(Ease.InBack).OnComplete(
+            closeTween = _contents.transform.DOScale(0, .2f).SetEase(Ease.InBack).SetUpdate(true).OnComplete(
                 () =>
                 {
                     gameObject.SetActive(false);

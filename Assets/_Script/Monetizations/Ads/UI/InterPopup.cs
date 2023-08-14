@@ -1,6 +1,8 @@
 using UnityEngine.UI;
 using UnityEngine;
 using DG.Tweening;
+using Gameplay;
+
 namespace Monetization.Ads.UI
 {
     public class InterPopup : BasePopup
@@ -20,8 +22,9 @@ namespace Monetization.Ads.UI
         {
             if (showAd)
             {
+                Tween openTween = base.Open().Pause();
                 AdsController.Instance.ShowInter(
-                    () => { base.Open(); });
+                     () => { openTween.Play(); });
             }
             else
             {
@@ -34,8 +37,9 @@ namespace Monetization.Ads.UI
         {
             if (showAd)
             {
+                Tween closeTween = base.Close().Pause();
                 AdsController.Instance.ShowInter(
-                     () => { base.Close(); });
+                     () => { closeTween.Play(); });
             }
             else
             {

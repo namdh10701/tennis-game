@@ -24,6 +24,8 @@ namespace Gameplay
         private Side _lastHitBy;
         [SerializeField] private MatchManager _matchManager;
         [SerializeField] private Transform _serveBallPoint;
+        [SerializeField] private SportAsset _sportAsset;
+        [SerializeField] private SpriteRenderer _spriteRenderer;
         private bool served;
         public void SetServeBallPoint(Transform point)
         {
@@ -37,6 +39,22 @@ namespace Gameplay
         public void Init(MatchEvent matchEvent, MatchSetting matchSettings)
         {
             _matchEvent = matchEvent;
+            switch (matchSettings.SportName)
+            {
+                case Sport.TENNIS:
+                    _spriteRenderer.sprite = _sportAsset.TennisSprite;
+                    break;
+                case Sport.BASEBALL:
+                    _spriteRenderer.sprite = _sportAsset.BaseballSprite;
+                    break;
+                case Sport.FOOTBALL:
+                    _spriteRenderer.sprite = _sportAsset.FootballSprite;
+                    break;
+                case Sport.VOLLEYBALL:
+                    _spriteRenderer.sprite = _sportAsset.VolleyballSprite;
+                    break;
+
+            }
         }
 
         public void Prepare()
@@ -112,16 +130,18 @@ namespace Gameplay
 
         private void MoveToOpositeSite()
         {
-
+            //ToDo logic hàm này và hàm dưới dựa theo màn hình điện thoại 
             _aimingTarget.position = GetRandomCPUSidePos();
-            _matchEvent.BallMove.Invoke(_aimingTarget.position);
+            _matchEvent.BallMove.Invoke(_aimingTarget.position, Side.Player);
             CurrentState = State.FALLING;
             MoveToAimingTarget();
         }
 
         private void MoveToPlayerSide()
         {
+            //ToDo logic hàm này và hàm trên dựa theo màn hình điện thoại 
             _aimingTarget.position = GetRandomPlayerSidePos();
+            _matchEvent.BallMove.Invoke(_aimingTarget.position, Side.CPU);
             CurrentState = State.GOING_UP;
             MoveToAimingTarget();
         }
@@ -148,7 +168,7 @@ namespace Gameplay
 
         private void Explose()
         {
-            //ToDo:
+            //ToDo: Anim nổ?
             gameObject.SetActive(false);
             _aimingTarget.gameObject.SetActive(false);
             _matchEvent.MatchEnd.Invoke();

@@ -1,13 +1,20 @@
-﻿using System.Collections;
+﻿using ListExtensions;
+using System.Collections;
 using UnityEngine;
 using static Gameplay.MatchEvent;
+using static Gameplay.MatchSetting;
 
 namespace Gameplay
 {
     public class CPU : MonoBehaviour
     {
         [SerializeField] private Transform _cat;
+
+        [SerializeField] private SpriteRenderer _catSprite;
+        [SerializeField] private SpriteRenderer _toolSprite;
         [SerializeField] private Animator _animator;
+        [SerializeField] private SportAsset _sportAsset;
+        [SerializeField] private CatAsset _catAsset;
 
         private Ball _ball;
         private MatchEvent _matchEvent;
@@ -23,6 +30,22 @@ namespace Gameplay
             _originalPos = _cat.position;
             _ball = ball;
             _matchEvent = matchEvent;
+            switch (matchSettings.SportName)
+            {
+                case Sport.TENNIS:
+                    _toolSprite.sprite = _sportAsset.RacketSprite;
+                    break;
+                case Sport.BASEBALL:
+                    _toolSprite.sprite = _sportAsset.BasebatSprite;
+                    break;
+                case Sport.FOOTBALL:
+                    _toolSprite.sprite = null;
+                    break;
+                case Sport.VOLLEYBALL:
+                    _toolSprite.sprite = null;
+                    break;
+            }
+            _catSprite.sprite = _catAsset.CatSprites.GetRandom();
         }
 
         public void Prepare()
@@ -49,8 +72,10 @@ namespace Gameplay
             _matchEvent.BallHit.Invoke(Side.CPU);
         }
 
-        private void MoveToBall(Vector3 ballPos)
+        private void MoveToBall(Vector3 ballPos, Side side)
         {
+            if (side == Side.CPU)
+                return;
             if (_moveCoroutine != null)
             {
                 StopCoroutine(_moveCoroutine);

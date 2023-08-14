@@ -20,7 +20,8 @@ namespace Gameplay
 
         public void Increase()
         {
-            _matchData.Score++;
+
+            _matchData.Score += _matchData.MatchSettings.Incremental;
             scoreText.text = _matchData.Score.ToString();
         }
 

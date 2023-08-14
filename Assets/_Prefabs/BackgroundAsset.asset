@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408539064606bcd479dbf683936f0af9, type: 3}
+  m_Name: BackgroundAsset
+  m_EditorClassIdentifier: 
+  red: {fileID: 21300000, guid: 7e944a737e1c663438373af6c3cf96a5, type: 3}
+  yellow: {fileID: 21300000, guid: 09ec3172cdf58344c8b362907b78820a, type: 3}
+  green: {fileID: 21300000, guid: d2bf5c5b70ebb6c49b3dd5fce9daabf6, type: 3}
+  blue: {fileID: 21300000, guid: 161b9ad45c450a144bbdbf31604e77ab, type: 3}
+  purple: {fileID: 21300000, guid: f980b2b4c05f6c341a28a2854c8eb715, type: 3}
+  orange: {fileID: 21300000, guid: d2cfeb93032631d489127360d02647a5, type: 3}
+  pink: {fileID: 21300000, guid: 7441b1042627d2548a4ea6953e05aba0, type: 3}

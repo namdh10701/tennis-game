@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 namespace ListExtensions
 {
@@ -44,6 +45,14 @@ namespace ListExtensions
                 item = default(T);
                 return false;
             }
+        }
+        public static T GetRandom<T>(this List<T> list)
+        {
+            if (list.Count > 0)
+            {
+                return list[UnityEngine.Random.Range(0, list.Count)];
+            }
+            return default(T);
         }
     }
 }

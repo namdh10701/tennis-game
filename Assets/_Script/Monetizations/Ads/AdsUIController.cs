@@ -24,7 +24,10 @@ namespace Monetization.Ads
         }
         public void CloseRewardUnavailableBox()
         {
-            _rewardUnavailable.Close();
+            _rewardUnavailable.Close().onComplete += () =>
+            {
+                AdsController.Instance.InvokeOnRewarded(false);
+            };
         }
         public void ShowNotRewardedBox()
         {
@@ -32,7 +35,10 @@ namespace Monetization.Ads
         }
         public void HideNotRewardedBox()
         {
-            _rewardNotRewarded.Close();
+            _rewardNotRewarded.Close().onComplete += () =>
+            {
+                AdsController.Instance.InvokeOnRewarded(false);
+            };
         }
 
         private void Start()

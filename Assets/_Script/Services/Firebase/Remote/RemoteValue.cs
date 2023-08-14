@@ -35,4 +35,12 @@ namespace Services.FirebaseService.Remote
             _value = initialValue;
         }
     }
+    public class RemoteJson : RemoteVariable
+    {
+        public RemoteJson(string name, string initialValue)
+        {
+            _name = name;
+            _value = initialValue;
+        }
+    }
 }

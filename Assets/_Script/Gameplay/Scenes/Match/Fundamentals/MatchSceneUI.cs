@@ -3,6 +3,7 @@ using UnityEngine;
 using Monetization.Ads;
 using Monetization.Ads.UI;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 namespace Gameplay
 {
@@ -11,11 +12,12 @@ namespace Gameplay
         private MatchManager _matchManager;
         private MatchData _matchData;
         private GameData _gameData;
-
+        private MatchSceneManager _sceneManager;
         [SerializeField] private GameOverPanel _gameOverPanel;
         [SerializeField] private BasePopup _revivePanel;
-        public void Init(MatchData matchData, GameData gameData, MatchManager matchManager)
+        public void Init(MatchData matchData, GameData gameData, MatchManager matchManager, MatchSceneManager matchSceneManager)
         {
+            _sceneManager = matchSceneManager;
             _matchManager = matchManager;
             _gameData = gameData;
             _matchData = matchData;
@@ -25,7 +27,7 @@ namespace Gameplay
         public void OpenGameOverPanel()
         {
             _gameOverPanel.Init(_matchData, _gameData);
-            _gameOverPanel.Open();
+            _gameOverPanel.Open(false);
         }
 
         public void OpenRevivePanel()
@@ -44,13 +46,20 @@ namespace Gameplay
 
         public void OnHomeClick()
         {
-            AdsController.Instance.ShowInter(
+
+            _gameOverPanel.Close(true).onComplete +=
                 () =>
                 {
-                    SceneManager.LoadScene("MenuScene");
-                }
-                );
+                    _sceneManager.BackToHome();
+                };
+        }
 
+        public void OnNoThanksClick()
+        {
+            _revivePanel.Close().onComplete += () =>
+            {
+                OpenGameOverPanel();
+            };
         }
     }
 }

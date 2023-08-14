@@ -25,7 +25,7 @@ namespace Monetization.Ads.UI
         private void Awake()
         {
             _isButtonActive = true;
-               button = GetComponent<Button>();
+            button = GetComponent<Button>();
             button.onClick.AddListener(() => OnClicked());
         }
         public void OnClicked()
@@ -54,6 +54,10 @@ namespace Monetization.Ads.UI
                 if (watched)
                 {
                     reward.Invoke();
+                }
+                else
+                {
+                    popup?.Open();
                 }
             });
         }

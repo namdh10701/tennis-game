@@ -22,6 +22,6 @@ namespace Gameplay
 
 
         public Action<Side> BallHit;
-        public Action<Vector3> BallMove;
+        public Action<Vector3, Side> BallMove;
     }
 }

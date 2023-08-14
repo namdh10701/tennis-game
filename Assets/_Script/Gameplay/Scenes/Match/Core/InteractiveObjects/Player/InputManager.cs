@@ -9,23 +9,21 @@ namespace Gameplay
         private MatchEvent _matchEvent;
         private Vector2 touchStart;
         private Vector3 touchCurrent;
-        private float threshold;
+        [SerializeField] private float threshold;
         private Transform _player;
         public void Init(MatchEvent matchEvent, Transform player)
         {
             _matchEvent = matchEvent;
             _player = player;
+            threshold = 0;
         }
 
         void Update()
         {
             //ToDo: switch state here 
-            switch (_matchEvent?.CurrentState)
-            {
-                case MatchEvent.MatchState.PLAYING:
-                    HandleTouchInput();
-                    break;
-            }
+
+            HandleTouchInput();
+
         }
 
         private void HandleTouchInput()
@@ -40,13 +38,19 @@ namespace Gameplay
                         touchStart = touch.position;
                         break;
                     case TouchPhase.Moved:
-                        float distance = (touch.position - touchStart).magnitude;
-                        if (distance > threshold)
+                        switch (_matchEvent?.CurrentState)
                         {
-                            touchCurrent = touch.position;
-                            Vector3 worldTouchCurrent = Camera.main.ScreenToWorldPoint(new Vector3(touchCurrent.x, touchCurrent.y, Camera.main.nearClipPlane));
-                            _player.position = worldTouchCurrent;
+                            case MatchEvent.MatchState.PLAYING:
+                                float distance = (touch.position - touchStart).magnitude;
+                                if (distance > threshold)
+                                {
+                                    touchCurrent = touch.position;
+                                    Vector3 worldTouchCurrent = Camera.main.ScreenToWorldPoint(new Vector3(touchCurrent.x, touchCurrent.y, Camera.main.nearClipPlane));
+                                    _player.position = worldTouchCurrent;
+                                }
+                                break;
                         }
+
                         break;
                     case TouchPhase.Ended:
                         break;

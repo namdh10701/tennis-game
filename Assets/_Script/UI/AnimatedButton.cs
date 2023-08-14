@@ -9,18 +9,7 @@ public class AnimatedButton : UIBehaviour, IPointerDownHandler, IPointerUpHandle
 {
     private Button _button;
     private Transform _transform;
-    [SerializeField] protected UnityEvent _onClickEvent;
-    public UnityEvent OnClickEvent
-    {
-        get
-        {
-            return _onClickEvent;
-        }
-        set
-        {
-            _onClickEvent = value;
-        }
-    }
+    [SerializeField] private UnityEvent _onClickEvent;
     [SerializeField] private bool _isSpamable;
     [SerializeField] private float _clickCooldownDuration = .5f; // Adjust the duration as needed
 
@@ -47,7 +36,7 @@ public class AnimatedButton : UIBehaviour, IPointerDownHandler, IPointerUpHandle
         if (_button.enabled && !_isCooldown && _clickedDown)
         {
             //AudioController.Instance.PlaySound("button");
-            _onClickEvent.Invoke();
+            _onClickEvent?.Invoke();
             _transform.localScale /= .9f;
             _clickedDown = false;
             if (!_isSpamable)
