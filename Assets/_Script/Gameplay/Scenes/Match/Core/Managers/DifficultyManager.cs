@@ -11,12 +11,14 @@ namespace Gameplay
         private float _timescaleStep;
         private IncrementalStep _incrementalStep;
         private MatchManager _matchManager;
-        public void Init(MatchData matchData, IncrementalStep incrementalStep, float timescaleStep, MatchManager matchManager)
+        private GameDataManager _gameDataManager;
+        public void Init(MatchData matchData, IncrementalStep incrementalStep, float timescaleStep, MatchManager matchManager, GameDataManager gameDataManager)
         {
             _matchManager = matchManager;
             _timescaleStep = timescaleStep;
             _incrementalStep = incrementalStep;
             _matchData = matchData;
+            _gameDataManager = gameDataManager;
         }
 
         public void ApplyDifficulty()
@@ -32,6 +34,11 @@ namespace Gameplay
                 _matchData.MatchSettings.ChangeIncremental();
                 ApplyDifficulty();
                 _matchManager.OnDifficultyChange();
+                if (_matchData.MatchSettings.Incremental > _gameDataManager.GameDatas.UnlockedIncremental)
+                {
+                    _gameDataManager.GameDatas.UnlockedIncremental = _matchData.MatchSettings.Incremental;
+                    _gameDataManager.SaveDatas();
+                }
             }
         }
     }

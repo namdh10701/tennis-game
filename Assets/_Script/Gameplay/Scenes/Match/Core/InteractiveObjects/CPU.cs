@@ -1,4 +1,5 @@
 ﻿using ListExtensions;
+using System;
 using System.Collections;
 using UnityEngine;
 using static Gameplay.MatchEvent;
@@ -20,16 +21,24 @@ namespace Gameplay
         private MatchEvent _matchEvent;
         private Coroutine _moveCoroutine;
         private Vector3 _originalPos;
+        private MatchSetting _matchSetting;
+        private bool _isReversed;
         private void Start()
         {
             _animator.Play("Idle");
         }
 
-        public void Init(MatchEvent matchEvent, MatchSetting matchSettings, Ball ball)
+        public void Init(MatchEvent matchEvent, MatchSetting matchSettings, Ball ball, bool isReversed)
         {
+            _isReversed = isReversed;
+            if (_isReversed)
+            {
+                _cat.transform.localScale = new Vector3(_cat.transform.localScale.x, -_cat.transform.localScale.y, _cat.transform.localScale.z);
+            }
             _originalPos = _cat.position;
             _ball = ball;
             _matchEvent = matchEvent;
+            _matchSetting = matchSettings;
             switch (matchSettings.SportName)
             {
                 case Sport.TENNIS:
@@ -45,7 +54,7 @@ namespace Gameplay
                     _toolSprite.sprite = null;
                     break;
             }
-            _catSprite.sprite = _catAsset.CatSprites.GetRandom();
+            _catSprite.sprite = _catAsset.CatSprites[matchSettings.Incremental - 1];
         }
 
         public void Prepare()
@@ -64,7 +73,14 @@ namespace Gameplay
 
         private void Hit()
         {
-            _animator.SetTrigger("Hit");
+            if (_isReversed)
+            {
+                _animator.SetTrigger("ReversedHit");
+            }
+            else
+            {
+                _animator.SetTrigger("Hit");
+            }
         }
 
         public void ProcessHit()
@@ -119,6 +135,11 @@ namespace Gameplay
             {
                 _matchEvent.BallMove -= MoveToBall;
             }
+        }
+
+        public void UpdateCat()
+        {
+            _catSprite.sprite = _catAsset.CatSprites[_matchSetting.Incremental - 1];
         }
     }
 }

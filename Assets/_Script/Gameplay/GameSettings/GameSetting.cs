@@ -7,5 +7,6 @@ namespace Gameplay
         public bool IsMusicOn;
         public bool IsSoundOn;
         public bool IsVibrationOn;
+        public bool IsReversed;
     }
 }

@@ -137,10 +137,6 @@ namespace Monetization.Ads
         }
         public void ShowAppOpenAd()
         {
-            if (!AdsIntervalValidator.IsValidInterval(AdType.INTER))
-            {
-                return;
-            }
             AdsController.Instance.IsShowingAd = true;
             appOpenAd.Show();
         }

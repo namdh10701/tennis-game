@@ -31,9 +31,9 @@ namespace Gameplay
         public void DisplayText()
         {
             text.sprite = availableTexts.GetRandom();
-            text.DOFade(1, .8f).onComplete += () =>
+            text.DOFade(1, 1f).onComplete += () =>
             {
-                text.DOFade(0, .8f);
+                text.DOFade(0, 1f);
             };
         }
 

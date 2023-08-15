@@ -11,6 +11,7 @@
         public static string adInterval_Inter_Inter = "adInterval_Inter_Inter";
         public static string adInterval_OpenAd_Inter = "adInterval_OpenAd_Inter";
         public static string adInterval_OpenAd_OpenAd = "adInterval_OpenAd_OpenAd";
+        public static string adInterval_Reward_Inter = "adInterval_Reward_Inter";
         #endregion
         #region Gameplay
         #endregion

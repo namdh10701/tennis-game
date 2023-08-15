@@ -42,7 +42,9 @@ namespace Gameplay
         private int _originalIncremental;
 
         private float _remainingTimeToStart;
-        public void Init(MatchEvent matchEvent, MatchData matchData, GameDataManager gameDataManager, MyRemoteVariableCollection remoteVariableCollection)
+
+        public void Init(MatchEvent matchEvent, MatchData matchData, GameDataManager gameDataManager, MyRemoteVariableCollection remoteVariableCollection,
+            SettingManager settingManager)
         {
             _gameDataManager = gameDataManager;
             _matchEvent = matchEvent;
@@ -50,18 +52,24 @@ namespace Gameplay
             _variableCollection = remoteVariableCollection;
             _retryCount = 0;
             _originalIncremental = _matchData.MatchSettings.Incremental;
+
             BackgroundColorOrder backgroundColorOrder = JsonUtility.FromJson<BackgroundColorOrder>(JsonUtility.ToJson(_variableCollection.BackgroundColorOrder));
             IncrementalStep incrementalStep = JsonUtility.FromJson<IncrementalStep>(JsonUtility.ToJson(_variableCollection.IncrementalStep));
             float timescaleStep = (float)_variableCollection.TimescaleStep.Value;
             MaxIncremental = (int)_variableCollection.MaxIncrement.Value;
             InitManagers();
             InitInteractiveObjects();
+            if (settingManager.GameSettings.IsReversed)
+            {
+                Quaternion newRotation = Quaternion.Euler(Camera.main.transform.rotation.eulerAngles.x, Camera.main.transform.rotation.eulerAngles.y, Camera.main.transform.rotation.eulerAngles.z + 180);
+                Camera.main.transform.rotation = newRotation;
+            }
             void InitManagers()
             {
                 _timeManager.Init(_matchData);
                 _scoreManager.Init(_matchData);
                 _backgroundManager.Init(backgroundColorOrder);
-                _difficultyManager.Init(_matchData, incrementalStep, timescaleStep, this);
+                _difficultyManager.Init(_matchData, incrementalStep, timescaleStep, this, _gameDataManager);
                 _textManager.Init(_matchData);
             }
             void InitInteractiveObjects()
@@ -81,9 +89,9 @@ namespace Gameplay
                         _player = Instantiate(_playerVolleyball, _playerSpawnPoint, true).GetComponent<Player>();
                         break;
                 }
-                _player.Init(_matchEvent, matchData.MatchSettings);
-                _cpu.Init(_matchEvent, matchData.MatchSettings, _ball);
-                _ball.Init(_matchEvent, matchData.MatchSettings);
+                _player.Init(_matchEvent, matchData.MatchSettings, settingManager.GameSettings.IsReversed);
+                _cpu.Init(_matchEvent, matchData.MatchSettings, _ball, settingManager.GameSettings.IsReversed);
+                _ball.Init(_matchEvent, matchData.MatchSettings, settingManager.GameSettings.IsReversed);
             }
 
             PrepareMatch();
@@ -170,7 +178,7 @@ namespace Gameplay
                 _textManager.DisplayText();
                 _scoreManager.Increase();
                 _difficultyManager.UpdateDifficulty();
-                Vibration.Vibrate(200);
+                Vibration.Vibrate(100);
             }
         }
 
@@ -191,6 +199,7 @@ namespace Gameplay
         public void OnDifficultyChange()
         {
             _backgroundManager.UpdateBackground();
+            _cpu.UpdateCat();
             _textManager.UpdateAvailableText();
         }
     }

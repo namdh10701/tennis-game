@@ -39,6 +39,7 @@ namespace Gameplay
             GameDatas.HighTime = 0;
             GameDatas.LastGamePlayed = null;
             GameDatas.UnlockedSports = new List<Sport>();
+            GameDatas.UnlockedIncremental = 1;
         }
     }
 }

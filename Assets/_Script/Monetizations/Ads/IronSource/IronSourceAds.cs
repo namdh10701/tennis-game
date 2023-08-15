@@ -13,6 +13,7 @@ namespace Monetization.Ads
         private bool _isRequestingBanner;
         private bool _isRequestingInter;
         private bool _isRequestingReward;
+        private bool _isRewarded;
 
         public bool Initilized { get; private set; }
         public bool IsInterReady
@@ -50,7 +51,6 @@ namespace Monetization.Ads
                 string testKey = "85460dcd";
                 appkey = testKey;
             }
-            Debug.Log(appkey);
             Initilized = false;
             #region Banner_Event
             IronSourceBannerEvents.onAdLoadedEvent += Banner_onLoaded;
@@ -187,6 +187,7 @@ namespace Monetization.Ads
         private void Reward_onReward(IronSourcePlacement arg1, IronSourceAdInfo arg2)
         {
             AdsController.Instance.InvokeOnRewarded(true);
+            _isRewarded = true;
         }
 
         private void Reward_onClosed(IronSourceAdInfo obj)
@@ -194,6 +195,12 @@ namespace Monetization.Ads
             Debug.Log("reward ad closed");
             LoadReward();
             AdsController.Instance.IsShowingAd = false;
+            if (!_isRewarded)
+                AdsController.Instance.OpenNotRewardedPanel();
+            if (_isRewarded)
+            {
+                AdsIntervalValidator.SetInterval(AdsController.AdType.REWARD);
+            }
         }
 
         private void Reward_onShowFailed(IronSourceError arg1, IronSourceAdInfo arg2)
@@ -230,7 +237,6 @@ namespace Monetization.Ads
             _isRequestingReward = false;
         }
 
-
         public void LoadReward()
         {
             Debug.Log(_isRequestingReward);
@@ -243,6 +249,7 @@ namespace Monetization.Ads
         public void ShowReward()
         {
             AdsController.Instance.IsShowingAd = true;
+            _isRewarded = false;
             IronSource.Agent.showRewardedVideo();
         }
         #endregion

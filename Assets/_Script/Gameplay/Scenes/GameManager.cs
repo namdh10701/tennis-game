@@ -4,6 +4,8 @@ using Services.FirebaseService;
 using Services.FirebaseService.Remote;
 using Enviroments;
 using Monetization.Ads;
+using Phoenix.Gameplay.Vibration;
+using com.adjust.sdk;
 
 namespace Gameplay
 {
@@ -20,8 +22,20 @@ namespace Gameplay
         private void Awake()
         {
             Enviroment.ENV = env;
+            if (Enviroment.ENV == Enviroment.Env.PROD)
+            {
+                Debug.Log(Enviroment.ENV);
+                Debug.unityLogger.logEnabled = false;
+            }
+            if (Enviroment.ENV != Enviroment.Env.PROD)
+            {
+                Adjust.setEnabled(false);
+            }
             Application.targetFrameRate = 60;
             SettingManager.LoadSettings();
+            Vibration.SetState(SettingManager.GameSettings.IsVibrationOn);
+
+
             GameDataManager.LoadDatas();
             RemoteVariableManager.LoadDatas();
 
@@ -32,7 +46,12 @@ namespace Gameplay
         private void Start()
         {
             AdsController.Instance.Init();
+            InvokeRepeating("TurnBannerOn", 10, 10);
             _firebaseManager.FirebaseRemote.OnFetchedCompleted += () => SaveRemoteVariable();
+        }
+        private void TurnBannerOn()
+        {
+            AdsController.Instance.ShowBanner();
         }
 
         private void SaveRemoteVariable()
@@ -58,6 +77,13 @@ namespace Gameplay
         public void ResetMatchSetting()
         {
             MatchSetting = new MatchSetting();
+        }
+        private void OnApplicationFocus(bool focus)
+        {
+            if (focus)
+            {
+                AdsController.Instance.ShowAppOpenAd();
+            }
         }
     }
 }

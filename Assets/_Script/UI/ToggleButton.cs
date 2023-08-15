@@ -37,10 +37,6 @@ namespace UI
         {
             _onImageOriginalPosX = _onImage.transform.localPosition.x;
             _offImageOriginalPosX = _offImage.transform.localPosition.x;
-
-            _currentState = State.ON;
-
-            SetDefaultPos(_currentState);
             _button.onClick.AddListener(
                 () => Toggle()
             );
@@ -54,6 +50,7 @@ namespace UI
 
         private void SetDefaultPos(State state)
         {
+            Debug.Log("default pos");
             if (state == State.ON)
             {
                 _onImage.gameObject.SetActive(true);

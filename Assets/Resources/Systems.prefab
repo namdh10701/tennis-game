@@ -116,10 +116,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 853847999f7844845a0c190402427f5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adsUIController: {fileID: 0}
-  INTERVAL_INTER_INTER: 15
-  INTERVAL_OPEN_INTER: 15
-  INTERVAL_OPEN_OPEN: 15
 --- !u!114 &541353747375314108
 MonoBehaviour:
   m_ObjectHideFlags: 0

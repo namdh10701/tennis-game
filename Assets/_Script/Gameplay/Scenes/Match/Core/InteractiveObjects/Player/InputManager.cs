@@ -8,7 +8,6 @@ namespace Gameplay
     {
         private MatchEvent _matchEvent;
         private Vector2 touchStart;
-        private Vector3 touchCurrent;
         [SerializeField] private float threshold;
         private Transform _player;
         public void Init(MatchEvent matchEvent, Transform player)
@@ -41,13 +40,10 @@ namespace Gameplay
                         switch (_matchEvent?.CurrentState)
                         {
                             case MatchEvent.MatchState.PLAYING:
-                                float distance = (touch.position - touchStart).magnitude;
-                                if (distance > threshold)
-                                {
-                                    touchCurrent = touch.position;
-                                    Vector3 worldTouchCurrent = Camera.main.ScreenToWorldPoint(new Vector3(touchCurrent.x, touchCurrent.y, Camera.main.nearClipPlane));
-                                    _player.position = worldTouchCurrent;
-                                }
+
+                                Vector3 worldTouchCurrent = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, Camera.main.nearClipPlane));
+                                _player.position = worldTouchCurrent;
+
                                 break;
                         }
 

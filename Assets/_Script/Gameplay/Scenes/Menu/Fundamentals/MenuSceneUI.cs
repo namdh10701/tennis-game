@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using Monetization.Ads.UI;
+using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -22,16 +23,16 @@ namespace Gameplay
         [SerializeField] private TextMeshProUGUI _highScore;
         [SerializeField] private TextMeshProUGUI _incrementalText;
 
-
-        [SerializeField] private GameObject _FootballAdLock;
-        [SerializeField] private GameObject _BaseballAdLock;
-        [SerializeField] private GameObject _VolleyballAdLock;
-
         [SerializeField] private Button _tennisBtn;
         [SerializeField] private RewardButton _unlockFootballBtn;
         [SerializeField] private RewardButton _unlockBaseballBtn;
         [SerializeField] private RewardButton _unlockVolleyballBtn;
+        [SerializeField] private Image _catImage;
 
+
+        [SerializeField] private BasePopup _notUnlockedIncrement;
+
+        public CatAsset CatAsset;
         public void Init(MenuSceneManager sceneManager,
             MatchSetting matchSetting,
             GameDataManager gameDataManager)
@@ -62,6 +63,15 @@ namespace Gameplay
         {
             _matchSetting.ChangeIncremental();
             _incrementalText.text = "X" + _matchSetting.Incremental;
+            _catImage.sprite = CatAsset.CatSprites[_matchSetting.Incremental - 1];
+            if (_matchSetting.Incremental > _gameDataManager.GameDatas.UnlockedIncremental)
+            {
+                _catImage.color = Color.black;
+            }
+            else
+            {
+                _catImage.color = Color.white;
+            }
         }
 
         private void UnlockSportUI(Sport sport)
@@ -100,6 +110,11 @@ namespace Gameplay
         public void OnRankClick()
         {
 
+        }
+
+        public void OpenNotUnlockedIncremental()
+        {
+            _notUnlockedIncrement.Open();
         }
     }
 }

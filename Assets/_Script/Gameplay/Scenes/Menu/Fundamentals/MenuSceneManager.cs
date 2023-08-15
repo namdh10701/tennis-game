@@ -28,7 +28,14 @@ namespace Gameplay
         public void StartMatch(Sport sportName)
         {
             _gameManager.MatchSetting.SportName = sportName;
-            SceneManager.LoadScene("MatchScene");
+            if (_gameManager.MatchSetting.Incremental > _gameManager.GameDataManager.GameDatas.UnlockedIncremental)
+            {
+                _menuSceneUI.OpenNotUnlockedIncremental();
+            }
+            else
+            {
+                SceneManager.LoadScene("MatchScene");
+            }
         }
 
         public void OpenSetting()

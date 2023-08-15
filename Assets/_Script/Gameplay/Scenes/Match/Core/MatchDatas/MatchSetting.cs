@@ -30,10 +30,9 @@ namespace Gameplay
         public void ChangeIncremental()
         {
             if (Incremental >= MaxIncremental)
-            {
-                return;
-            }
-            Incremental = Incremental + 1;
+                Incremental = 1;
+            else
+                Incremental = Incremental + 1;
         }
         public string GetCurrentSportNameToString()
         {

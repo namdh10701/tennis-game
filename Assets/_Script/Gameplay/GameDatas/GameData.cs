@@ -17,7 +17,7 @@ namespace Gameplay
         public MatchData LastGamePlayed;
         public List<Sport> UnlockedSports;
         public List<TextType> UnlockedTexts;
-
+        public int UnlockedIncremental;
         /* List<Skin> UnlockedSkin;
          List<Skin> LockedSkin;*/
     }

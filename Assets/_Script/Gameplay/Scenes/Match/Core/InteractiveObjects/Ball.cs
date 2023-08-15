@@ -36,8 +36,13 @@ namespace Gameplay
             CurrentState = newState;
         }
 
-        public void Init(MatchEvent matchEvent, MatchSetting matchSettings)
+        public void Init(MatchEvent matchEvent, MatchSetting matchSettings, bool isReversed)
         {
+            if (isReversed)
+            {
+                Quaternion newRotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + 180);
+                transform.rotation = newRotation;
+            }
             _matchEvent = matchEvent;
             switch (matchSettings.SportName)
             {

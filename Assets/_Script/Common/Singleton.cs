@@ -13,7 +13,6 @@ namespace Common
             Destroy(gameObject);
         }
     }
-
     public abstract class SingletonPersistent<T> : Singleton<T> where T : MonoBehaviour
     {
         protected override void Awake()

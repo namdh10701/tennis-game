@@ -27,13 +27,11 @@ namespace Monetization.Ads
         private Action<bool> _onRewardClosed;
         public Action OnRemoveAdsPurchased;
 
-        public AdsUIController adsUIController;
+        private AdsUIController _adsUIController;
 
         private List<NativeAdPanel> _nativeAdPanels = new List<NativeAdPanel>();
 
-        public double INTERVAL_INTER_INTER = 15;
-        public double INTERVAL_OPEN_INTER = 15;
-        public double INTERVAL_OPEN_OPEN = 15;
+        private bool _isFreeAdsTimeEnded = false;
 
         public bool HasBanner { get; set; }
         public bool IsShowingAd { get; set; }
@@ -58,7 +56,14 @@ namespace Monetization.Ads
             CachedNativeAds = new List<CachedNativeAd>();
             _ironsource.Init();
             _admob.Init();
+            Invoke("EndFreeAdsTime", 30);
         }
+        private void EndFreeAdsTime()
+        {
+            _isFreeAdsTimeEnded = true;
+        }
+
+
 
         public void SetBanner(bool hasBanner)
         {
@@ -70,12 +75,12 @@ namespace Monetization.Ads
 
         public void RegisterAdsUI(AdsUIController adsUI)
         {
-            adsUIController = adsUI;
+            _adsUIController = adsUI;
         }
         public void UnregisterAdsUI(AdsUIController adsUI)
         {
-            if (adsUIController == adsUI)
-                adsUIController = null;
+            if (_adsUIController == adsUI)
+                _adsUIController = null;
         }
 
         #region NativeAd
@@ -105,7 +110,7 @@ namespace Monetization.Ads
                 return;
             if (_nativeAdPanels.Contains(nativeAdPanel))
                 _nativeAdPanels.Remove(nativeAdPanel);
-            if (!nativeAdPanel.IsNativeAdShowed)
+            if (!nativeAdPanel.IsNativeAdShowed && nativeAdPanel.CachedNativeAd != null)
             {
                 if (IsCachedNativeAdTimeout(nativeAdPanel.CachedNativeAd))
                 {
@@ -164,6 +169,11 @@ namespace Monetization.Ads
             _onInterClosed = null;
         }
 
+        public void OpenNotRewardedPanel()
+        {
+            _adsUIController.ShowNotRewardedBox();
+        }
+
         public void LoadNativeAds()
         {
             if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
@@ -188,6 +198,14 @@ namespace Monetization.Ads
         {
             if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
                 return;
+            if (IsShowingAd)
+            {
+                return;
+            }
+            if (!AdsIntervalValidator.IsValidInterval(AdType.OPEN))
+            {
+                return;
+            }
             if (_admob.IsAppOpenAdAvailable)
             {
                 _admob.ShowAppOpenAd();
@@ -197,6 +215,10 @@ namespace Monetization.Ads
         #region Reward
         public void ShowReward(Action<bool> watched)
         {
+            if (IsShowingAd)
+            {
+                return;
+            }
             _onRewardClosed = watched;
             if (Enviroment.ENV == Enviroment.Env.DEV)
             {
@@ -215,7 +237,7 @@ namespace Monetization.Ads
             //else if(other ad source)
             else if (!HasInternet)
             {
-                adsUIController.ShowRewardUnavailableBox();
+                _adsUIController.ShowRewardUnavailableBox();
             }
             else
             {
@@ -225,9 +247,9 @@ namespace Monetization.Ads
             IEnumerator WaitForRewardVideo()
             {
                 _ironsource.LoadReward();
-                adsUIController.ShowWaitingBox();
+                _adsUIController.ShowWaitingBox();
                 yield return new WaitForSecondsRealtime(3f);
-                adsUIController.CloseWaitingBox().onComplete +=
+                _adsUIController.CloseWaitingBox().onComplete +=
                     () =>
                     {
                         if (_ironsource.IsRewardReady)
@@ -236,7 +258,7 @@ namespace Monetization.Ads
                         }
                         else
                         {
-                            adsUIController.ShowRewardUnavailableBox();
+                            _adsUIController.ShowRewardUnavailableBox();
                         }
                     };
             }
@@ -266,14 +288,24 @@ namespace Monetization.Ads
         public void ShowInter(Action onInterClosed)
         {
             _onInterClosed = onInterClosed;
+            if (!_isFreeAdsTimeEnded)
+            {
+                _onInterClosed.Invoke();
+                return;
+            }
+            if (IsShowingAd)
+            {
+                _onInterClosed.Invoke();
+                return;
+            }
             if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
             {
-                onInterClosed.Invoke();
+                _onInterClosed.Invoke();
                 return;
             }
             if (!AdsIntervalValidator.IsValidInterval(AdType.INTER))
             {
-                onInterClosed.Invoke();
+                _onInterClosed.Invoke();
                 return;
             }
             if (IsShowingAd)
@@ -287,9 +319,16 @@ namespace Monetization.Ads
             }
             else
             {
-                onInterClosed.Invoke();
+                _onInterClosed.Invoke();
             }
         }
         #endregion
+
+        public void OnRemoveAds()
+        {
+            _ironsource.ToggleBanner(false);
+            _nativeAdPanels.Clear();
+            CachedNativeAds.Clear();
+        }
     }
 }

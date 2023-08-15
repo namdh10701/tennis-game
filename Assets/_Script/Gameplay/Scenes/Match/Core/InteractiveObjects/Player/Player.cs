@@ -16,8 +16,13 @@ namespace Gameplay
         private Vector3 _flippedScale;
         [SerializeField] private PlayerCollider _playerCollider;
 
-        public void Init(MatchEvent matchEvent, MatchSetting matchSettings)
+        public void Init(MatchEvent matchEvent, MatchSetting matchSettings, bool isReversed)
         {
+            if (isReversed)
+            {
+                Quaternion newRotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + 180);
+                transform.rotation = newRotation;
+            }
             _originalPos = transform.position;
             _inputManager.Init(matchEvent, transform);
             _matchEvent = matchEvent;

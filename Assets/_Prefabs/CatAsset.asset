@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: CatAsset
   m_EditorClassIdentifier: 
   CatSprites:
-  - {fileID: -1471648272, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
-  - {fileID: -852560913, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
-  - {fileID: -1342230359, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
   - {fileID: 707406441, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
-  - {fileID: 1338508365, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
-  - {fileID: -142824790, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
-  - {fileID: -140522611, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
-  - {fileID: -1791349459, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
   - {fileID: 947760723, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
+  - {fileID: -1791349459, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
+  - {fileID: -1342230359, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
+  - {fileID: -1471648272, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
+  - {fileID: 1338508365, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
+  - {fileID: -140522611, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
+  - {fileID: -142824790, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
+  - {fileID: -852560913, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
   - {fileID: 1958042359, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
