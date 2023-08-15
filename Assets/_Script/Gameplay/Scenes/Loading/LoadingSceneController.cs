@@ -13,7 +13,6 @@ namespace Gameplay
         public Image progressBar;
         private void Start()
         {
-
             StartCoroutine(LoadGameScene());
         }
 

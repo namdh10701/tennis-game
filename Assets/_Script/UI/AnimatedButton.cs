@@ -1,3 +1,4 @@
+using Audio;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -35,7 +36,7 @@ public class AnimatedButton : UIBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         if (_button.enabled && !_isCooldown && _clickedDown)
         {
-            //AudioController.Instance.PlaySound("button");
+            AudioController.Instance.PlaySound("button");
             _onClickEvent?.Invoke();
             _transform.localScale /= .9f;
             _clickedDown = false;

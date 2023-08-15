@@ -1,4 +1,5 @@
-﻿using Phoenix.Gameplay.Vibration;
+﻿using Audio;
+using Phoenix.Gameplay.Vibration;
 using Services.FirebaseService.Remote;
 using System;
 using System.Collections;
@@ -175,6 +176,7 @@ namespace Gameplay
         {
             if (side == Side.Player)
             {
+                AudioController.Instance.PlaySound("ball_hit");
                 _textManager.DisplayText();
                 _scoreManager.Increase();
                 _difficultyManager.UpdateDifficulty();

@@ -6,7 +6,7 @@ using Monetization.Ads.UI;
 using Monetization.Ads;
 using Phoenix.Gameplay.Vibration;
 using TMPro;
-
+using Audio;
 public class SettingPanel : InterPopup
 {
     private SettingManager _settingManager;
@@ -33,11 +33,13 @@ public class SettingPanel : InterPopup
     {
         _settingManager.GameSettings.IsMusicOn = isOn;
         _settingManager.SaveSettings();
+        AudioController.Instance.ToggleMusic(isOn);
     }
     public void SetSound(bool isOn)
     {
         _settingManager.GameSettings.IsSoundOn = isOn;
         _settingManager.SaveSettings();
+        AudioController.Instance.ToggleSound(isOn);
     }
     public void SetVibrate(bool isOn)
     {

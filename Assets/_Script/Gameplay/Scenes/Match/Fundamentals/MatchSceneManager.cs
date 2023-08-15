@@ -3,11 +3,12 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using Audio;
 namespace Gameplay
 {
     public class MatchSceneManager : MonoBehaviour
     {
+        public AudioAsset AudioAsset;
         private GameManager _gameManager;
         [SerializeField] private MatchSceneUI _matchSceneUI;
         [SerializeField] private MatchManager _matchManager;
@@ -19,7 +20,10 @@ namespace Gameplay
         private SettingManager _settingManager;
 
         [SerializeField] private TextMeshProUGUI countdowntext;
-
+        private void Start()
+        {
+            AudioController.Instance.CrossfadeMusic(AudioAsset.MatchSceneBGM, .3f);
+        }
         public void BackToHome()
         {
             //ToDo; Xem lại logic chỗ này

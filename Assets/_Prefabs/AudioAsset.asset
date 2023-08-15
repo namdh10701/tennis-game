@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 196c5f6935aa1fb4fa473d1f699e08f9, type: 3}
+  m_Name: AudioAsset
+  m_EditorClassIdentifier: 
+  MatchSceneBGM: {fileID: 8300000, guid: de35b62d05de5c9419ff113520c17be9, type: 3}
+  MenuSceneBGM: {fileID: 8300000, guid: fd7dc069942f60c4b881a02514dfb1a8, type: 3}
+  ButtonClick: {fileID: 8300000, guid: fb0fb6e601848ec429ab70977ee80e43, type: 3}
+  BallHit: {fileID: 8300000, guid: 5177f181f10dcb8419a17ff3ff27dc4f, type: 3}

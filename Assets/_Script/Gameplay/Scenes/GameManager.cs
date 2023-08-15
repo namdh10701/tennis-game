@@ -6,6 +6,7 @@ using Enviroments;
 using Monetization.Ads;
 using Phoenix.Gameplay.Vibration;
 using com.adjust.sdk;
+using Audio;
 
 namespace Gameplay
 {
@@ -34,8 +35,7 @@ namespace Gameplay
             Application.targetFrameRate = 60;
             SettingManager.LoadSettings();
             Vibration.SetState(SettingManager.GameSettings.IsVibrationOn);
-
-
+            
             GameDataManager.LoadDatas();
             RemoteVariableManager.LoadDatas();
 
@@ -46,6 +46,8 @@ namespace Gameplay
         private void Start()
         {
             AdsController.Instance.Init();
+            AudioController.Instance.Init(SettingManager.GameSettings.IsMusicOn, SettingManager.GameSettings.IsSoundOn);
+
             InvokeRepeating("TurnBannerOn", 10, 10);
             _firebaseManager.FirebaseRemote.OnFetchedCompleted += () => SaveRemoteVariable();
         }
