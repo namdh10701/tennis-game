@@ -55,6 +55,9 @@ namespace Audio
                 case "ball_hit":
                     _soundSource.PlayOneShot(AudioAsset.BallHit);
                     break;
+                case "game_over":
+                    _soundSource.PlayOneShot(AudioAsset.GameOver);
+                    break;
             }
         }
         public void CrossfadeMusic(AudioClip newClip, float fadeDuration)

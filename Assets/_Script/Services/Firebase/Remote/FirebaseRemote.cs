@@ -55,23 +55,19 @@ namespace Services.FirebaseService.Remote
                         foreach (var kvp in _remoteVariableCollection.Variables)
                         {
                             string variableName = kvp.Key;
-                            object variableValue = kvp.Value.Value;
+                            object variableValue = kvp.Value.GetValue();
 
-                            if (variableValue is float || variableValue is int)
+                            if (variableValue is double)
                             {
-                                variableValue = FirebaseRemoteConfig.DefaultInstance.GetValue(variableName).DoubleValue;
-                            }
-                            else if (variableValue is long)
-                            {
-                                variableValue = FirebaseRemoteConfig.DefaultInstance.GetValue(variableName).LongValue;
+                                kvp.Value.SetValue(FirebaseRemoteConfig.DefaultInstance.GetValue(variableName).DoubleValue);
                             }
                             else if (variableValue is string)
                             {
-                                variableValue = FirebaseRemoteConfig.DefaultInstance.GetValue(variableName).StringValue;
+                                kvp.Value.SetValue(FirebaseRemoteConfig.DefaultInstance.GetValue(variableName).StringValue);
                             }
                             else if (variableValue is bool)
                             {
-                                variableValue = FirebaseRemoteConfig.DefaultInstance.GetValue(variableName).BooleanValue;
+                                kvp.Value.SetValue(FirebaseRemoteConfig.DefaultInstance.GetValue(variableName).BooleanValue);
                             }
                         }
                         OnFetchedCompleted?.Invoke();

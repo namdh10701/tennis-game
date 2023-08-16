@@ -5,8 +5,11 @@ using Services.FirebaseService.Remote;
 using Enviroments;
 using Monetization.Ads;
 using Phoenix.Gameplay.Vibration;
-using com.adjust.sdk;
 using Audio;
+using Common;
+using System.Collections;
+using GoogleMobileAds.Common;
+using GoogleMobileAds.Api;
 
 namespace Gameplay
 {
@@ -30,21 +33,29 @@ namespace Gameplay
             }
             if (Enviroment.ENV != Enviroment.Env.PROD)
             {
-                Adjust.setEnabled(false);
+                //Adjust.setEnabled(false);
             }
             Application.targetFrameRate = 60;
             SettingManager.LoadSettings();
             Vibration.SetState(SettingManager.GameSettings.IsVibrationOn);
-            
+
             GameDataManager.LoadDatas();
             RemoteVariableManager.LoadDatas();
-
             _firebaseManager.RemoteVariableCollection = RemoteVariableManager.MyRemoteVariables;
             _firebaseManager.Init();
+
+
+
         }
 
         private void Start()
         {
+            AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
+            bool isRemovedAd = PlayerPrefs.GetInt(Constant.ADS_REMOVED_KEY) == 1;
+            if (isRemovedAd)
+            {
+                AdsController.Instance.OnRemoveAds();
+            }
             AdsController.Instance.Init();
             AudioController.Instance.Init(SettingManager.GameSettings.IsMusicOn, SettingManager.GameSettings.IsSoundOn);
 
@@ -58,6 +69,7 @@ namespace Gameplay
 
         private void SaveRemoteVariable()
         {
+            Debug.Log("remotevariable saved");
             RemoteVariableManager.SaveDatas();
         }
 
@@ -79,13 +91,28 @@ namespace Gameplay
         public void ResetMatchSetting()
         {
             MatchSetting = new MatchSetting();
+
         }
-        private void OnApplicationFocus(bool focus)
+        public void OnAppStateChanged(AppState state)
         {
-            if (focus)
+            // Display the app open ad when the app is foregrounded.
+            Debug.Log("App State is " + state);
+
+            // OnAppStateChanged is not guaranteed to execute on the Unity UI thread.
+            MobileAdsEventExecutor.ExecuteInUpdate(() =>
             {
-                AdsController.Instance.ShowAppOpenAd();
-            }
+                if (state == AppState.Foreground)
+                {
+                    AdsController.Instance.ShowAppOpenAd();
+                }
+            });
+        }
+
+    
+
+        private void Update()
+        {
+            //Debug.Log(RemoteVariableManager.MyRemoteVariables.TimescaleStep.Value);
         }
     }
 }

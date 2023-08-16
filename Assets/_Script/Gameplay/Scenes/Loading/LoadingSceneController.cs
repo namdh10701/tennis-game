@@ -19,7 +19,7 @@ namespace Gameplay
         private IEnumerator LoadGameScene()
         {
             float startTime = Time.time;
-            float timeout = 3;
+            float timeout = 5;
             AsyncOperation asyncOperation;
             asyncOperation = SceneManager.LoadSceneAsync("MenuScene");
             asyncOperation.allowSceneActivation = false;
@@ -28,7 +28,7 @@ namespace Gameplay
             while (!asyncOperation.isDone)
             {
                 float elapsedTime = Time.time - startTime;
-                if (elapsedTime > 2)
+                if (elapsedTime > 4)
                 {
                     if (!openAdShowed)
                     {

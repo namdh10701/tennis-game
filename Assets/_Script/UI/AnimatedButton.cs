@@ -36,26 +36,35 @@ public class AnimatedButton : UIBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         if (_button.enabled && !_isCooldown && _clickedDown)
         {
-            AudioController.Instance.PlaySound("button");
-            _onClickEvent?.Invoke();
+            Vector2 localPoint;
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                _button.GetComponent<RectTransform>(),
+                eventData.position, eventData.pressEventCamera, out localPoint))
+            {
+                if (_button.GetComponent<RectTransform>().rect.Contains(localPoint))
+                {
+                    AudioController.Instance.PlaySound("button");
+                    _onClickEvent?.Invoke();
+                }
+            }
+
             _transform.localScale /= .9f;
             _clickedDown = false;
+
             if (!_isSpamable)
             {
                 StartCoroutine(StartCooldown());
             }
         }
-
-        IEnumerator StartCooldown()
-        {
-            _isCooldown = true;
-            _button.enabled = false;
-            yield return new WaitForSeconds(_clickCooldownDuration);
-            _button.enabled = true;
-            _isCooldown = false;
-        }
     }
-
+    IEnumerator StartCooldown()
+    {
+        _isCooldown = true;
+        _button.enabled = false;
+        yield return new WaitForSeconds(_clickCooldownDuration);
+        _button.enabled = true;
+        _isCooldown = false;
+    }
     protected override void OnEnable()
     {
         _button.enabled = true;

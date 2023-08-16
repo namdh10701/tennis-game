@@ -70,7 +70,7 @@ namespace Gameplay
                 _timeManager.Init(_matchData);
                 _scoreManager.Init(_matchData);
                 _backgroundManager.Init(backgroundColorOrder);
-                _difficultyManager.Init(_matchData, incrementalStep, timescaleStep, this, _gameDataManager);
+                _difficultyManager.Init(_matchData, incrementalStep, timescaleStep, this, _gameDataManager, MaxIncremental);
                 _textManager.Init(_matchData);
             }
             void InitInteractiveObjects()
@@ -91,7 +91,7 @@ namespace Gameplay
                         break;
                 }
                 _player.Init(_matchEvent, matchData.MatchSettings, settingManager.GameSettings.IsReversed);
-                _cpu.Init(_matchEvent, matchData.MatchSettings, _ball, settingManager.GameSettings.IsReversed);
+                _cpu.Init(_matchEvent, matchData.MatchSettings, _ball, settingManager.GameSettings.IsReversed, (int)_variableCollection.MaxIncrement.Value);
                 _ball.Init(_matchEvent, matchData.MatchSettings, settingManager.GameSettings.IsReversed);
             }
 
@@ -142,7 +142,10 @@ namespace Gameplay
             {
                 _gameDataManager.GameDatas.HighScore = _matchData.Score;
                 _gameDataManager.SaveDatas();
+                Leaderboard.Instance.ReportScore(_matchData.Score);
             }
+            AudioController.Instance.PlaySound("game_over");
+
             if (_retryCount == 0)
             {
                 _sceneUI.OpenRevivePanel();

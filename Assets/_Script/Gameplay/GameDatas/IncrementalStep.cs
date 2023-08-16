@@ -11,14 +11,14 @@ public class IncrementalStep
         Steps = new List<Step>
         {
             new Step(2, 4),
-            new Step(3, 9),
-            new Step(4, 15),
-            new Step(5, 26),
-            new Step(6, 41),
-            new Step(7, 61),
-            new Step(8, 86),
-            new Step(9, 111),
-            new Step(8, 141)
+            new Step(3, 16),
+            new Step(4, 36),
+            new Step(5, 64),
+            new Step(6, 100),
+            new Step(7, 144),
+            new Step(8, 196),
+            new Step(9, 256),
+            new Step(10, 324)
         };
     }
 }

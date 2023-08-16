@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "433803222424",
+    "project_id": "cat-tennis-master-phoenix",
+    "storage_bucket": "cat-tennis-master-phoenix.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:433803222424:android:659c54cbeacf9b04dddfed",
+        "android_client_info": {
+          "package_name": "com.cattennismaster.tennischampion.tennis.open.tournament"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "433803222424-dvbt83mt670bk8olg3ig564mr80d8u21.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cattennismaster.tennischampion.tennis.open.tournament",
+            "certificate_hash": "a67ad5fc7497bacdc187a25757619c9a15f3b0a9"
+          }
+        },
+        {
+          "client_id": "433803222424-cs2nem7qnu9h9euvq4p3c3pcj6n61kcd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmfaN0Ovm7Xn9V6fXdA2rzJl4tkBExB9o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "433803222424-cs2nem7qnu9h9euvq4p3c3pcj6n61kcd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

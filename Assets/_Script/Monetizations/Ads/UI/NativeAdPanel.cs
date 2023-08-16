@@ -18,6 +18,7 @@ namespace Monetization.Ads.UI
         [SerializeField] private Text headline;
         [SerializeField] private Text body;
         [SerializeField] private Text callToAction;
+        public bool IsRegistered = false;
 
         public bool IsNativeAdShowed { get; private set; }
 
@@ -29,6 +30,7 @@ namespace Monetization.Ads.UI
             }
             set
             {
+                Debug.Log("set ad here");
                 _cachedNativeAd = value;
                 SetData(_cachedNativeAd);
                 IsNativeAdShowed = false;
@@ -36,13 +38,22 @@ namespace Monetization.Ads.UI
         }
         public void Show()
         {
+            Debug.Log("native ad panel show request");
+            gameObject.SetActive(true);
+            loadedObject.SetActive(false);
+            loadingObject.SetActive(true);
             StartCoroutine(HandleShow());
         }
 
         private IEnumerator HandleShow()
         {
-            yield return new WaitUntil(() => _cachedNativeAd != null);
-            gameObject.SetActive(true);
+            while (_cachedNativeAd == null)
+            {
+                yield return null;
+            }
+            Debug.Log("nativeads showed after loaded");
+            loadedObject.SetActive(true);
+            loadingObject.SetActive(false);
             IsNativeAdShowed = true;
         }
 
@@ -51,9 +62,12 @@ namespace Monetization.Ads.UI
             gameObject.SetActive(false);
         }
 
-        private void Awake()
+        private void Start()
         {
+            Debug.Log("native ad panel register here");
+
             AdsController.Instance.RegisterNativeAdPanel(this);
+            IsRegistered = true;
         }
 
         private void OnDestroy()

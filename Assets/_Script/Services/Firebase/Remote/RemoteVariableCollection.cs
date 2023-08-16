@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Services.FirebaseService.Remote
 {
+    [Serializable]
     public abstract class RemoteVariableCollection
     {
         private Dictionary<string, RemoteVariable> _variables = new Dictionary<string, RemoteVariable>();
@@ -13,24 +15,18 @@ namespace Services.FirebaseService.Remote
         public abstract void AddToFetchQueue();
         protected void AddVariable(RemoteVariable variable)
         {
-            if (_variables.ContainsKey(variable.Name))
+            if (_variables.ContainsKey(variable.GetName()))
             {
-                Debug.LogError($"Duplicate entry: Variable '{variable.Name}' already exists.");
+                Debug.LogError($"Duplicate entry: Variable '{variable.GetName()}' already exists.");
                 return;
             }
 
-            _variables.Add(variable.Name, variable);
+            _variables.Add(variable.GetName(), variable);
         }
 
-        protected RemoteInt CreateRemoteInt(string name, int value)
+        protected RemoteDouble CreateRemoteInt(string name, double value)
         {
-            RemoteInt newVariable = new(name, value);
-            AddVariable(newVariable);
-            return newVariable;
-        }
-        protected RemoteFloat CreateRemoteFloat(string name, float value)
-        {
-            RemoteFloat newVariable = new(name, value);
+            RemoteDouble newVariable = new(name, value);
             AddVariable(newVariable);
             return newVariable;
         }

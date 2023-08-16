@@ -6,8 +6,8 @@ namespace Gameplay
     [System.Serializable]
     public class MyRemoteVariableCollection : RemoteVariableCollection
     {
-        public RemoteFloat TimescaleStep { get; set; }
-        public RemoteInt MaxIncrement { get; set; }
+        public RemoteDouble TimescaleStep;
+        public RemoteDouble MaxIncrement;
 
         public RemoteJson BackgroundColorOrder;
 
@@ -16,8 +16,8 @@ namespace Gameplay
         public MyRemoteVariableCollection()
         {
             IncrementalStep = new RemoteJson("IncrementalStep", JsonUtility.ToJson(new IncrementalStep()));
-            TimescaleStep = new RemoteFloat("TimescaleStep", 1);
-            MaxIncrement = new RemoteInt("MaxIncrement", 10);
+            TimescaleStep = new RemoteDouble("TimescaleStep", 1);
+            MaxIncrement = new RemoteDouble("MaxIncrement", 10);
             BackgroundColorOrder = new RemoteJson("BackgroundColorOrder", JsonUtility.ToJson(new BackgroundColorOrder()));
         }
 

@@ -19,13 +19,9 @@ namespace Phoenix.Gameplay.Vibration
 
         public static void Vibrate()
         {
-            if (!isRunVibration)
-            {
+            if (!isRunVibration || !isAndroid())
                 return;
-            }
-#if UNITY_EDITOR
-            return;
-#endif
+
             if (isAndroid())
                 vibrator.Call("vibrate");
             else
@@ -35,16 +31,9 @@ namespace Phoenix.Gameplay.Vibration
 
         public static void Vibrate(long milliseconds)
         {
-            if (!isRunVibration)
-            {
+            if (!isRunVibration || !isAndroid())
                 return;
-            }
-#if UNITY_IOS
-        return;
-#endif
-#if UNITY_EDITOR
-            return;
-#endif
+
             if (isAndroid())
                 vibrator.Call("vibrate", milliseconds);
             else
@@ -53,13 +42,9 @@ namespace Phoenix.Gameplay.Vibration
 
         public static void Vibrate(long[] pattern, int repeat)
         {
-            if (!isRunVibration)
-            {
+            if (!isRunVibration || !isAndroid())
                 return;
-            }
-#if UNITY_EDITOR
-            return;
-#endif
+
             if (isAndroid())
                 vibrator.Call("vibrate", pattern, repeat);
             else
@@ -79,11 +64,7 @@ namespace Phoenix.Gameplay.Vibration
 
         private static bool isAndroid()
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
-	return true;
-#else
-            return false;
-#endif
+            return unityPlayer != null && currentActivity != null && vibrator != null;
         }
         public static void SetState(bool isEnable)
         {

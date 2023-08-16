@@ -23,13 +23,15 @@ namespace Gameplay
         private Vector3 _originalPos;
         private MatchSetting _matchSetting;
         private bool _isReversed;
+        private int _maxCat;
         private void Start()
         {
             _animator.Play("Idle");
         }
 
-        public void Init(MatchEvent matchEvent, MatchSetting matchSettings, Ball ball, bool isReversed)
+        public void Init(MatchEvent matchEvent, MatchSetting matchSettings, Ball ball, bool isReversed, int maxCat)
         {
+            _maxCat = maxCat;
             _isReversed = isReversed;
             if (_isReversed)
             {
@@ -54,12 +56,12 @@ namespace Gameplay
                     _toolSprite.sprite = null;
                     break;
             }
-            _catSprite.sprite = _catAsset.CatSprites[matchSettings.Incremental - 1];
         }
 
         public void Prepare()
         {
             _cat.position = _originalPos;
+            _catSprite.sprite = _catAsset.CatSprites[_matchSetting.Incremental - 1];
         }
 
 
@@ -139,7 +141,7 @@ namespace Gameplay
 
         public void UpdateCat()
         {
-            _catSprite.sprite = _catAsset.CatSprites[_matchSetting.Incremental - 1];
+            _catSprite.sprite = _catAsset.CatSprites[(_matchSetting.Incremental - 1) % _maxCat];
         }
     }
 }

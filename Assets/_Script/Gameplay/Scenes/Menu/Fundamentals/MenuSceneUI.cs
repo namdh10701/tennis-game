@@ -109,7 +109,14 @@ namespace Gameplay
         //ToDo: change to leaderboard scene here
         public void OnRankClick()
         {
-
+            Leaderboard.Instance.SignInToLeaderboardManual(
+                singed =>
+                {
+                    if (singed)
+                    {
+                        Leaderboard.Instance.ShowLeaderboard();
+                    }
+                });
         }
 
         public void OpenNotUnlockedIncremental()

@@ -81,6 +81,7 @@ namespace Monetization.Ads
             {
                 DestroyAppOpenAd();
             }
+            Debug.Log("load app open ad request");
             FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
             _isRequestingAppOpenAd = true;
             AppOpenAd.Load(_appOpenAdId, new AdRequest(),
@@ -95,6 +96,7 @@ namespace Monetization.Ads
                 appOpenAd = ad;
                 appOpenExpireTime = DateTime.Now + APPOPEN_TIMEOUT;
 
+                Debug.Log("load app open ad loaded");
                 HandleOpenAdOpened(ad);
                 HandleOpenAdClosed(ad);
                 HandleOpenAdShowFailed(ad);
@@ -157,6 +159,7 @@ namespace Monetization.Ads
             }
             if (_isNativeAdKey1Requesting)
                 return;
+            Debug.Log("native ad load request");
             _isNativeAdKey1Requesting = true;
             FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
             AdLoader adLoader1 = new AdLoader.Builder(_nativeAdId1).ForNativeAd().Build();
@@ -164,6 +167,7 @@ namespace Monetization.Ads
             adLoader1.OnAdFailedToLoad += (sender, e) => HandleAdFailedToLoad(sender, e, _nativeAdId1);
             adLoader1.LoadAd(new AdRequest());
 
+            Debug.Log("native ad load request");
             if (_isNativeAdKey2Requesting)
                 return;
             _isNativeAdKey2Requesting = true;
@@ -185,6 +189,7 @@ namespace Monetization.Ads
 
         private void HandleNativeAdLoaded(object sender, NativeAdEventArgs e, string key)
         {
+            Debug.Log("native ad load loaded");
             AdsController.Instance.OnNativeAdLoaded(e.nativeAd);
             e.nativeAd.OnPaidEvent += NativeAd_OnPaidEvent;
             FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST_SUCCEED);

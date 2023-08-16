@@ -3,6 +3,7 @@ using Common;
 using Services.FirebaseService.Analytics;
 using Services.Adjust;
 using Enviroments;
+using System.Collections;
 
 namespace Monetization.Ads
 {
@@ -193,14 +194,18 @@ namespace Monetization.Ads
         private void Reward_onClosed(IronSourceAdInfo obj)
         {
             Debug.Log("reward ad closed");
-            LoadReward();
-            AdsController.Instance.IsShowingAd = false;
+            LoadReward(); StartCoroutine(WaitToResetAdsControllerState());
             if (!_isRewarded)
                 AdsController.Instance.OpenNotRewardedPanel();
             if (_isRewarded)
             {
                 AdsIntervalValidator.SetInterval(AdsController.AdType.REWARD);
             }
+        }
+        private IEnumerator WaitToResetAdsControllerState()
+        {
+            yield return new WaitForSeconds(1f);
+            AdsController.Instance.IsShowingAd = false;
         }
 
         private void Reward_onShowFailed(IronSourceError arg1, IronSourceAdInfo arg2)

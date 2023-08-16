@@ -7,6 +7,8 @@ using Monetization.Ads;
 using Phoenix.Gameplay.Vibration;
 using TMPro;
 using Audio;
+using System.Collections;
+
 public class SettingPanel : InterPopup
 {
     private SettingManager _settingManager;
@@ -56,8 +58,17 @@ public class SettingPanel : InterPopup
         Debug.Log(_settingManager.GameSettings.IsReversed);
     }
 
-    private void OnEnable()
+    private void Start()
     {
+        StartCoroutine(WaitAndShowNativeAds());
+    }
+
+    private IEnumerator WaitAndShowNativeAds()
+    {
+        while (!_nativeAdPanel.IsRegistered)
+        {
+            yield return null;
+        }
         AdsController.Instance.ShowNativeAd(_nativeAdPanel);
     }
 }

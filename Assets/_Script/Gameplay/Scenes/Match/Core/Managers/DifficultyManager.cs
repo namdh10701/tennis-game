@@ -12,8 +12,11 @@ namespace Gameplay
         private IncrementalStep _incrementalStep;
         private MatchManager _matchManager;
         private GameDataManager _gameDataManager;
-        public void Init(MatchData matchData, IncrementalStep incrementalStep, float timescaleStep, MatchManager matchManager, GameDataManager gameDataManager)
+        private int _maxIncremental;
+        public void Init(MatchData matchData, IncrementalStep incrementalStep, float timescaleStep, MatchManager matchManager, GameDataManager gameDataManager,
+            int maxIncremental)
         {
+            _maxIncremental = maxIncremental;
             _matchManager = matchManager;
             _timescaleStep = timescaleStep;
             _incrementalStep = incrementalStep;
@@ -27,7 +30,7 @@ namespace Gameplay
         }
         public void UpdateDifficulty()
         {
-            if (_matchData.MatchSettings.Incremental >= MatchSetting.MaxIncremental)
+            if (_matchData.MatchSettings.Incremental >= _incrementalStep.Steps.Count+1)
                 return;
             if (_matchData.Score >= _incrementalStep.Steps[_matchData.MatchSettings.Incremental - 1].TriggerScore)
             {

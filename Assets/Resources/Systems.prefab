@@ -1,5 +1,50 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &93382341527781516
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1750062538272937877}
+  - component: {fileID: 1541148896760966490}
+  m_Layer: 0
+  m_Name: Leaderboard
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1750062538272937877
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93382341527781516}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2453938482708411780}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1541148896760966490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93382341527781516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7180d8327eb5899498657fe139607475, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isConnectdToLeaderboard: 0
 --- !u!1 &541353746430603778
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,10 +278,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3480127248034542622}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6954c044f101f0c40b415395987b450a, type: 3}
+  m_Script: {fileID: 11500000, guid: 54a1c8179b35fa54d949b4ac92d19581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AudioAsset: {fileID: 11400000, guid: 69f18a9133f7a404995cf8b2a40214d5, type: 2}
+  AudioAsset: {fileID: 11400000, guid: 0c12cb9b78676b944ac740445d7fb37f, type: 2}
   _musicSource: {fileID: 3480127248034542618}
   _soundSource: {fileID: 3480127248034542619}
 --- !u!82 &3480127248034542618
@@ -463,6 +508,7 @@ Transform:
   - {fileID: 541353747588019771}
   - {fileID: 541353747375314110}
   - {fileID: 3480127248034542616}
+  - {fileID: 1750062538272937877}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

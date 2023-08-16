@@ -6,4 +6,5 @@ public class AudioAsset : ScriptableObject
     public AudioClip MenuSceneBGM;
     public AudioClip ButtonClick;
     public AudioClip BallHit;
+    public AudioClip GameOver;
 }

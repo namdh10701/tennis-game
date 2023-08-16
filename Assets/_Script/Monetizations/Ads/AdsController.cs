@@ -96,10 +96,16 @@ namespace Monetization.Ads
             CachedNativeAd cachedNativeAd;
             if (CachedNativeAds.GetFirst(out cachedNativeAd))
             {
+                Debug.Log("get one native ad");
                 if (IsCachedNativeAdTimeout(cachedNativeAd))
+                {
                     cachedNativeAd.Disolve();
+                    Debug.Log("get one native ad timeout");
+                }
+
                 else
                 {
+                    Debug.Log("assign a");
                     nativeAdPanel.CachedNativeAd = cachedNativeAd;
                 }
             }
@@ -156,6 +162,7 @@ namespace Monetization.Ads
             {
                 if (nativeAdPanel.CachedNativeAd == null)
                 {
+                    Debug.Log("native ad assigned");
                     nativeAdPanel.CachedNativeAd = cachedNativeAd;
                     isAssigned = true;
                 }
@@ -185,7 +192,10 @@ namespace Monetization.Ads
             if (RemoveAds)
                 return;
             if (_nativeAdPanels.Contains(nativeAdPanel))
+            {
                 nativeAdPanel.Show();
+                Debug.Log("native ad panel show request from ads controller");
+            }
         }
         public void HideNativeAd(NativeAdPanel nativeAdPanel)
         {
@@ -326,9 +336,10 @@ namespace Monetization.Ads
 
         public void OnRemoveAds()
         {
+            RemoveAds = true;
             _ironsource.ToggleBanner(false);
-            _nativeAdPanels.Clear();
-            CachedNativeAds.Clear();
+            _nativeAdPanels?.Clear();
+            CachedNativeAds?.Clear();
         }
     }
 }

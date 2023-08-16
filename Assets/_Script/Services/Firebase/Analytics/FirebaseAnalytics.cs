@@ -35,7 +35,7 @@ namespace Services.FirebaseService.Analytics
             }
             else
             {
-                Debug.Log("event: " + valueLog + "\n" + parameters);
+                //Debug.Log("event: " + valueLog + "\n" + parameters);
             }
         }
 

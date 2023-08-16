@@ -36,7 +36,7 @@ namespace Gameplay
             GameSettings.IsMusicOn = true;
             GameSettings.IsSoundOn = true;
             GameSettings.IsVibrationOn = true;
-            GameSettings.IsReversed = false;
+            GameSettings.IsReversed = true;
         }
     }
 }
