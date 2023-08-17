@@ -15,9 +15,9 @@ namespace Gameplay
 
         public MyRemoteVariableCollection()
         {
-            IncrementalStep = new RemoteJson("IncrementalStep", JsonUtility.ToJson(new IncrementalStep()));
+            IncrementalStep = new RemoteJson("IncrementalSteps", JsonUtility.ToJson(new IncrementalStep()));
             TimescaleStep = new RemoteDouble("TimescaleStep", 1);
-            MaxIncrement = new RemoteDouble("MaxIncrement", 10);
+            MaxIncrement = new RemoteDouble("MaxIncrement", 11);
             BackgroundColorOrder = new RemoteJson("BackgroundColorOrder", JsonUtility.ToJson(new BackgroundColorOrder()));
         }
 

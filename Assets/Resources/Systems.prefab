@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isConnectdToLeaderboard: 0
+  IsLeaderboardUIShowing: 0
 --- !u!1 &541353746430603778
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,7 +235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _firebaseManager: {fileID: 541353746430603780}
-  env: 1
+  env: 0
 --- !u!1 &3480127248034542622
 GameObject:
   m_ObjectHideFlags: 0

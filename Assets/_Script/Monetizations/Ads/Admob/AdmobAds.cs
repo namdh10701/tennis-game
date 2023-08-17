@@ -139,9 +139,19 @@ namespace Monetization.Ads
         }
         public void ShowAppOpenAd()
         {
-            AdsController.Instance.IsShowingAd = true;
-            appOpenAd.Show();
+            StartCoroutine(PassframeShowAd());
         }
+
+        public IEnumerator PassframeShowAd()
+        {
+            yield return new WaitForEndOfFrame();
+            if (!AdsController.Instance.IsShowingAd)
+            {
+                AdsController.Instance.IsShowingAd = true;
+                appOpenAd.Show();
+            }
+        }
+
         #endregion
         #region Native
         private bool _isNativeAdKey1Requesting = false;

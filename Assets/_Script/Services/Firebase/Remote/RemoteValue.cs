@@ -19,6 +19,8 @@ namespace Services.FirebaseService.Remote
         public RemoteDouble(string name, double initialValue)
         {
             _name = name;
+            Debug.LogWarning(this.GetHashCode() + GetName() + " init here");
+
             _value = initialValue;
         }
         public override object GetValue()
@@ -27,12 +29,12 @@ namespace Services.FirebaseService.Remote
         }
         public override void SetValue(object value)
         {
-            Debug.Log("set value float");
-            Value = (double)value;
+            Debug.LogWarning(this.GetHashCode() + GetName());
+            _value = (double)value;
         }
         public override string GetName()
         {
-            return Name;
+            return _name;
         }
     }
 
@@ -55,11 +57,11 @@ namespace Services.FirebaseService.Remote
         public override void SetValue(object value)
         {
 
-            Value = (bool)value;
+            _value = (bool)value;
         }
         public override string GetName()
         {
-            return Name;
+            return _name;
         }
     }
     [System.Serializable]
@@ -71,7 +73,9 @@ namespace Services.FirebaseService.Remote
         public string _value;
         public RemoteJson(string name, string initialValue)
         {
-            _name = name;
+
+            _name = name; Debug.LogWarning(this.GetHashCode() + GetName() + " init here");
+
             _value = initialValue;
         }
         public override object GetValue()
@@ -80,12 +84,13 @@ namespace Services.FirebaseService.Remote
         }
         public override void SetValue(object value)
         {
-            Debug.Log("set value json");
-            Value = (string)value;
+            _value = (string)value;
+            Debug.Log(_value);
+            Debug.Log(Value);
         }
         public override string GetName()
         {
-            return Name;
+            return _name;
         }
     }
 }

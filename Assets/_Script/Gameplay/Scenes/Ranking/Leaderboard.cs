@@ -88,7 +88,7 @@ namespace Gameplay
             string idLeaderboard = GPGSIds.leaderboard_topcat;
             Social.ReportScore(score, idLeaderboard, (bool success) =>
             {
-                Debug.Log("report score success");
+                Debug.Log("report score success with score: " + score + "id: " + idLeaderboard);
             });
         }
 

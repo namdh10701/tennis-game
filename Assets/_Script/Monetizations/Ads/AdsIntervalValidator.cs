@@ -7,8 +7,8 @@ namespace Monetization.Ads
     public static class AdsIntervalValidator
     {
         public static double INTERVAL_INTER_INTER = 20;
-        public static double INTERVAL_OPEN_INTER = 15;
-        public static double INTERVAL_OPEN_OPEN = 15;
+        //public static double INTERVAL_OPEN_INTER = 15;
+        //public static double INTERVAL_OPEN_OPEN = 15;
         public static double INTERVAL_REWARD_INTER = 20;
         public static void SetInterval(AdType type)
         {
@@ -18,12 +18,10 @@ namespace Monetization.Ads
                     GetSetTimeSave.SetTime(Constant.adInterval_Reward_Inter);
                     break;
                 case AdType.INTER:
-                    GetSetTimeSave.SetTime(Constant.adInterval_OpenAd_OpenAd);
+                    GetSetTimeSave.SetTime(Constant.adInterval_Inter_Inter);
                     GetSetTimeSave.SetTime(Constant.adInterval_OpenAd_Inter);
                     break;
                 case AdType.OPEN:
-                    GetSetTimeSave.SetTime(Constant.adInterval_Inter_Inter);
-                    GetSetTimeSave.SetTime(Constant.adInterval_OpenAd_Inter);
                     break;
             }
         }
@@ -47,12 +45,12 @@ namespace Monetization.Ads
                     {
                         ret = false;
                     }
-                    var timeShowInterAdsBetween_OpenAds_Inter = GetSetTimeSave.GetTimeToNow(Constant.adInterval_OpenAd_Inter);
+                    /*var timeShowInterAdsBetween_OpenAds_Inter = GetSetTimeSave.GetTimeToNow(Constant.adInterval_OpenAd_Inter);
                     if (timeShowInterAdsBetween_OpenAds_Inter.TotalSeconds > 0
                         && timeShowInterAdsBetween_OpenAds_Inter.TotalSeconds < INTERVAL_OPEN_INTER)
                     {
                         ret = false;
-                    }
+                    }*/
                     break;
                 case AdType.OPEN:
                     /*var timeShowInterAds_OpenAds = GetSetTimeSave.GetTimeToNow(Constant.adInterval_OpenAd_Inter);

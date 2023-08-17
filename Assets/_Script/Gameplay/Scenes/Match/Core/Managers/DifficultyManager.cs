@@ -8,12 +8,12 @@ namespace Gameplay
     public class DifficultyManager : MonoBehaviour
     {
         private MatchData _matchData;
-        private float _timescaleStep;
+        private double _timescaleStep;
         private IncrementalStep _incrementalStep;
         private MatchManager _matchManager;
         private GameDataManager _gameDataManager;
         private int _maxIncremental;
-        public void Init(MatchData matchData, IncrementalStep incrementalStep, float timescaleStep, MatchManager matchManager, GameDataManager gameDataManager,
+        public void Init(MatchData matchData, IncrementalStep incrementalStep, double timescaleStep, MatchManager matchManager, GameDataManager gameDataManager,
             int maxIncremental)
         {
             _maxIncremental = maxIncremental;
@@ -26,11 +26,11 @@ namespace Gameplay
 
         public void ApplyDifficulty()
         {
-            Time.timeScale = _timescaleStep * _matchData.MatchSettings.Incremental;
+            Time.timeScale = (float)_timescaleStep * _matchData.MatchSettings.Incremental;
         }
         public void UpdateDifficulty()
         {
-            if (_matchData.MatchSettings.Incremental >= _incrementalStep.Steps.Count+1)
+            if (_matchData.MatchSettings.Incremental >= _incrementalStep.Steps.Count + 1)
                 return;
             if (_matchData.Score >= _incrementalStep.Steps[_matchData.MatchSettings.Incremental - 1].TriggerScore)
             {

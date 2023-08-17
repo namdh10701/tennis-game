@@ -53,7 +53,7 @@ namespace Audio
                     _soundSource.PlayOneShot(AudioAsset.ButtonClick);
                     break;
                 case "ball_hit":
-                    _soundSource.PlayOneShot(AudioAsset.BallHit);
+                    _soundSource.PlayOneShot(AudioAsset.BallHit, .9f);
                     break;
                 case "game_over":
                     _soundSource.PlayOneShot(AudioAsset.GameOver);

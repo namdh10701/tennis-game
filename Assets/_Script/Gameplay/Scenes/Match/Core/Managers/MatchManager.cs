@@ -54,8 +54,9 @@ namespace Gameplay
             _retryCount = 0;
             _originalIncremental = _matchData.MatchSettings.Incremental;
 
-            BackgroundColorOrder backgroundColorOrder = JsonUtility.FromJson<BackgroundColorOrder>(JsonUtility.ToJson(_variableCollection.BackgroundColorOrder));
-            IncrementalStep incrementalStep = JsonUtility.FromJson<IncrementalStep>(JsonUtility.ToJson(_variableCollection.IncrementalStep));
+            BackgroundColorOrder backgroundColorOrder = JsonUtility.FromJson<BackgroundColorOrder>(_variableCollection.BackgroundColorOrder.Value);
+            IncrementalStep incrementalStep = JsonUtility.FromJson<IncrementalStep>(_variableCollection.IncrementalStep.Value);
+
             float timescaleStep = (float)_variableCollection.TimescaleStep.Value;
             MaxIncremental = (int)_variableCollection.MaxIncrement.Value;
             InitManagers();

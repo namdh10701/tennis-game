@@ -18,7 +18,8 @@ public class IncrementalStep
             new Step(7, 144),
             new Step(8, 196),
             new Step(9, 256),
-            new Step(10, 324)
+            new Step(10, 324),
+            new Step(11, 400)
         };
     }
 }

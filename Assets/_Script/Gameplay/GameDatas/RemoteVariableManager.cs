@@ -21,6 +21,7 @@ namespace Gameplay
         public void SaveDatas()
         {
             string json = JsonUtility.ToJson(MyRemoteVariables);
+            Debug.Log(json + " saved");
             PlayerPrefs.SetString("RemoteVariableCollection", json);
             PlayerPrefs.Save();
         }

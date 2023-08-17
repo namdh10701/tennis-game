@@ -20,21 +20,8 @@ namespace Services.FirebaseService.Remote
                 Debug.LogError($"Duplicate entry: Variable '{variable.GetName()}' already exists.");
                 return;
             }
-
+            Debug.LogWarning(variable.GetHashCode() + variable.GetName());
             _variables.Add(variable.GetName(), variable);
-        }
-
-        protected RemoteDouble CreateRemoteInt(string name, double value)
-        {
-            RemoteDouble newVariable = new(name, value);
-            AddVariable(newVariable);
-            return newVariable;
-        }
-        protected RemoteBool CreateRemoteBool(string name, bool value)
-        {
-            RemoteBool newVariable = new(name, value);
-            AddVariable(newVariable);
-            return newVariable;
         }
     }
 }

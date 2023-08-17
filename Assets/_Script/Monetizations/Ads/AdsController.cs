@@ -275,8 +275,6 @@ namespace Monetization.Ads
         }
         public void InvokeOnRewarded(bool rewarded)
         {
-            Debug.Log("reward false");
-            Debug.Log(_onRewardClosed == null);
             _onRewardClosed.Invoke(rewarded);
             _onRewardClosed = null;
         }

@@ -141,7 +141,7 @@ namespace Gameplay
 
         public void UpdateCat()
         {
-            _catSprite.sprite = _catAsset.CatSprites[(_matchSetting.Incremental - 1) % _maxCat];
+            _catSprite.sprite = _catAsset.CatSprites[(_matchSetting.Incremental - 1) % _catAsset.CatSprites.Count];
         }
     }
 }

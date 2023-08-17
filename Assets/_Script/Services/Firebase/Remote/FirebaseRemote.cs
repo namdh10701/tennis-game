@@ -19,22 +19,22 @@ namespace Services.FirebaseService.Remote
 
         public void Init(RemoteVariableCollection remoteVariableCollection)
         {
-            if (Enviroment.ENV == Enviroment.Env.PROD)
+            /*  if (Enviroment.ENV == Enviroment.Env.PROD)
+              {*/
+            if (remoteVariableCollection == null)
             {
-                if (remoteVariableCollection == null)
-                {
-                    Debug.Log("You havent provide your custom remove variable collection");
-                    return;
-                }
-                _remoteVariableCollection = remoteVariableCollection;
-                _remoteVariableCollection.AddToFetchQueue();
-                FetchDataAsync();
+                Debug.Log("You havent provide your custom remove variable collection");
+                return;
             }
-            else
+            _remoteVariableCollection = remoteVariableCollection;
+            _remoteVariableCollection.AddToFetchQueue();
+            FetchDataAsync();
+        }
+        /*    else
             {
                 Debug.Log("Firebase remote initilized");
             }
-        }
+        }*/
 
         public Task FetchDataAsync()
         {
@@ -69,6 +69,9 @@ namespace Services.FirebaseService.Remote
                             {
                                 kvp.Value.SetValue(FirebaseRemoteConfig.DefaultInstance.GetValue(variableName).BooleanValue);
                             }
+                            Debug.Log($"Feteched {variableName}: {kvp.Value.GetValue()}");
+
+                            Debug.LogWarning(kvp.Value.GetHashCode() + kvp.Value.GetName() + "feteched here");
                         }
                         OnFetchedCompleted?.Invoke();
                     });
