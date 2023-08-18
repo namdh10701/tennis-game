@@ -1,5 +1,7 @@
 ﻿using Audio;
+using Common;
 using Phoenix.Gameplay.Vibration;
+using Services.FirebaseService.Analytics;
 using Services.FirebaseService.Remote;
 using System;
 using System.Collections;
@@ -168,6 +170,7 @@ namespace Gameplay
 
         public void Revive()
         {
+            FirebaseAnalytics.Instance.PushEvent(Constant.REVIVE_COMPLETE);
             _matchEvent.CurrentState = MatchState.PRE_START;
             _cpu.Prepare();
             _ball.Prepare();

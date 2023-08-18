@@ -13,6 +13,7 @@ namespace Gameplay
         private MatchManager _matchManager;
         private GameDataManager _gameDataManager;
         private int _maxIncremental;
+        public static float currentTimescale;
         public void Init(MatchData matchData, IncrementalStep incrementalStep, double timescaleStep, MatchManager matchManager, GameDataManager gameDataManager,
             int maxIncremental)
         {
@@ -26,7 +27,8 @@ namespace Gameplay
 
         public void ApplyDifficulty()
         {
-            Time.timeScale = (float)_timescaleStep * _matchData.MatchSettings.Incremental;
+            Time.timeScale = ((float)_timescaleStep) * _matchData.MatchSettings.Incremental;
+            currentTimescale = Time.timeScale;
         }
         public void UpdateDifficulty()
         {

@@ -4,6 +4,7 @@ using Services.FirebaseService.Analytics;
 using Services.Adjust;
 using Enviroments;
 using System.Collections;
+using Services.FirebaseService.Crashlytics;
 
 namespace Monetization.Ads
 {
@@ -196,7 +197,11 @@ namespace Monetization.Ads
             Debug.Log("reward ad closed");
             LoadReward(); StartCoroutine(WaitToResetAdsControllerState());
             if (!_isRewarded)
+            {
+                FirebaseAnalytics.Instance.PushEvent(Constant.REWARD_FAILED);
                 AdsController.Instance.OpenNotRewardedPanel();
+            }
+
             if (_isRewarded)
             {
                 AdsIntervalValidator.SetInterval(AdsController.AdType.REWARD);

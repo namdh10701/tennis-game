@@ -86,7 +86,7 @@ namespace Monetization.Ads
         #region NativeAd
         public List<CachedNativeAd> CachedNativeAds { get; private set; }
         private const int NATIVE_AD_CACHED_TIMEOUT_MINUTES = 30;
-        public const int MAX_NATIVE_AD_CACHE_SIZE = 4;
+        public const int MAX_NATIVE_AD_CACHE_SIZE = 2;
 
         public void RegisterNativeAdPanel(NativeAdPanel nativeAdPanel)
         {
@@ -134,7 +134,7 @@ namespace Monetization.Ads
             if (CachedNativeAds.Count < MAX_NATIVE_AD_CACHE_SIZE)
             {
                 CachedNativeAds.AddFirst(cachedNativeAd);
-                Debug.Log($"cached native ad {CachedNativeAds.Count}");
+                Debug.Log($"cached native ad has {CachedNativeAds.Count}");
             }
             else
             {
@@ -152,7 +152,10 @@ namespace Monetization.Ads
         {
             CachedNativeAd cachedNativeAd = new CachedNativeAd(nativeAd);
             if (!AssignToAvailablePanel(cachedNativeAd))
+            {
                 CachedNativeAds.AddLast(cachedNativeAd);
+                Debug.Log(CachedNativeAds.Count + " cached has");
+            }
         }
 
         private bool AssignToAvailablePanel(CachedNativeAd cachedNativeAd)
@@ -185,6 +188,10 @@ namespace Monetization.Ads
         {
             if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
                 return;
+            if (!HasInternet)
+            {
+                return;
+            }
             _admob.LoadNativeAds();
         }
         public void ShowNativeAd(NativeAdPanel nativeAdPanel)
@@ -193,8 +200,15 @@ namespace Monetization.Ads
                 return;
             if (_nativeAdPanels.Contains(nativeAdPanel))
             {
+
+                if (CachedNativeAds.Count == 0)
+                {
+                    Debug.Log("native ad cache empty, need load");
+                    LoadNativeAds();
+                }
+
+                Debug.Log("native ads is waiting to be filled");
                 nativeAdPanel.Show();
-                Debug.Log("native ad panel show request from ads controller");
             }
         }
         public void HideNativeAd(NativeAdPanel nativeAdPanel)
@@ -336,7 +350,14 @@ namespace Monetization.Ads
         {
             RemoveAds = true;
             _ironsource.ToggleBanner(false);
-            _nativeAdPanels?.Clear();
+            if (_nativeAdPanels != null)
+            {
+                foreach (NativeAdPanel panel in _nativeAdPanels)
+                {
+                    panel.gameObject.SetActive(false);
+                }
+                _nativeAdPanels.Clear();
+            }
             CachedNativeAds?.Clear();
         }
     }

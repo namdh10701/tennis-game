@@ -4,6 +4,8 @@ using Monetization.Ads;
 using Monetization.Ads.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using Services.FirebaseService.Analytics;
+using Common;
 
 namespace Gameplay
 {
@@ -60,6 +62,11 @@ namespace Gameplay
             {
                 OpenGameOverPanel();
             };
+        }
+
+        public void OnReviveClick()
+        {
+            FirebaseAnalytics.Instance.PushEvent(Constant.REVIVE_CLICK);
         }
     }
 }

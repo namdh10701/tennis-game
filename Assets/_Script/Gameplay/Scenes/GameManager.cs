@@ -58,13 +58,20 @@ namespace Gameplay
             }
             AdsController.Instance.Init();
             AudioController.Instance.Init(SettingManager.GameSettings.IsMusicOn, SettingManager.GameSettings.IsSoundOn);
-
-            InvokeRepeating("TurnBannerOn", 10, 10);
+            if (!isRemovedAd)
+            {
+                InvokeRepeating("TurnBannerOn", 10, 10);
+                InvokeRepeating("LoadNativeAd", 60, 60);
+            }
             _firebaseManager.FirebaseRemote.OnFetchedCompleted += () => SaveRemoteVariable();
         }
         private void TurnBannerOn()
         {
             AdsController.Instance.ShowBanner();
+        }
+        private void LoadNativeAd()
+        {
+            AdsController.Instance.LoadNativeAds();
         }
 
         private void SaveRemoteVariable()
@@ -108,7 +115,7 @@ namespace Gameplay
             });
         }
 
-    
+
 
         private void Update()
         {

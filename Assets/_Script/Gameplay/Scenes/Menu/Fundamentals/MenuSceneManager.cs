@@ -20,6 +20,7 @@ namespace Gameplay
         }
         private void Start()
         {
+            Time.timeScale = 1;
             AudioController.Instance.CrossfadeMusic(AudioAsset.MenuSceneBGM, .3f);
             settingPanel.Init(_gameManager.SettingManager);
             _menuSceneUI.Init(this, _gameManager.MatchSetting, _gameManager.GameDataManager);

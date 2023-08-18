@@ -19,22 +19,22 @@ namespace Services.FirebaseService.Remote
 
         public void Init(RemoteVariableCollection remoteVariableCollection)
         {
-            /*  if (Enviroment.ENV == Enviroment.Env.PROD)
-              {*/
-            if (remoteVariableCollection == null)
+            if (Enviroment.ENV == Enviroment.Env.PROD)
             {
-                Debug.Log("You havent provide your custom remove variable collection");
-                return;
-            }
+                if (remoteVariableCollection == null)
+                {
+                    Debug.Log("You havent provide your custom remove variable collection");
+                    return;
+                }
             _remoteVariableCollection = remoteVariableCollection;
             _remoteVariableCollection.AddToFetchQueue();
             FetchDataAsync();
-        }
-        /*    else
+            }
+            else
             {
                 Debug.Log("Firebase remote initilized");
             }
-        }*/
+        }
 
         public Task FetchDataAsync()
         {

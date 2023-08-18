@@ -24,8 +24,6 @@ public class SettingPanel : InterPopup
         _musicButton.Init(_settingManager.GameSettings.IsMusicOn ? State.ON : State.OFF);
         _soundButton.Init(_settingManager.GameSettings.IsSoundOn ? State.ON : State.OFF);
         _vibrateButton.Init(_settingManager.GameSettings.IsVibrationOn ? State.ON : State.OFF);
-
-        Debug.Log(_settingManager.GameSettings.IsReversed);
         _reversedButton.Init(_settingManager.GameSettings.IsReversed ? State.ON : State.OFF);
 
         _versionName.text = "Version " + Application.version.ToString();
@@ -58,7 +56,7 @@ public class SettingPanel : InterPopup
         Debug.Log(_settingManager.GameSettings.IsReversed);
     }
 
-    private void Start()
+    private void OnEnable()
     {
         StartCoroutine(WaitAndShowNativeAds());
     }
@@ -69,7 +67,15 @@ public class SettingPanel : InterPopup
         {
             yield return null;
         }
-        AdsController.Instance.ShowNativeAd(_nativeAdPanel);
+        if (_nativeAdPanel.IsNativeAdShowed)
+        {
+            yield break;
+        }
+        else
+        {
+            Debug.Log("show native ads from setting");
+            AdsController.Instance.ShowNativeAd(_nativeAdPanel);
+        }
     }
 }
 

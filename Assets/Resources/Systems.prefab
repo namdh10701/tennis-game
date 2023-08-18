@@ -235,7 +235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _firebaseManager: {fileID: 541353746430603780}
-  env: 0
+  env: 4
 --- !u!1 &3480127248034542622
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,7 +299,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0

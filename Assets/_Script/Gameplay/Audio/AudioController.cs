@@ -19,27 +19,27 @@ namespace Audio
         {
             _isMusicOn = isMusicOn;
             _isSoundOn = isSoundOn;
-            _musicSource.volume = !_isMusicOn ? 0 : .5f;
-            _soundSource.volume = !_isSoundOn ? 0 : .7f;
+            _musicSource.volume = !_isMusicOn ? 0 : .33f;
+            _soundSource.volume = !_isSoundOn ? 0 : .6f;
         }
         public void ToggleSound(bool isSoundOn)
         {
             _isSoundOn = isSoundOn;
-            _soundSource.DOFade(!_isSoundOn ? 0 : .7f, .3f);
+            _soundSource.DOFade(!_isSoundOn ? 0 : .6f, .3f);
         }
 
         public void ToggleMusic(bool isMusicOn)
         {
             Debug.Log($"Toggle music {isMusicOn}");
             _isMusicOn = isMusicOn;
-            _musicSource.DOFade(!_isMusicOn ? 0 : .7f, .3f);
+            _musicSource.DOFade(!_isMusicOn ? 0 : .33f, .3f);
         }
 
         protected override void Awake()
         {
             base.Awake();
-            _musicSource.volume = .5f;
-            _soundSource.volume = .7f;
+            _musicSource.volume = .33f;
+            _soundSource.volume = .6f;
         }
         public void PlaySound(AudioClip clip)
         {
@@ -53,7 +53,7 @@ namespace Audio
                     _soundSource.PlayOneShot(AudioAsset.ButtonClick);
                     break;
                 case "ball_hit":
-                    _soundSource.PlayOneShot(AudioAsset.BallHit, .9f);
+                    _soundSource.PlayOneShot(AudioAsset.BallHit, 1f);
                     break;
                 case "game_over":
                     _soundSource.PlayOneShot(AudioAsset.GameOver);
