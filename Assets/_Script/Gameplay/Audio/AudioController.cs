@@ -30,7 +30,6 @@ namespace Audio
 
         public void ToggleMusic(bool isMusicOn)
         {
-            Debug.Log($"Toggle music {isMusicOn}");
             _isMusicOn = isMusicOn;
             _musicSource.DOFade(!_isMusicOn ? 0 : .33f, .3f);
         }

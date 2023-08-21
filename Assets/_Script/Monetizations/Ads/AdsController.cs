@@ -360,5 +360,20 @@ namespace Monetization.Ads
             }
             CachedNativeAds?.Clear();
         }
+
+        public void SetRemoveAds(bool removeAdsPuchased)
+        {
+            RemoveAds = removeAdsPuchased;
+            _ironsource.ToggleBanner(!removeAdsPuchased);
+            if (_nativeAdPanels != null)
+            {
+                foreach (NativeAdPanel panel in _nativeAdPanels)
+                {
+                    panel.gameObject.SetActive(!removeAdsPuchased);
+                }
+                if(!removeAdsPuchased) _nativeAdPanels.Clear();
+            }
+            if (!removeAdsPuchased) CachedNativeAds?.Clear();
+        }
     }
 }

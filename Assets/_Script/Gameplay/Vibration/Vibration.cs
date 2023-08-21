@@ -5,25 +5,25 @@ namespace Phoenix.Gameplay.Vibration
 {
     public static class Vibration
     {
-        private static bool isRunVibration = true;
+        private static bool _isRunVibration = true;
 
 #if UNITY_ANDROID && !UNITY_EDITOR
     public static AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
     public static AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
     public static AndroidJavaObject vibrator = currentActivity.Call<AndroidJavaObject>("getSystemService", "vibrator");
 #else
-        public static AndroidJavaClass unityPlayer;
-        public static AndroidJavaObject currentActivity;
-        public static AndroidJavaObject vibrator;
+        public static AndroidJavaClass UnityPlayer;
+        public static AndroidJavaObject CurrentActivity;
+        public static AndroidJavaObject Vibrator;
 #endif
 
         public static void Vibrate()
         {
-            if (!isRunVibration || !isAndroid())
+            if (!_isRunVibration || !IsAndroid())
                 return;
 
-            if (isAndroid())
-                vibrator.Call("vibrate");
+            if (IsAndroid())
+                Vibrator.Call("vibrate");
             else
                 Handheld.Vibrate();
         }
@@ -31,44 +31,44 @@ namespace Phoenix.Gameplay.Vibration
 
         public static void Vibrate(long milliseconds)
         {
-            if (!isRunVibration || !isAndroid())
+            if (!_isRunVibration || !IsAndroid())
                 return;
 
-            if (isAndroid())
-                vibrator.Call("vibrate", milliseconds);
+            if (IsAndroid())
+                Vibrator.Call("vibrate", milliseconds);
             else
                 Handheld.Vibrate();
         }
 
         public static void Vibrate(long[] pattern, int repeat)
         {
-            if (!isRunVibration || !isAndroid())
+            if (!_isRunVibration || !IsAndroid())
                 return;
 
-            if (isAndroid())
-                vibrator.Call("vibrate", pattern, repeat);
+            if (IsAndroid())
+                Vibrator.Call("vibrate", pattern, repeat);
             else
                 Handheld.Vibrate();
         }
 
         public static bool HasVibrator()
         {
-            return isAndroid();
+            return IsAndroid();
         }
 
         public static void Cancel()
         {
-            if (isAndroid())
-                vibrator.Call("cancel");
+            if (IsAndroid())
+                Vibrator.Call("cancel");
         }
 
-        private static bool isAndroid()
+        private static bool IsAndroid()
         {
-            return unityPlayer != null && currentActivity != null && vibrator != null;
+            return UnityPlayer != null && CurrentActivity != null && Vibrator != null;
         }
         public static void SetState(bool isEnable)
         {
-            isRunVibration = isEnable;
+            _isRunVibration = isEnable;
         }
     }
 }

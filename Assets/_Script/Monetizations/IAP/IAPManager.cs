@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using UnityEngine.Purchasing.Extension;
-using UnityEngine.Tilemaps;
 using Common;
 using Monetization.Ads;
 using Services.FirebaseService.Analytics;
@@ -20,7 +17,7 @@ namespace Monetization.IAP
         {
             Debug.Log("purchased success");
             PlayerPrefs.SetInt(Constant.ADS_REMOVED_KEY, 1);
-            AdsController.Instance.OnRemoveAds();
+            AdsController.Instance.SetRemoveAds(true);
             FirebaseAnalytics.Instance.PushEvent("REMOVES_ADS_PURCHASED");
             FirebaseAnalytics.Instance.PushEvent("REMOVES_ADS_CLICK");
             StartCoroutine(HideButton());
@@ -46,12 +43,13 @@ namespace Monetization.IAP
                 Debug.Log("Player has purchased removed ads");
                 PlayerPrefs.SetInt(Constant.ADS_REMOVED_KEY, 1);
                 IAPButtons.gameObject.SetActive(false);
-                AdsController.Instance.OnRemoveAds();
+                AdsController.Instance.SetRemoveAds(true);
             }
             else
             {
                 Debug.Log("Player has not purchased removed ads");
                 PlayerPrefs.SetInt(Constant.ADS_REMOVED_KEY, 0);
+                AdsController.Instance.SetRemoveAds(false);
             }
 
         }

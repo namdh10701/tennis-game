@@ -15,9 +15,7 @@ namespace Gameplay
         private MatchSetting _matchSetting;
         private MatchEvent _matchEvent;
         private MatchData _matchData;
-        private GameDataManager _gameDataManager;
         private MyRemoteVariableCollection _remoteVariables;
-        private SettingManager _settingManager;
 
         [SerializeField] private TextMeshProUGUI countdowntext;
         private void Start()
@@ -39,8 +37,8 @@ namespace Gameplay
             InitGameSetting();
             _matchEvent = new MatchEvent();
             _matchData = new MatchData(_matchSetting);
-            _matchManager.Init(_matchEvent, _matchData, _gameDataManager, _remoteVariables, _settingManager);
-            _matchSceneUI.Init(_matchData, _gameDataManager.GameDatas, _matchManager, this);
+            _matchManager.Init(_matchEvent, _matchData);
+            _matchSceneUI.Init(_matchData, _matchManager, this);
         }
 
         private void InitGameSetting()
@@ -48,9 +46,6 @@ namespace Gameplay
             GameManager gameManager = FindObjectOfType<GameManager>();
             _gameManager = gameManager;
             _matchSetting = gameManager.MatchSetting;
-            _gameDataManager = gameManager.GameDataManager;
-            _remoteVariables = gameManager.RemoteVariableManager.MyRemoteVariables;
-            _settingManager = gameManager.SettingManager;
         }
     }
 }

@@ -22,6 +22,7 @@ namespace Services.Adjust
             adRevenue.setAdRevenueUnit(impressionData.adUnit);
             adRevenue.setAdRevenuePlacement(impressionData.placement);
             com.adjust.sdk.Adjust.trackAdRevenue(adRevenue);
+
         }
 
         public static void TrackAdmobRevenue(AdValue adValue)

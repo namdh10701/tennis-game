@@ -2,12 +2,9 @@
 using Common;
 using Phoenix.Gameplay.Vibration;
 using Services.FirebaseService.Analytics;
-using Services.FirebaseService.Remote;
-using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Playables;
 using static Gameplay.MatchEvent;
 using static Gameplay.MatchSetting;
 
@@ -17,7 +14,6 @@ namespace Gameplay
     {
         private MatchEvent _matchEvent;
         private MatchData _matchData;
-        private GameDataManager _gameDataManager;
         [SerializeField] private MatchSceneUI _sceneUI;
 
         [SerializeField] private ScoreManager _scoreManager;
@@ -39,64 +35,49 @@ namespace Gameplay
         [SerializeField] private GameObject _playerBaseball;
         [SerializeField] private GameObject _playerFootball;
         [SerializeField] private GameObject _playerVolleyball;
-
-        private MyRemoteVariableCollection _variableCollection;
         private int _retryCount;
         private int _originalIncremental;
-
         private float _remainingTimeToStart;
 
-        public void Init(MatchEvent matchEvent, MatchData matchData, GameDataManager gameDataManager, MyRemoteVariableCollection remoteVariableCollection,
-            SettingManager settingManager)
+        public void Init(MatchEvent matchEvent, MatchData matchData)
         {
-            _gameDataManager = gameDataManager;
             _matchEvent = matchEvent;
             _matchData = matchData;
-            _variableCollection = remoteVariableCollection;
             _retryCount = 0;
             _originalIncremental = _matchData.MatchSettings.Incremental;
+            RemoteVariable remoteVariables = RemoteVariable.Convert(RemoteVariableManager.Instance.MyRemoteVariables);
 
-            BackgroundColorOrder backgroundColorOrder = JsonUtility.FromJson<BackgroundColorOrder>(_variableCollection.BackgroundColorOrder.Value);
-            IncrementalStep incrementalStep = JsonUtility.FromJson<IncrementalStep>(_variableCollection.IncrementalStep.Value);
+            _timeManager.Init(_matchData);
+            _scoreManager.Init(_matchData);
+            _backgroundManager.Init(remoteVariables.BackgroundColorOrder);
+            _difficultyManager.Init(_matchData, remoteVariables.IncrementalStep, remoteVariables.TimescaleStep, this, MaxIncremental);
+            _textManager.Init(_matchData);
 
-            float timescaleStep = (float)_variableCollection.TimescaleStep.Value;
-            MaxIncremental = (int)_variableCollection.MaxIncrement.Value;
-            InitManagers();
-            InitInteractiveObjects();
-            if (settingManager.GameSettings.IsReversed)
+            bool isMatchReversed = SettingManager.Instance.GameSettings.IsReversed;
+            if (isMatchReversed)
             {
                 Quaternion newRotation = Quaternion.Euler(Camera.main.transform.rotation.eulerAngles.x, Camera.main.transform.rotation.eulerAngles.y, Camera.main.transform.rotation.eulerAngles.z + 180);
                 Camera.main.transform.rotation = newRotation;
             }
-            void InitManagers()
+            switch (matchData.MatchSettings.SportName)
             {
-                _timeManager.Init(_matchData);
-                _scoreManager.Init(_matchData);
-                _backgroundManager.Init(backgroundColorOrder);
-                _difficultyManager.Init(_matchData, incrementalStep, timescaleStep, this, _gameDataManager, MaxIncremental);
-                _textManager.Init(_matchData);
+                case Sport.TENNIS:
+                    _player = Instantiate(_playerTennis, _playerSpawnPoint, true).GetComponent<Player>();
+                    break;
+                case Sport.BASEBALL:
+                    _player = Instantiate(_playerBaseball, _playerSpawnPoint, true).GetComponent<Player>();
+                    break;
+                case Sport.FOOTBALL:
+                    _player = Instantiate(_playerFootball, _playerSpawnPoint, true).GetComponent<Player>();
+                    break;
+                case Sport.VOLLEYBALL:
+                    _player = Instantiate(_playerVolleyball, _playerSpawnPoint, true).GetComponent<Player>();
+                    break;
             }
-            void InitInteractiveObjects()
-            {
-                switch (matchData.MatchSettings.SportName)
-                {
-                    case Sport.TENNIS:
-                        _player = Instantiate(_playerTennis, _playerSpawnPoint, true).GetComponent<Player>();
-                        break;
-                    case Sport.BASEBALL:
-                        _player = Instantiate(_playerBaseball, _playerSpawnPoint, true).GetComponent<Player>();
-                        break;
-                    case Sport.FOOTBALL:
-                        _player = Instantiate(_playerFootball, _playerSpawnPoint, true).GetComponent<Player>();
-                        break;
-                    case Sport.VOLLEYBALL:
-                        _player = Instantiate(_playerVolleyball, _playerSpawnPoint, true).GetComponent<Player>();
-                        break;
-                }
-                _player.Init(_matchEvent, matchData.MatchSettings, settingManager.GameSettings.IsReversed);
-                _cpu.Init(_matchEvent, matchData.MatchSettings, _ball, settingManager.GameSettings.IsReversed, (int)_variableCollection.MaxIncrement.Value);
-                _ball.Init(_matchEvent, matchData.MatchSettings, settingManager.GameSettings.IsReversed);
-            }
+            _player.Init(_matchEvent, matchData.MatchSettings, isMatchReversed);
+            _cpu.Init(_matchEvent, matchData.MatchSettings, _ball, isMatchReversed, remoteVariables.MaxIncrement);
+            _ball.Init(_matchEvent, matchData.MatchSettings, isMatchReversed);
+
 
             PrepareMatch();
             StartCoroutine(CountdownCoroutine());
@@ -141,10 +122,10 @@ namespace Gameplay
         {
             _timeManager.StopTime();
             _matchEvent.CurrentState = MatchState.STOPPED;
-            if (_matchData.Score > _gameDataManager.GameDatas.HighScore)
+            if (_matchData.Score > GameDataManager.Instance.GameDatas.HighScore)
             {
-                _gameDataManager.GameDatas.HighScore = _matchData.Score;
-                _gameDataManager.SaveDatas();
+                GameDataManager.Instance.GameDatas.HighScore = _matchData.Score;
+                GameDataManager.Instance.SaveDatas();
                 Leaderboard.Instance.ReportScore(_matchData.Score);
             }
             AudioController.Instance.PlaySound("game_over");

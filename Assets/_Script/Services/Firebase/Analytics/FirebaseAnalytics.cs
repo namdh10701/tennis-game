@@ -18,10 +18,6 @@ namespace Services.FirebaseService.Analytics
                 Firebase.Analytics.FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
                 Firebase.Analytics.FirebaseAnalytics.SetSessionTimeoutDuration(new TimeSpan(0, 30, 0));
             }
-            else
-            {
-                Debug.Log("Firebase Analytics initilized");
-            }
         }
 
         public void PushEvent(string valueLog, params Parameter[] parameters)
@@ -46,6 +42,8 @@ namespace Services.FirebaseService.Analytics
                 if (FirebaseManager.Instance.FirebaseInitialized)
                 {
                     Firebase.Analytics.FirebaseAnalytics.LogEvent(eventName);
+           
+                    Debug.Log("event: " + eventName + " logged");
                 }
             }
             else

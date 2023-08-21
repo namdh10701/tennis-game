@@ -13,22 +13,20 @@ namespace Gameplay
     {
         private MatchManager _matchManager;
         private MatchData _matchData;
-        private GameData _gameData;
         private MatchSceneManager _sceneManager;
         [SerializeField] private GameOverPanel _gameOverPanel;
         [SerializeField] private BasePopup _revivePanel;
-        public void Init(MatchData matchData, GameData gameData, MatchManager matchManager, MatchSceneManager matchSceneManager)
+        public void Init(MatchData matchData, MatchManager matchManager, MatchSceneManager matchSceneManager)
         {
             _sceneManager = matchSceneManager;
             _matchManager = matchManager;
-            _gameData = gameData;
             _matchData = matchData;
         }
 
 
         public void OpenGameOverPanel()
         {
-            _gameOverPanel.Init(_matchData, _gameData);
+            _gameOverPanel.Init(_matchData);
             _gameOverPanel.Open(false);
         }
 

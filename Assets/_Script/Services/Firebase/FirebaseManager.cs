@@ -9,7 +9,7 @@ using Firebase.Extensions;
 
 namespace Services.FirebaseService
 {
-    public class FirebaseManager : Singleton<FirebaseManager>
+    public class FirebaseManager : SingletonPersistent<FirebaseManager>
     {
         public FirebaseRemote FirebaseRemote { get; private set; }
         public FirebaseCrashlytics FirebaseCrashlytics { get; private set; }

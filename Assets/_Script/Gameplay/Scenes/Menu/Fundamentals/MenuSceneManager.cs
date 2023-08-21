@@ -22,8 +22,8 @@ namespace Gameplay
         {
             Time.timeScale = 1;
             AudioController.Instance.CrossfadeMusic(AudioAsset.MenuSceneBGM, .3f);
-            settingPanel.Init(_gameManager.SettingManager);
-            _menuSceneUI.Init(this, _gameManager.MatchSetting, _gameManager.GameDataManager);
+            settingPanel.Init();
+            _menuSceneUI.Init(this, _gameManager.MatchSetting);
         }
 
 
@@ -31,7 +31,7 @@ namespace Gameplay
         public void StartMatch(Sport sportName)
         {
             _gameManager.MatchSetting.SportName = sportName;
-            if (_gameManager.MatchSetting.Incremental > _gameManager.GameDataManager.GameDatas.UnlockedIncremental)
+            if (_gameManager.MatchSetting.Incremental > GameDataManager.Instance.GameDatas.UnlockedIncremental)
             {
                 _menuSceneUI.OpenNotUnlockedIncremental();
             }

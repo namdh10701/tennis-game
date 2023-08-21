@@ -564,20 +564,36 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6190197168680457553, guid: 45c331054e1256b4281c5a84527876c3, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6190197168680457553, guid: 45c331054e1256b4281c5a84527876c3, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6190197168680457553, guid: 45c331054e1256b4281c5a84527876c3, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6190197168680457553, guid: 45c331054e1256b4281c5a84527876c3, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6190197168680457553, guid: 45c331054e1256b4281c5a84527876c3, type: 3}
       propertyPath: m_SizeDelta.x
-      value: -497.9835
+      value: 582.0165
       objectReference: {fileID: 0}
     - target: {fileID: 6190197168680457553, guid: 45c331054e1256b4281c5a84527876c3, type: 3}
       propertyPath: m_SizeDelta.y
-      value: -1338.6797
+      value: 581.3203
       objectReference: {fileID: 0}
     - target: {fileID: 6190197168680457553, guid: 45c331054e1256b4281c5a84527876c3, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 4.9987793
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6190197168680457553, guid: 45c331054e1256b4281c5a84527876c3, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 4.9956055
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6368456351271741842, guid: 45c331054e1256b4281c5a84527876c3, type: 3}
       propertyPath: m_Name
@@ -1784,19 +1800,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1928720241}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1154115487}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &601924744
 GameObject:
   m_ObjectHideFlags: 0

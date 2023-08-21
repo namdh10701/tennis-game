@@ -16,10 +16,6 @@ namespace Gameplay
     {
         private MenuSceneManager _sceneManager;
         private MatchSetting _matchSetting;
-
-        //ToDo optional
-        private GameDataManager _gameDataManager;
-
         [SerializeField] private TextMeshProUGUI _highScore;
         [SerializeField] private TextMeshProUGUI _incrementalText;
 
@@ -34,19 +30,17 @@ namespace Gameplay
 
         public CatAsset CatAsset;
         public void Init(MenuSceneManager sceneManager,
-            MatchSetting matchSetting,
-            GameDataManager gameDataManager)
+            MatchSetting matchSetting)
         {
             _sceneManager = sceneManager;
             _matchSetting = matchSetting;
-            _gameDataManager = gameDataManager;
             InitUIContent();
             void InitUIContent()
             {
                 _incrementalText.text = "X" + _matchSetting.Incremental;
-                _highScore.text = _gameDataManager.GameDatas.HighScore.ToString();
+                _highScore.text = GameDataManager.Instance.GameDatas.HighScore.ToString();
 
-                foreach (Sport sport in _gameDataManager.GameDatas.UnlockedSports)
+                foreach (Sport sport in GameDataManager.Instance.GameDatas.UnlockedSports)
                 {
                     UnlockSportUI(sport);
                 }
@@ -64,7 +58,7 @@ namespace Gameplay
             _matchSetting.ChangeIncremental();
             _incrementalText.text = "X" + _matchSetting.Incremental;
             _catImage.sprite = CatAsset.CatSprites[_matchSetting.Incremental - 1];
-            if (_matchSetting.Incremental > _gameDataManager.GameDatas.UnlockedIncremental)
+            if (_matchSetting.Incremental > GameDataManager.Instance.GameDatas.UnlockedIncremental)
             {
                 _catImage.color = Color.black;
             }
@@ -95,11 +89,11 @@ namespace Gameplay
 
         public void OnReward(string sportName)
         {
-            Sport sport = (Sport)System.Enum.Parse(typeof(Sport), sportName);
+            Sport sport = (Sport)Enum.Parse(typeof(Sport), sportName);
             UnlockSportUI(sport);
-            if (!_gameDataManager.GameDatas.UnlockedSports.Contains(sport))
-                _gameDataManager.GameDatas.UnlockedSports.Add(sport);
-            _gameDataManager.SaveDatas();
+            if (!GameDataManager.Instance.GameDatas.UnlockedSports.Contains(sport))
+                GameDataManager.Instance.GameDatas.UnlockedSports.Add(sport);
+            GameDataManager.Instance.SaveDatas();
 
         }
 

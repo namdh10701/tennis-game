@@ -11,10 +11,9 @@ namespace Gameplay
         private double _timescaleStep;
         private IncrementalStep _incrementalStep;
         private MatchManager _matchManager;
-        private GameDataManager _gameDataManager;
         private int _maxIncremental;
         public static float currentTimescale;
-        public void Init(MatchData matchData, IncrementalStep incrementalStep, double timescaleStep, MatchManager matchManager, GameDataManager gameDataManager,
+        public void Init(MatchData matchData, IncrementalStep incrementalStep, double timescaleStep, MatchManager matchManager,
             int maxIncremental)
         {
             _maxIncremental = maxIncremental;
@@ -22,7 +21,6 @@ namespace Gameplay
             _timescaleStep = timescaleStep;
             _incrementalStep = incrementalStep;
             _matchData = matchData;
-            _gameDataManager = gameDataManager;
         }
 
         public void ApplyDifficulty()
@@ -39,10 +37,10 @@ namespace Gameplay
                 _matchData.MatchSettings.ChangeIncremental();
                 ApplyDifficulty();
                 _matchManager.OnDifficultyChange();
-                if (_matchData.MatchSettings.Incremental > _gameDataManager.GameDatas.UnlockedIncremental)
+                if (_matchData.MatchSettings.Incremental > GameDataManager.Instance.GameDatas.UnlockedIncremental)
                 {
-                    _gameDataManager.GameDatas.UnlockedIncremental = _matchData.MatchSettings.Incremental;
-                    _gameDataManager.SaveDatas();
+                    GameDataManager.Instance.GameDatas.UnlockedIncremental = _matchData.MatchSettings.Incremental;
+                    GameDataManager.Instance.SaveDatas();
                 }
             }
         }

@@ -109,6 +109,7 @@ namespace com.adjust.sdk
 
             if (!this.startManually)
             {
+                Debug.Log("Ajust app token: "+ appToken);
                 AdjustConfig adjustConfig = new AdjustConfig(this.appToken, this.environment, (this.logLevel == AdjustLogLevel.Suppress));
                 adjustConfig.setLogLevel(this.logLevel);
                 adjustConfig.setSendInBackground(this.sendInBackground);
@@ -132,6 +133,7 @@ namespace com.adjust.sdk
                     adjustConfig.deactivateSKAdNetworkHandling();
                 }
                 Adjust.start(adjustConfig);
+                Debug.Log("Adjust started");
             }
         }
 
