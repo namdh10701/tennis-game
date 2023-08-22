@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Audio;
+using Phoenix;
+
 namespace Gameplay
 {
     public class MatchSceneManager : MonoBehaviour
@@ -15,7 +17,8 @@ namespace Gameplay
         private MatchSetting _matchSetting;
         private MatchEvent _matchEvent;
         private MatchData _matchData;
-        private MyRemoteVariableCollection _remoteVariables;
+        private MyRemoteVariableCollection _remoteVariables; 
+        [SerializeField] private SceneTransition _sceneTransition;
 
         [SerializeField] private TextMeshProUGUI countdowntext;
         private void Start()
@@ -27,7 +30,7 @@ namespace Gameplay
             //ToDo; Xem lại logic chỗ này
             _gameManager.ResetMatchSetting();
             Time.timeScale = 1.0f;
-            SceneManager.LoadScene("MenuScene");
+            _sceneTransition.ChangeScene("MenuScene");
         }
 
         private void Awake()

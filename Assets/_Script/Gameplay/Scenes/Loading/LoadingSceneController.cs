@@ -5,11 +5,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Monetization.Ads;
+using Phoenix;
 
 namespace Gameplay
 {
     public class LoadingSceneController : MonoBehaviour
     {
+        [SerializeField] private SceneTransition _sceneTransition;
         public Image progressBar;
         private void Start()
         {
@@ -47,7 +49,7 @@ namespace Gameplay
 
                 if (asyncOperation.progress >= 0.9f && elapsedTime >= timeout)
                 {
-                    asyncOperation.allowSceneActivation = true;
+                    _sceneTransition.PreloadChangeScene(asyncOperation);
                 }
 
                 yield return null;

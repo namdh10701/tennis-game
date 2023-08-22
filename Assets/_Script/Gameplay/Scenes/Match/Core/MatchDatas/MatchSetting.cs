@@ -26,7 +26,6 @@ namespace Gameplay
 
         public int Incremental { get; set; }
         public Sport SportName;
-
         public void ChangeIncremental()
         {
             if (Incremental >= MaxIncremental)

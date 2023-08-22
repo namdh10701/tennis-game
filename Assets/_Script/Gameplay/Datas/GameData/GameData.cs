@@ -27,7 +27,8 @@ namespace Gameplay
             UnlockedSports = new List<Sport>();
             UnlockedIncremental = 1;
         }
-        /* List<Skin> UnlockedSkin;
-         List<Skin> LockedSkin;*/
+
+        public List<Skin> UnlockedSkin;
+        public List<Skin> LockedSkin;
     }
 }

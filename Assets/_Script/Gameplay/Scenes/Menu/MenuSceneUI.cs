@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using Monetization.Ads.UI;
+using Phoenix;
 using System;
 using TMPro;
 using Unity.VisualScripting;
@@ -24,6 +25,7 @@ namespace Gameplay
         [SerializeField] private RewardButton _unlockBaseballBtn;
         [SerializeField] private RewardButton _unlockVolleyballBtn;
         [SerializeField] private Image _catImage;
+        [SerializeField] private SceneTransition _sceneTransition;
 
 
         [SerializeField] private BasePopup _notUnlockedIncrement;
@@ -111,6 +113,11 @@ namespace Gameplay
                         Leaderboard.Instance.ShowLeaderboard();
                     }
                 });
+        }
+
+        public void OnSkinClick()
+        {
+            _sceneTransition.ChangeScene("SkinScene");
         }
 
         public void OpenNotUnlockedIncremental()

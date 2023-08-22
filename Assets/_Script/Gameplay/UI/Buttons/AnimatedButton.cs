@@ -22,7 +22,14 @@ public class AnimatedButton : UIBehaviour, IPointerDownHandler, IPointerUpHandle
         _button = GetComponent<Button>();
         _transform = GetComponent<Transform>();
     }
-
+    public void SetOnClickEnvent(UnityAction onClick)
+    {
+        _onClickEvent.AddListener(onClick);
+    }
+    public void SetEnable(bool IsEnable)
+    {
+        _button.interactable = IsEnable;
+    }
     public void OnPointerDown(PointerEventData eventData)
     {
         if (_button.enabled && !_isCooldown)

@@ -50,5 +50,18 @@ namespace Gameplay
             GameData defaultGameData = new GameData();
             return defaultGameData;
         }
+
+        public void UnlockSkin(Skin skin)
+        {
+            if (!GameDatas.UnlockedSkin.Contains(skin))
+            {
+                GameDatas.UnlockedSkin.Add(skin);
+            }
+            if (GameDatas.LockedSkin.Contains(skin))
+            {
+                GameDatas.LockedSkin.Remove(skin);
+            }
+            SaveDatas();
+        }
     }
 }

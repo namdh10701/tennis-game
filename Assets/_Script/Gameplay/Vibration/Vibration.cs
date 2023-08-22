@@ -19,52 +19,54 @@ namespace Phoenix.Gameplay.Vibration
 
         public static void Vibrate()
         {
-            if (!_isRunVibration || !IsAndroid())
+           /* if (!_isRunVibration || !IsAndroid())
                 return;
 
             if (IsAndroid())
                 Vibrator.Call("vibrate");
             else
-                Handheld.Vibrate();
+                Handheld.Vibrate();*/
         }
 
 
         public static void Vibrate(long milliseconds)
         {
-            if (!_isRunVibration || !IsAndroid())
+          /*  if (!_isRunVibration || !IsAndroid())
                 return;
 
             if (IsAndroid())
                 Vibrator.Call("vibrate", milliseconds);
             else
-                Handheld.Vibrate();
+                Handheld.Vibrate();*/
         }
 
         public static void Vibrate(long[] pattern, int repeat)
         {
-            if (!_isRunVibration || !IsAndroid())
+          /*  if (!_isRunVibration || !IsAndroid())
                 return;
 
             if (IsAndroid())
                 Vibrator.Call("vibrate", pattern, repeat);
             else
-                Handheld.Vibrate();
+                Handheld.Vibrate();*/
         }
 
         public static bool HasVibrator()
         {
-            return IsAndroid();
+            return false;
+           // return IsAndroid();
         }
 
         public static void Cancel()
         {
-            if (IsAndroid())
-                Vibrator.Call("cancel");
+           /* if (IsAndroid())
+                Vibrator.Call("cancel");*/
         }
 
         private static bool IsAndroid()
         {
-            return UnityPlayer != null && CurrentActivity != null && Vibrator != null;
+            return false;
+            /*return UnityPlayer != null && CurrentActivity != null && Vibrator != null;*/
         }
         public static void SetState(bool isEnable)
         {

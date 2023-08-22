@@ -50,7 +50,7 @@ namespace Gameplay
             _timeManager.Init(_matchData);
             _scoreManager.Init(_matchData);
             _backgroundManager.Init(remoteVariables.BackgroundColorOrder);
-            _difficultyManager.Init(_matchData, remoteVariables.IncrementalStep, remoteVariables.TimescaleStep, this, MaxIncremental);
+            _difficultyManager.Init(_matchData, remoteVariables.IncrementalStep, remoteVariables.TimescaleStep, this, remoteVariables.MaxIncrement);
             _textManager.Init(_matchData);
 
             bool isMatchReversed = SettingManager.Instance.GameSettings.IsReversed;

@@ -54,5 +54,21 @@ namespace ListExtensions
             }
             return default(T);
         }
+
+        public static List<T> Next<T>(this List<T> list, int num)
+        {
+            int count = 0;
+            List<T> ret = new List<T>();
+            for (int i = 0; i < (list.Count < num ? list.Count : num); i++)
+            {
+                if (list[i] != null)
+                {
+                    count++;
+                    ret.Add(list[i]);
+                }
+            }
+            list.RemoveRange(0, count);
+            return ret;
+        }
     }
 }

@@ -8,13 +8,11 @@ namespace Gameplay
     {
         private MatchEvent _matchEvent;
         private Vector2 touchStart;
-        [SerializeField] private float threshold;
         private Transform _player;
         public void Init(MatchEvent matchEvent, Transform player)
         {
             _matchEvent = matchEvent;
             _player = player;
-            threshold = 0;
         }
 
         void Update()

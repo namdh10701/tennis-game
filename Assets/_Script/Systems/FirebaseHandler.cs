@@ -17,7 +17,7 @@ public class FirebaseHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        if (FirebaseManager.Instance.FirebaseRemote != null)
+        if (FirebaseManager.Instance != null)
         {
             FirebaseManager.Instance.FirebaseRemote.OnFetchedCompleted += () => SaveRemoteVariable();
         }
@@ -25,7 +25,7 @@ public class FirebaseHandler : MonoBehaviour
 
     private void OnDisable()
     {
-        if (FirebaseManager.Instance.FirebaseRemote != null)
+        if (FirebaseManager.Instance != null)
         {
             FirebaseManager.Instance.FirebaseRemote.OnFetchedCompleted -= () => SaveRemoteVariable();
         }

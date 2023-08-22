@@ -5,9 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/_Scenes/LoadingScene.unity
     guid: c7fa9eb3465788945bd04c7442a124b5
@@ -17,5 +14,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Scenes/MatchScene.unity
     guid: 1db45f9b329d937458ba3516bf151ddd
+  - enabled: 1
+    path: Assets/_Scenes/SkinScene.unity
+    guid: 59764fad392d37b4aa2167ed89b9c0a8
   m_configObjects:
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: ba9909ed9a88a8543803c21869620d3d, type: 2}

@@ -4,24 +4,17 @@ using UnityEngine;
 using Enviroments;
 using GooglePlayGames.BasicApi;
 using Common;
-using System.Collections;
 
 namespace Gameplay
 {
     public class Leaderboard : SingletonPersistent<Leaderboard>
     {
         public bool isConnectdToLeaderboard = false;
-        public bool IsLeaderboardUIShowing = false;
-        private bool previousAuthState = false;
         private void Start()
         {
             if (Enviroment.ENV == Enviroment.Env.PROD)
             {
                 PlayGamesPlatform.DebugLogEnabled = false;
-            }
-            else
-            {
-                //PlayGamesPlatform.DebugLogEnabled = true;
             }
             PlayGamesPlatform.Activate();
             SignInToLeaderboardAutomatic();
@@ -77,7 +70,6 @@ namespace Gameplay
         public void ShowLeaderboard()
         {
             Social.ShowLeaderboardUI();
-            IsLeaderboardUIShowing = true;
         }
         public void ReportScore(int score)
         {
@@ -90,15 +82,6 @@ namespace Gameplay
             {
                 Debug.Log("report score success with score: " + score + "id: " + idLeaderboard);
             });
-        }
-
-        private void Update()
-        {
-            // Detect leaderboard UI close
-            if (IsLeaderboardUIShowing && !Social.localUser.authenticated)
-            {
-                IsLeaderboardUIShowing = false;
-            }
         }
     }
 }
