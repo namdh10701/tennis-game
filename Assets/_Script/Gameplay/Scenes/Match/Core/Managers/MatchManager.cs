@@ -1,6 +1,5 @@
 ﻿using Audio;
 using Common;
-using Phoenix.Gameplay.Vibration;
 using Services.FirebaseService.Analytics;
 using System.Collections;
 using TMPro;

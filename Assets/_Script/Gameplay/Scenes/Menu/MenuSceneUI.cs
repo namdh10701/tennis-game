@@ -1,6 +1,8 @@
+using Common;
 using JetBrains.Annotations;
 using Monetization.Ads.UI;
 using Phoenix;
+using Services.FirebaseService.Analytics;
 using System;
 using TMPro;
 using Unity.VisualScripting;
@@ -75,14 +77,17 @@ namespace Gameplay
             switch (sport)
             {
                 case Sport.FOOTBALL:
+                    FirebaseAnalytics.Instance.PushEvent(Constant.REWARD_COMPLETE_FOOTBALL);
                     _unlockFootballBtn.IsButtonActive = false;
                     _unlockFootballBtn.GetComponent<Button>().onClick.AddListener(() => _sceneManager.StartMatch(sport));
                     break;
                 case Sport.BASEBALL:
+                    FirebaseAnalytics.Instance.PushEvent(Constant.REWARD_COMPLETE_BASEBALL);
                     _unlockBaseballBtn.IsButtonActive = false;
                     _unlockBaseballBtn.GetComponent<Button>().onClick.AddListener(() => _sceneManager.StartMatch(sport));
                     break;
                 case Sport.VOLLEYBALL:
+                    FirebaseAnalytics.Instance.PushEvent(Constant.REWARD_COMPLETE_VOLLEYBALL);
                     _unlockVolleyballBtn.IsButtonActive = false;
                     _unlockVolleyballBtn.GetComponent<Button>().onClick.AddListener(() => _sceneManager.StartMatch(sport));
                     break;

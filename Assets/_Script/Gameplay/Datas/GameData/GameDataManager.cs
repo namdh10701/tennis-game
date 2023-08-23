@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using static Gameplay.MatchSetting;
 
@@ -18,49 +19,57 @@ namespace Gameplay
                 return instance;
             }
         }
+
+        private string dataFilePath;
+
         public GameData GameDatas { get; private set; }
 
         public GameDataManager()
         {
+            dataFilePath = Path.Combine(Application.persistentDataPath, "GameDatas.json");
+
+            if (!File.Exists(dataFilePath))
+            {
+                GameDatas = CreateDefaultDatas();
+                Debug.Log(GameDatas.Skins.Count);
+                SaveDatas(); // Save default data to create the JSON file
+            }
             GameDatas = LoadDatas();
         }
 
         public void SaveDatas()
         {
             string json = JsonUtility.ToJson(GameDatas);
-            PlayerPrefs.SetString("GameDatas", json);
-            PlayerPrefs.Save();
+            File.WriteAllText(dataFilePath, json);
         }
 
         public GameData LoadDatas()
         {
-            if (PlayerPrefs.HasKey("GameDatas"))
-            {
-                string json = PlayerPrefs.GetString("GameDatas");
-                return JsonUtility.FromJson<GameData>(json);
-            }
-            else
-            {
-                return CreateDefaultDatas();
-            }
+            string json = File.ReadAllText(dataFilePath);
+            return JsonUtility.FromJson<GameData>(json);
         }
 
         private GameData CreateDefaultDatas()
         {
-            GameData defaultGameData = new GameData();
-            return defaultGameData;
+            UnityEngine.TextAsset defaultJsonAsset = Resources.Load<UnityEngine.TextAsset>("DefaultGameDatas");
+            return JsonUtility.FromJson<GameData>(defaultJsonAsset.text);
         }
 
         public void UnlockSkin(Skin skin)
         {
-            if (!GameDatas.UnlockedSkin.Contains(skin))
+            skin.Unlocked = true;
+            SaveDatas();
+        }
+        public void UseSkin(Skin selectedSkin)
+        {
+            foreach (Skin skin in GameDatas.Skins)
             {
-                GameDatas.UnlockedSkin.Add(skin);
+                if (skin.Type == selectedSkin.Type)
+                {
+                    skin.BeingUsed = false;
+                }
             }
-            if (GameDatas.LockedSkin.Contains(skin))
-            {
-                GameDatas.LockedSkin.Remove(skin);
-            }
+            selectedSkin.BeingUsed = true;
             SaveDatas();
         }
     }

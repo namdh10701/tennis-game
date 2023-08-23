@@ -4,7 +4,6 @@ using UnityEngine;
 using static UI.ToggleButton;
 using Monetization.Ads.UI;
 using Monetization.Ads;
-using Phoenix.Gameplay.Vibration;
 using TMPro;
 using Audio;
 using System.Collections;
@@ -17,6 +16,10 @@ public class SettingPanel : InterPopup
     [SerializeField] private ToggleButton _reversedButton;
     [SerializeField] private NativeAdPanel _nativeAdPanel;
     [SerializeField] private TextMeshProUGUI _versionName;
+    private void Start()
+    {
+        StartCoroutine(WaitAndShowNativeAds());
+    }
     public void Init()
     {
         _musicButton.Init(SettingManager.Instance.GameSettings.IsMusicOn ? State.ON : State.OFF);
@@ -51,11 +54,6 @@ public class SettingPanel : InterPopup
         SettingManager.Instance.GameSettings.IsReversed = isReversed;
         SettingManager.Instance.SaveSettings();
 
-    }
-
-    private void OnEnable()
-    {
-        StartCoroutine(WaitAndShowNativeAds());
     }
 
     private IEnumerator WaitAndShowNativeAds()

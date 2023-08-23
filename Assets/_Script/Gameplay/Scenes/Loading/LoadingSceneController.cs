@@ -1,6 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+using Enviroments;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,7 +14,10 @@ namespace Gameplay
         public Image progressBar;
         private void Start()
         {
-            StartCoroutine(LoadGameScene());
+            if (Enviroment.ENV == Enviroment.Env.DEV)
+                _sceneTransition.ChangeScene("MenuScene");
+            else
+                StartCoroutine(LoadGameScene());
         }
 
         private IEnumerator LoadGameScene()

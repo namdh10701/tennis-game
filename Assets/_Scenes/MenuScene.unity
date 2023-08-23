@@ -266,7 +266,7 @@ GameObject:
   - component: {fileID: 115706857}
   - component: {fileID: 115706858}
   m_Layer: 5
-  m_Name: Rank (1)
+  m_Name: Skin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -291,7 +291,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -131.1, y: 251.7}
+  m_AnchoredPosition: {x: -131.09998, y: 251.7}
   m_SizeDelta: {x: 167.7923, y: 189.1517}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &115706857
@@ -2883,7 +2883,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Rank
+  m_text: 'Skin
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9f4caef88564840498349d4a00fa2261, type: 2}
   m_sharedMaterial: {fileID: -1371937816636605761, guid: 9f4caef88564840498349d4a00fa2261, type: 2}
@@ -5596,21 +5598,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 517488996}
     m_Modifications:
-    - target: {fileID: 6425409021299926893, guid: cf359687ab98ddc40816e46a11290f92, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6425409022481929731, guid: cf359687ab98ddc40816e46a11290f92, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6425409022639883028, guid: cf359687ab98ddc40816e46a11290f92, type: 3}
       propertyPath: m_Name
       value: SettingPanel
-      objectReference: {fileID: 0}
-    - target: {fileID: 6425409022639883028, guid: cf359687ab98ddc40816e46a11290f92, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6425409022639883031, guid: cf359687ab98ddc40816e46a11290f92, type: 3}
       propertyPath: m_Pivot.x

@@ -13,6 +13,7 @@ public class FirebaseHandler : MonoBehaviour
     private void SaveRemoteVariable()
     {
         RemoteVariableManager.Instance.SaveDatas();
+        MatchSetting.MaxIncrementalIngame = (int)RemoteVariableManager.Instance.MyRemoteVariables.MaxIncrement.Value;
     }
 
     private void OnEnable()

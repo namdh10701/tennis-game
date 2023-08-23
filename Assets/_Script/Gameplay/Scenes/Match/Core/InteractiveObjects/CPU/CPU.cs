@@ -14,8 +14,9 @@ namespace Gameplay
         [SerializeField] private SpriteRenderer _catSprite;
         [SerializeField] private SpriteRenderer _toolSprite;
         [SerializeField] private Animator _animator;
-        [SerializeField] private SportAsset _sportAsset;
-        [SerializeField] private CatAsset _catAsset;
+        public SportAsset SportAsset;
+        public CatAsset CatAsset;
+        public SkinAsset SkinAsset;
 
         private Ball _ball;
         private MatchEvent _matchEvent;
@@ -24,6 +25,7 @@ namespace Gameplay
         private MatchSetting _matchSetting;
         private bool _isReversed;
         private int _maxCat;
+        private Skin.SkinType _skinType;
         private void Start()
         {
             _animator.Play("Idle");
@@ -44,24 +46,44 @@ namespace Gameplay
             switch (matchSettings.SportName)
             {
                 case Sport.TENNIS:
-                    _toolSprite.sprite = _sportAsset.RacketSprite;
+                    _toolSprite.sprite = SportAsset.RacketSprite;
+                    _skinType = Skin.SkinType.RACKET;
                     break;
                 case Sport.BASEBALL:
-                    _toolSprite.sprite = _sportAsset.BasebatSprite;
+                    _toolSprite.sprite = SportAsset.BasebatSprite;
+                    _skinType = Skin.SkinType.BASEBAT;
                     break;
                 case Sport.FOOTBALL:
                     _toolSprite.sprite = null;
+                    _skinType = Skin.SkinType.GLOVES;
                     break;
                 case Sport.VOLLEYBALL:
                     _toolSprite.sprite = null;
+                    _skinType = Skin.SkinType.HAND;
                     break;
             }
+
+            
+            if (_skinType == Skin.SkinType.GLOVES
+                || _skinType == Skin.SkinType.HAND)
+            {
+                return;
+            }
+            string skinID = "";
+            foreach (Skin skin in GameDataManager.Instance.GameDatas.Skins)
+            {
+                if (skin.Unlocked && skin.BeingUsed && skin.Type == _skinType)
+                {
+                    skinID = skin.ID;
+                }
+            }
+            _toolSprite.sprite = SkinAsset.skinSprites[int.Parse(skinID) - 1];
         }
 
         public void Prepare()
         {
             _cat.position = _originalPos;
-            _catSprite.sprite = _catAsset.CatSprites[_matchSetting.Incremental - 1];
+            _catSprite.sprite = CatAsset.CatSprites[_matchSetting.Incremental - 1];
         }
 
 
@@ -141,7 +163,7 @@ namespace Gameplay
 
         public void UpdateCat()
         {
-            _catSprite.sprite = _catAsset.CatSprites[(_matchSetting.Incremental - 1) % _catAsset.CatSprites.Count];
+            _catSprite.sprite = CatAsset.CatSprites[(_matchSetting.Incremental - 1) % CatAsset.CatSprites.Count];
         }
     }
 }

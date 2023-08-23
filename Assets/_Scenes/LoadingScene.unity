@@ -1757,29 +1757,5 @@ PrefabInstance:
       propertyPath: m_Name
       value: SceneTransition
       objectReference: {fileID: 0}
-    - target: {fileID: 1267833039741567550, guid: 41769cf77f66d7f4da1d138c11132367, type: 3}
-      propertyPath: m_Color.b
-      value: 0.18867922
-      objectReference: {fileID: 0}
-    - target: {fileID: 1267833039741567550, guid: 41769cf77f66d7f4da1d138c11132367, type: 3}
-      propertyPath: m_Color.g
-      value: 0.18867922
-      objectReference: {fileID: 0}
-    - target: {fileID: 1267833039741567550, guid: 41769cf77f66d7f4da1d138c11132367, type: 3}
-      propertyPath: m_Color.r
-      value: 0.18867922
-      objectReference: {fileID: 0}
-    - target: {fileID: 1267833040096918206, guid: 41769cf77f66d7f4da1d138c11132367, type: 3}
-      propertyPath: m_Color.b
-      value: 0.18867922
-      objectReference: {fileID: 0}
-    - target: {fileID: 1267833040096918206, guid: 41769cf77f66d7f4da1d138c11132367, type: 3}
-      propertyPath: m_Color.g
-      value: 0.18867922
-      objectReference: {fileID: 0}
-    - target: {fileID: 1267833040096918206, guid: 41769cf77f66d7f4da1d138c11132367, type: 3}
-      propertyPath: m_Color.r
-      value: 0.18867922
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41769cf77f66d7f4da1d138c11132367, type: 3}

@@ -4,7 +4,6 @@ using Services.FirebaseService;
 using Services.FirebaseService.Remote;
 using Enviroments;
 using Monetization.Ads;
-using Phoenix.Gameplay.Vibration;
 using Audio;
 using Common;
 using System.Collections;

@@ -9,7 +9,8 @@ namespace Gameplay
         {
             TENNIS, VOLLEYBALL, FOOTBALL, BASEBALL
         }
-        public static int MaxIncremental = 10;
+        public static int MaxIncrementalMenu = 11;
+        public static int MaxIncrementalIngame = 11;
         public static readonly Sport[] AvailableSports = { Sport.TENNIS, Sport.VOLLEYBALL };
         public static readonly Dictionary<Sport, string> SportNamesMap = new Dictionary<Sport, string>() {
         {Sport.TENNIS,"Tennis" },
@@ -28,9 +29,15 @@ namespace Gameplay
         public Sport SportName;
         public void ChangeIncremental()
         {
-            if (Incremental >= MaxIncremental)
+            if (Incremental >= MaxIncrementalMenu)
                 Incremental = 1;
             else
+                Incremental = Incremental + 1;
+        }
+
+        public void ChangeIncrementalInGame()
+        {
+            if (Incremental < MaxIncrementalIngame)
                 Incremental = Incremental + 1;
         }
         public string GetCurrentSportNameToString()

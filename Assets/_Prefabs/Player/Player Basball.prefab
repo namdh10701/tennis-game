@@ -133,6 +133,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _inputManager: {fileID: 7343313436185961463}
   _playerCollider: {fileID: 7343313436430417688}
+  SkinAsset: {fileID: 11400000, guid: 7386a62bb513ad8469aa0b51621bb066, type: 2}
 --- !u!114 &7343313436185961463
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,7 +146,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65ed33f2128a4974aaf1dd35f00cb92b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  threshold: 60
 --- !u!1 &7343313436430417687
 GameObject:
   m_ObjectHideFlags: 0

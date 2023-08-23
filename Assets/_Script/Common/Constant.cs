@@ -15,7 +15,9 @@
         public static string adInterval_OpenAd_OpenAd = "adInterval_OpenAd_OpenAd";
         public static string adInterval_Reward_Inter = "adInterval_Reward_Inter";
         public static string ADS_REMOVED_KEY = "ADS_REMOVED_KEY";
-
+        public static string REWARD_COMPLETE_FOOTBALL = "REWARD_COMPLETE_FOOTBALL";
+        public static string REWARD_COMPLETE_BASEBALL = "REWARD_COMPLETE_BASEBALL";
+        public static string REWARD_COMPLETE_VOLLEYBALL = "REWARD_COMPLETE_VOLLEYBALL";
         public static string REVIVE_CLICK = "REWARD_AD_CLICK_REVIVE";
         public static string REVIVE_COMPLETE = "REWARD_AD_COMPLETE_REVIVE";
         public static string REWARD_FAILED = "REWARD_FAILED";

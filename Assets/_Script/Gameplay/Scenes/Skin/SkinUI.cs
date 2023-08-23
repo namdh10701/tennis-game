@@ -1,5 +1,6 @@
 using ListExtensions;
 using Phoenix;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UI;
@@ -10,6 +11,7 @@ namespace Gameplay
     {
         [SerializeField] GameObject SkinRowPrefab;
 
+        public SkinAsset SkinAsset;
         private const int EXIST_SKIN_ROW = 5;
         private const int SKIN_PER_ROW = 4;
         [SerializeField] private Transform skinRowsHolder;
@@ -22,7 +24,30 @@ namespace Gameplay
         public void Init(List<Skin> skins)
         {
             _skins = skins;
-            int numberOfRow = skins.Count / SKIN_PER_ROW + 1;
+            CreateRows();
+
+            _skinButtons = _scrollRect.GetComponentsInChildren<SkinButton>().ToList();
+            HandleSkinButtons();
+
+        }
+
+        private void HandleSkinButtons()
+        {
+            for (int i = 0; i < _skinButtons.Count - _skins.Count; i++)
+            {
+                _skinButtons[_skinButtons.Count - 1 - i].Disalbe();
+            }
+
+            for (int i = 0; i < _skins.Count; i++)
+            {
+                if (!_skinButtons[i].Disabled)
+                    _skinButtons[i].Init(this, _skins[i], SkinAsset.skinSprites[int.Parse(_skins[i].ID) - 1]);
+            }
+        }
+
+        private void CreateRows()
+        {
+            int numberOfRow = _skins.Count / SKIN_PER_ROW + 1;
             if (numberOfRow > EXIST_SKIN_ROW)
             {
                 for (int i = 0; i < numberOfRow - EXIST_SKIN_ROW; i++)
@@ -30,19 +55,6 @@ namespace Gameplay
                     Instantiate(SkinRowPrefab, skinRowsHolder);
                 }
             }
-
-            _skinButtons = _scrollRect.GetComponentsInChildren<SkinButton>().ToList();
-            for (int i = 0; i < _skinButtons.Count - skins.Count; i++)
-            {
-                _skinButtons[_skinButtons.Count - 1 - i].Disalbe();
-            }
-
-            for (int i = 0; i < skins.Count; i++)
-            {
-                _skinButtons[i].Init(_skins[i]);
-            }
-
-
         }
 
         public void OnBackButtonClick()
@@ -50,9 +62,16 @@ namespace Gameplay
             _sceneTransition.ChangeScene("MenuScene");
         }
 
-        public void OnSkinClick()
+        public void OnSkinSelect(Skin skin)
         {
-
+            GameDataManager.Instance.UseSkin(skin);
+            foreach (SkinButton skinBtn in _skinButtons)
+            {
+                if (!skinBtn.Disabled && skinBtn.Skin.Unlocked)
+                {
+                    skinBtn.UpdateSkinButtonVisualAndFunction(this);
+                }
+            }
         }
     }
 }

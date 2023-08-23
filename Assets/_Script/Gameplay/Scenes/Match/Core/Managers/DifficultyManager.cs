@@ -34,7 +34,7 @@ namespace Gameplay
                 return;
             if (_matchData.Score >= _incrementalStep.Steps[_matchData.MatchSettings.Incremental - 1].TriggerScore)
             {
-                _matchData.MatchSettings.ChangeIncremental();
+                _matchData.MatchSettings.ChangeIncrementalInGame();
                 ApplyDifficulty();
                 _matchManager.OnDifficultyChange();
                 if (_matchData.MatchSettings.Incremental > GameDataManager.Instance.GameDatas.UnlockedIncremental)

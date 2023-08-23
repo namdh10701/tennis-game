@@ -19,12 +19,17 @@ public class AnimatedButton : UIBehaviour, IPointerDownHandler, IPointerUpHandle
 
     protected override void Awake()
     {
+        _clickCooldownDuration = .2f;
         _button = GetComponent<Button>();
         _transform = GetComponent<Transform>();
     }
     public void SetOnClickEnvent(UnityAction onClick)
     {
         _onClickEvent.AddListener(onClick);
+    }
+    public void RemoveOnClickEvent()
+    {
+        _onClickEvent.RemoveAllListeners();
     }
     public void SetEnable(bool IsEnable)
     {

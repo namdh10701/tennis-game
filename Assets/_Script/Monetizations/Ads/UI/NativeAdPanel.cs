@@ -1,4 +1,6 @@
-﻿using GoogleMobileAds.Api;
+﻿using Common;
+using GoogleMobileAds.Api;
+using Services.FirebaseService.Analytics;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -54,7 +56,11 @@ namespace Monetization.Ads.UI
             Debug.Log("nativeads showed after loaded");
             loadedObject.SetActive(true);
             loadingObject.SetActive(false);
-            IsNativeAdShowed = true;
+            if (!IsNativeAdShowed)
+            {
+                IsNativeAdShowed = true;
+                FirebaseAnalytics.Instance.PushEvent(Constant.SHOW_NATIVE_AD);
+            }
         }
 
         public void Hide()
@@ -94,6 +100,10 @@ namespace Monetization.Ads.UI
             if (adChoicesTexture != null)
             {
                 HandleAdChoiceTexture(adChoicesTexture);
+            }
+            else
+            {
+                adChoices.gameObject.SetActive(false);
             }
             string headline = _nativeAd.GetHeadlineText();
             if (headline != null && headline != "")

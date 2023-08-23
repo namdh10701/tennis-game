@@ -3,10 +3,10 @@ using System;
 using UnityEngine;
 using static Gameplay.MatchEvent;
 using static Gameplay.MatchSetting;
+using static Gameplay.Skin;
 
 namespace Gameplay
 {
-    //ToDo:Flip character here
     public class Player : MonoBehaviour
     {
         private MatchEvent _matchEvent;
@@ -15,6 +15,11 @@ namespace Gameplay
         private Vector3 _originalScale;
         private Vector3 _flippedScale;
         [SerializeField] private PlayerCollider _playerCollider;
+
+        [SerializeField] private SpriteRenderer _spriteRenderer;
+        public SkinAsset SkinAsset;
+        private SkinType _skinType;
+        //Todo : skin
 
         public void Init(MatchEvent matchEvent, MatchSetting matchSettings, bool isReversed)
         {
@@ -30,6 +35,44 @@ namespace Gameplay
             _flippedScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
             _playerCollider.Init(matchEvent);
             _matchEvent.BallMove += HandleFlipCharacter;
+
+
+            ApplySkin(matchSettings);
+        }
+
+        private void ApplySkin(MatchSetting matchSetting)
+        {
+            switch (matchSetting.SportName)
+            {
+                case Sport.TENNIS:
+                    _skinType = Skin.SkinType.RACKET;
+                    break;
+                case Sport.BASEBALL:
+                    _skinType = Skin.SkinType.BASEBAT;
+                    break;
+                case Sport.FOOTBALL:
+                    _skinType = Skin.SkinType.GLOVES;
+                    break;
+                case Sport.VOLLEYBALL:
+                    _skinType = Skin.SkinType.HAND;
+                    break;
+            }
+
+
+            if (_skinType == Skin.SkinType.GLOVES
+                || _skinType == Skin.SkinType.HAND)
+            {
+                return;
+            }
+            string skinID = "";
+            foreach (Skin skin in GameDataManager.Instance.GameDatas.Skins)
+            {
+                if (skin.Unlocked && skin.BeingUsed && skin.Type == _skinType)
+                {
+                    skinID = skin.ID;
+                }
+            }
+            _spriteRenderer.sprite = SkinAsset.skinSprites[int.Parse(skinID) - 1];
         }
 
         private void HandleFlipCharacter(Vector3 newBallPos, Side side)

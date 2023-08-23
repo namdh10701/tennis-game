@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using static Gameplay.MatchSetting;
 
 namespace Gameplay
@@ -9,7 +10,7 @@ namespace Gameplay
     {
         public enum TextType
         {
-            COOL, EXCELLENT, NICE, PERFECT, WONDERFUL, WOW, YAY
+            COOL = 0, EXCELLENT = 1, NICE = 2, PERFECT = 3, WONDERFUL = 4, WOW = 5, YAY = 6
         }
 
         public float HighTime;
@@ -18,17 +19,6 @@ namespace Gameplay
         public List<Sport> UnlockedSports;
         public List<TextType> UnlockedTexts;
         public int UnlockedIncremental;
-
-        public GameData()
-        {
-            HighScore = 0;
-            HighTime = 0;
-            LastGamePlayed = null;
-            UnlockedSports = new List<Sport>();
-            UnlockedIncremental = 1;
-        }
-
-        public List<Skin> UnlockedSkin;
-        public List<Skin> LockedSkin;
+        public List<Skin> Skins;
     }
 }
