@@ -10,13 +10,15 @@ namespace Gameplay
         public RemoteDouble MaxIncrement;
         public RemoteJson BackgroundColorOrder;
         public RemoteJson IncrementalStep;
+        public RemoteDouble NewMaxIncrement;
 
         public MyRemoteVariableCollection()
         {
             IncrementalStep = new RemoteJson("IncrementalSteps", JsonUtility.ToJson(new IncrementalStep()));
             TimescaleStep = new RemoteDouble("TimescaleStep", 1);
-            MaxIncrement = new RemoteDouble("MaxIncrement", 11);
+            MaxIncrement = new RemoteDouble("MaxIncrement", 10);
             BackgroundColorOrder = new RemoteJson("BackgroundColorOrder", JsonUtility.ToJson(new BackgroundColorOrder()));
+            NewMaxIncrement = new RemoteDouble("NewMaxIncrement",11);
         }
 
         public override void AddToFetchQueue()
@@ -25,6 +27,7 @@ namespace Gameplay
             AddVariable(MaxIncrement);
             AddVariable(IncrementalStep);
             AddVariable(BackgroundColorOrder);
+            AddVariable(NewMaxIncrement);
         }
     }
 }

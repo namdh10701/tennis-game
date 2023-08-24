@@ -49,6 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _inputManager: {fileID: 5081827100015912879}
   _playerCollider: {fileID: 7987272717430935103}
+  _spriteRenderer: {fileID: 5081827101348116464}
   SkinAsset: {fileID: 11400000, guid: 7386a62bb513ad8469aa0b51621bb066, type: 2}
 --- !u!114 &5081827100015912879
 MonoBehaviour:

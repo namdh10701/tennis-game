@@ -1,9 +1,11 @@
 using Common;
 using JetBrains.Annotations;
+using Monetization.Ads;
 using Monetization.Ads.UI;
 using Phoenix;
 using Services.FirebaseService.Analytics;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -27,12 +29,15 @@ namespace Gameplay
         [SerializeField] private RewardButton _unlockBaseballBtn;
         [SerializeField] private RewardButton _unlockVolleyballBtn;
         [SerializeField] private Image _catImage;
+        [SerializeField] private List<Image> _catShadows;
         [SerializeField] private SceneTransition _sceneTransition;
 
 
         [SerializeField] private BasePopup _notUnlockedIncrement;
 
         public CatAsset CatAsset;
+        public CatShadowAsset CatShadowAsset;
+        public Animator _catSlideAnimator;
         public void Init(MenuSceneManager sceneManager,
             MatchSetting matchSetting)
         {
@@ -62,13 +67,25 @@ namespace Gameplay
             _matchSetting.ChangeIncremental();
             _incrementalText.text = "X" + _matchSetting.Incremental;
             _catImage.sprite = CatAsset.CatSprites[_matchSetting.Incremental - 1];
+          
             if (_matchSetting.Incremental > GameDataManager.Instance.GameDatas.UnlockedIncremental)
             {
+                foreach (Image catShadow in _catShadows)
+                {
+                    catShadow.gameObject.SetActive(false);
+                }
                 _catImage.color = Color.black;
+                _catSlideAnimator.SetTrigger("LockedCatSlide");
             }
             else
             {
+                foreach (Image catShadow in _catShadows)
+                {
+                    catShadow.gameObject.SetActive(true);
+                    catShadow.sprite = CatShadowAsset.CatShadowSprites[_matchSetting.Incremental - 1];
+                }
                 _catImage.color = Color.white;
+                _catSlideAnimator.SetTrigger("SlideIn");
             }
         }
 
@@ -77,17 +94,14 @@ namespace Gameplay
             switch (sport)
             {
                 case Sport.FOOTBALL:
-                    FirebaseAnalytics.Instance.PushEvent(Constant.REWARD_COMPLETE_FOOTBALL);
                     _unlockFootballBtn.IsButtonActive = false;
                     _unlockFootballBtn.GetComponent<Button>().onClick.AddListener(() => _sceneManager.StartMatch(sport));
                     break;
                 case Sport.BASEBALL:
-                    FirebaseAnalytics.Instance.PushEvent(Constant.REWARD_COMPLETE_BASEBALL);
                     _unlockBaseballBtn.IsButtonActive = false;
                     _unlockBaseballBtn.GetComponent<Button>().onClick.AddListener(() => _sceneManager.StartMatch(sport));
                     break;
                 case Sport.VOLLEYBALL:
-                    FirebaseAnalytics.Instance.PushEvent(Constant.REWARD_COMPLETE_VOLLEYBALL);
                     _unlockVolleyballBtn.IsButtonActive = false;
                     _unlockVolleyballBtn.GetComponent<Button>().onClick.AddListener(() => _sceneManager.StartMatch(sport));
                     break;
@@ -99,7 +113,10 @@ namespace Gameplay
             Sport sport = (Sport)Enum.Parse(typeof(Sport), sportName);
             UnlockSportUI(sport);
             if (!GameDataManager.Instance.GameDatas.UnlockedSports.Contains(sport))
+            {
                 GameDataManager.Instance.GameDatas.UnlockedSports.Add(sport);
+                FirebaseAnalytics.Instance.PushEvent($"REWARD_COMPLETE_{sport.ToString().ToUpper()}");
+            }
             GameDataManager.Instance.SaveDatas();
 
         }

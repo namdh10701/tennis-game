@@ -49,6 +49,7 @@ public class AnimatedButton : UIBehaviour, IPointerDownHandler, IPointerUpHandle
         if (_button.enabled && !_isCooldown && _clickedDown)
         {
             Vector2 localPoint;
+            _transform.localScale /= .9f;
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 _button.GetComponent<RectTransform>(),
                 eventData.position, eventData.pressEventCamera, out localPoint))
@@ -59,8 +60,6 @@ public class AnimatedButton : UIBehaviour, IPointerDownHandler, IPointerUpHandle
                     _onClickEvent?.Invoke();
                 }
             }
-
-            _transform.localScale /= .9f;
             _clickedDown = false;
 
             if (!_isSpamable)

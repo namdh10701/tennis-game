@@ -10,7 +10,7 @@ public class IncrementalStep
     {
         Steps = new List<Step>
         {
-            new Step(2, 4),
+            new Step(2, 3),
             new Step(3, 16),
             new Step(4, 36),
             new Step(5, 64),

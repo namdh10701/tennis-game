@@ -37,8 +37,10 @@ namespace Gameplay
 
         public void ChangeIncrementalInGame()
         {
-            if (Incremental < MaxIncrementalIngame)
+            if (Incremental < MaxIncrementalIngame) { 
                 Incremental = Incremental + 1;
+                Debug.Log(MaxIncrementalIngame +"update");
+            }
         }
         public string GetCurrentSportNameToString()
         {

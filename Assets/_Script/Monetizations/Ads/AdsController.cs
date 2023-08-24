@@ -196,8 +196,12 @@ namespace Monetization.Ads
         }
         public void ShowNativeAd(NativeAdPanel nativeAdPanel)
         {
+            Debug.Log($"Removeads purchased: {RemoveAds}");
             if (RemoveAds)
+            {
+                nativeAdPanel.gameObject.SetActive(false);
                 return;
+            }
             if (_nativeAdPanels.Contains(nativeAdPanel))
             {
 
@@ -371,7 +375,7 @@ namespace Monetization.Ads
                 {
                     panel.gameObject.SetActive(!removeAdsPuchased);
                 }
-                if(!removeAdsPuchased) _nativeAdPanels.Clear();
+                if (!removeAdsPuchased) _nativeAdPanels.Clear();
             }
             if (!removeAdsPuchased) CachedNativeAds?.Clear();
         }

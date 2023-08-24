@@ -5,6 +5,7 @@ using Common;
 using Monetization.Ads;
 using Services.FirebaseService.Analytics;
 using System.Collections;
+using Enviroments;
 
 namespace Monetization.IAP
 {
@@ -21,7 +22,6 @@ namespace Monetization.IAP
             FirebaseAnalytics.Instance.PushEvent("REMOVES_ADS_PURCHASED");
             FirebaseAnalytics.Instance.PushEvent("REMOVES_ADS_CLICK");
             StartCoroutine(HideButton());
-
         }
 
         private IEnumerator HideButton()
@@ -44,12 +44,6 @@ namespace Monetization.IAP
                 PlayerPrefs.SetInt(Constant.ADS_REMOVED_KEY, 1);
                 IAPButtons.gameObject.SetActive(false);
                 AdsController.Instance.SetRemoveAds(true);
-            }
-            else
-            {
-                Debug.Log("Player has not purchased removed ads");
-                PlayerPrefs.SetInt(Constant.ADS_REMOVED_KEY, 0);
-                AdsController.Instance.SetRemoveAds(false);
             }
 
         }

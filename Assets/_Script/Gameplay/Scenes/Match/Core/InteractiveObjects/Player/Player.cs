@@ -35,9 +35,7 @@ namespace Gameplay
             _flippedScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
             _playerCollider.Init(matchEvent);
             _matchEvent.BallMove += HandleFlipCharacter;
-
-
-            ApplySkin(matchSettings);
+            //ApplySkin(matchSettings);
         }
 
         private void ApplySkin(MatchSetting matchSetting)
@@ -58,12 +56,6 @@ namespace Gameplay
                     break;
             }
 
-
-            if (_skinType == Skin.SkinType.GLOVES
-                || _skinType == Skin.SkinType.HAND)
-            {
-                return;
-            }
             string skinID = "";
             foreach (Skin skin in GameDataManager.Instance.GameDatas.Skins)
             {
@@ -71,6 +63,7 @@ namespace Gameplay
                 {
                     skinID = skin.ID;
                 }
+                Debug.Log("Player is using skin: " + skinID);
             }
             _spriteRenderer.sprite = SkinAsset.skinSprites[int.Parse(skinID) - 1];
         }
@@ -104,7 +97,7 @@ namespace Gameplay
 
         public void Prepare()
         {
-            transform.position = _originalPos;
+            transform.localPosition = Vector3.zero;
         }
     }
 }

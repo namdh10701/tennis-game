@@ -8,6 +8,7 @@ public class RemoteVariable
     public IncrementalStep IncrementalStep;
     public float TimescaleStep;
     public int MaxIncrement;
+    public int NewMaxIncrement;
 
     public static T Convert<T>(RemoteJson remoteJson)
     {
@@ -20,7 +21,7 @@ public class RemoteVariable
         remoteVariable.MaxIncrement = (int)myRemoteVariableCollection.MaxIncrement.Value;
         remoteVariable.BackgroundColorOrder = Convert<BackgroundColorOrder>(myRemoteVariableCollection.BackgroundColorOrder);
         remoteVariable.IncrementalStep = Convert<IncrementalStep>(myRemoteVariableCollection.IncrementalStep);
-        Debug.Log(remoteVariable.MaxIncrement);
+        remoteVariable.NewMaxIncrement = (int)myRemoteVariableCollection.NewMaxIncrement.Value;
         return remoteVariable;
     }
 }

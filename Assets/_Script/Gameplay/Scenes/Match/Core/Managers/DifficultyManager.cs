@@ -35,12 +35,16 @@ namespace Gameplay
             if (_matchData.Score >= _incrementalStep.Steps[_matchData.MatchSettings.Incremental - 1].TriggerScore)
             {
                 _matchData.MatchSettings.ChangeIncrementalInGame();
+                Debug.Log(_matchData.MatchSettings.Incremental);
                 ApplyDifficulty();
                 _matchManager.OnDifficultyChange();
                 if (_matchData.MatchSettings.Incremental > GameDataManager.Instance.GameDatas.UnlockedIncremental)
                 {
-                    GameDataManager.Instance.GameDatas.UnlockedIncremental = _matchData.MatchSettings.Incremental;
-                    GameDataManager.Instance.SaveDatas();
+                    if (_matchData.MatchSettings.Incremental <= 11)
+                    {
+                        GameDataManager.Instance.GameDatas.UnlockedIncremental = _matchData.MatchSettings.Incremental;
+                        GameDataManager.Instance.SaveDatas();
+                    }
                 }
             }
         }

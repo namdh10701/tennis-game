@@ -90,11 +90,19 @@ namespace Monetization.Ads.UI
             {
                 HandleImageTexture2D(imageTexture2DList);
             }
+            else
+            {
+                image.gameObject.SetActive(false);
+            }
 
             Texture2D iconTexture = _nativeAd.GetIconTexture();
             if (iconTexture != null)
             {
                 HandleIconTexture(iconTexture);
+            }
+            else
+            {
+                icon.gameObject.SetActive(false);
             }
             Texture2D adChoicesTexture = _nativeAd.GetAdChoicesLogoTexture();
             if (adChoicesTexture != null)

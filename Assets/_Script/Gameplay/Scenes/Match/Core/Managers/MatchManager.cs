@@ -49,7 +49,7 @@ namespace Gameplay
             _timeManager.Init(_matchData);
             _scoreManager.Init(_matchData);
             _backgroundManager.Init(remoteVariables.BackgroundColorOrder);
-            _difficultyManager.Init(_matchData, remoteVariables.IncrementalStep, remoteVariables.TimescaleStep, this, remoteVariables.MaxIncrement);
+            _difficultyManager.Init(_matchData, remoteVariables.IncrementalStep, remoteVariables.TimescaleStep, this, remoteVariables.NewMaxIncrement);
             _textManager.Init(_matchData);
 
             bool isMatchReversed = SettingManager.Instance.GameSettings.IsReversed;
@@ -93,6 +93,7 @@ namespace Gameplay
             _backgroundManager.Prepare();
             _cpu.Prepare();
             _ball.Prepare();
+            _player.Prepare();
         }
 
         public IEnumerator CountdownCoroutine()

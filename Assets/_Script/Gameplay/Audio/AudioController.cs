@@ -20,12 +20,12 @@ namespace Audio
             _isMusicOn = isMusicOn;
             _isSoundOn = isSoundOn;
             _musicSource.volume = !_isMusicOn ? 0 : .33f;
-            _soundSource.volume = !_isSoundOn ? 0 : .6f;
+            _soundSource.volume = !_isSoundOn ? 0 : .8f;
         }
         public void ToggleSound(bool isSoundOn)
         {
             _isSoundOn = isSoundOn;
-            _soundSource.DOFade(!_isSoundOn ? 0 : .6f, .3f);
+            _soundSource.DOFade(!_isSoundOn ? 0 : .8f, .3f);
         }
 
         public void ToggleMusic(bool isMusicOn)
@@ -38,7 +38,7 @@ namespace Audio
         {
             base.Awake();
             _musicSource.volume = .33f;
-            _soundSource.volume = .6f;
+            _soundSource.volume = .8f;
         }
         public void PlaySound(AudioClip clip)
         {

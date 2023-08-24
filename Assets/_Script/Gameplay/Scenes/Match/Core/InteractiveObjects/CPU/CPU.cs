@@ -62,13 +62,16 @@ namespace Gameplay
                     _skinType = Skin.SkinType.HAND;
                     break;
             }
-
-            
             if (_skinType == Skin.SkinType.GLOVES
                 || _skinType == Skin.SkinType.HAND)
             {
                 return;
             }
+            //ApplySkin();
+        }
+
+        private void ApplySkin()
+        {
             string skinID = "";
             foreach (Skin skin in GameDataManager.Instance.GameDatas.Skins)
             {

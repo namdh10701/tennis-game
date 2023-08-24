@@ -9,22 +9,23 @@ namespace UI
 {
     public class SkinButton : MonoBehaviour
     {
-        private AnimatedButton _button;
+        [SerializeField] private AnimatedButton _button;
         private Image _image;
+        [SerializeField] private Image _toolImage;
+        [SerializeField] private GameObject _content;
         [SerializeField] private GameObject _lock;
         [SerializeField] private GameObject _beingUsed;
         public Skin Skin { get; set; }
         public bool Disabled { get; private set; }
         private void Awake()
         {
-            _button = GetComponent<AnimatedButton>();
             _image = GetComponent<Image>();
         }
         public void Init(SkinUI skinUI, Skin skin, Sprite sprite)
         {
             Skin = skin;
-            _image.sprite = sprite;
-            _image.preserveAspect = true;
+            _toolImage.sprite = sprite;
+            _toolImage.preserveAspect = true;
             _lock.SetActive(!skin.Unlocked);
             if (!Skin.Unlocked)
             {
@@ -71,9 +72,10 @@ namespace UI
         public void Disalbe()
         {
             Disabled = true;
-            _lock.SetActive(false);
             _image.color = new Color(0, 0, 0, 0);
-            _button.SetEnable(false);
+            _content.SetActive(false);
+
+
         }
     }
 }
