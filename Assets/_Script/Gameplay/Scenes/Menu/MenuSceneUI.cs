@@ -59,6 +59,8 @@ namespace Gameplay
                         _sceneManager.StartMatch(Sport.TENNIS);
                     }
                     );
+
+                UpdateCatImage();
             }
         }
 
@@ -66,8 +68,13 @@ namespace Gameplay
         {
             _matchSetting.ChangeIncremental();
             _incrementalText.text = "X" + _matchSetting.Incremental;
+            UpdateCatImage();
+        }
+
+        private void UpdateCatImage()
+        {
             _catImage.sprite = CatAsset.CatSprites[_matchSetting.Incremental - 1];
-          
+
             if (_matchSetting.Incremental > GameDataManager.Instance.GameDatas.UnlockedIncremental)
             {
                 foreach (Image catShadow in _catShadows)

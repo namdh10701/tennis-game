@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: CatShadowAsset
   m_EditorClassIdentifier: 
   CatShadowSprites:
+  - {fileID: -1041600678, guid: d952bafb4f9591f468095413b15d23cb, type: 3}
   - {fileID: 974211906, guid: d952bafb4f9591f468095413b15d23cb, type: 3}
   - {fileID: 2066986838, guid: d952bafb4f9591f468095413b15d23cb, type: 3}
   - {fileID: -307992825, guid: d952bafb4f9591f468095413b15d23cb, type: 3}
@@ -23,4 +24,3 @@ MonoBehaviour:
   - {fileID: -535235331, guid: d952bafb4f9591f468095413b15d23cb, type: 3}
   - {fileID: -1542010250, guid: d952bafb4f9591f468095413b15d23cb, type: 3}
   - {fileID: -600852743, guid: d952bafb4f9591f468095413b15d23cb, type: 3}
-  - {fileID: -1041600678, guid: d952bafb4f9591f468095413b15d23cb, type: 3}

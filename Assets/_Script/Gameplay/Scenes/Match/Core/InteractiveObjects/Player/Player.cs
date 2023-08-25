@@ -19,23 +19,25 @@ namespace Gameplay
         [SerializeField] private SpriteRenderer _spriteRenderer;
         public SkinAsset SkinAsset;
         private SkinType _skinType;
+        private bool _isReversed;
         //Todo : skin
 
         public void Init(MatchEvent matchEvent, MatchSetting matchSettings, bool isReversed)
         {
+            _isReversed = isReversed;
             if (isReversed)
             {
                 Quaternion newRotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + 180);
                 transform.rotation = newRotation;
             }
             _originalPos = transform.position;
-            _inputManager.Init(matchEvent, transform);
+            _inputManager.Init(matchEvent, transform, isReversed);
             _matchEvent = matchEvent;
             _originalScale = transform.localScale;
             _flippedScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
             _playerCollider.Init(matchEvent);
             _matchEvent.BallMove += HandleFlipCharacter;
-            //ApplySkin(matchSettings);
+            ApplySkin(matchSettings);
         }
 
         private void ApplySkin(MatchSetting matchSetting)
@@ -74,11 +76,11 @@ namespace Gameplay
                 return;
             if (newBallPos.x < _originalPos.x)
             {
-                transform.localScale = _originalScale;
+                transform.localScale = _isReversed?_flippedScale: _originalScale;
             }
             else if (newBallPos.x > _originalPos.x)
             {
-                transform.localScale = _flippedScale;
+                transform.localScale = _isReversed ? _originalScale : _flippedScale;
             }
         }
 

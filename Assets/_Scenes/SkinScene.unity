@@ -172,6 +172,9 @@ MonoBehaviour:
   skinRowsHolder: {fileID: 684313129}
   _sceneTransition: {fileID: 1850819572}
   _scrollRect: {fileID: 793775890}
+  _skinButtons: []
+  _nativeAdPanelHolder: {fileID: 1706762678}
+  _nativeAdPanel: {fileID: 731313717}
 --- !u!1 &227008879
 GameObject:
   m_ObjectHideFlags: 0

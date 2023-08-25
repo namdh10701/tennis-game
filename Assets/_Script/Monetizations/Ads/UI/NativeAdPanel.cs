@@ -40,6 +40,7 @@ namespace Monetization.Ads.UI
         }
         public void Show()
         {
+        
             Debug.Log("native ad panel show request");
             gameObject.SetActive(true);
             loadedObject.SetActive(false);
@@ -78,7 +79,7 @@ namespace Monetization.Ads.UI
 
         private void OnDestroy()
         {
-            AdsController.Instance.UnRegisterNativeAdPanel(this);
+            AdsController.Instance?.UnRegisterNativeAdPanel(this);
         }
 
         #region HandleNativeAdData

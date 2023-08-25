@@ -16,9 +16,13 @@ public class SettingPanel : InterPopup
     [SerializeField] private ToggleButton _reversedButton;
     [SerializeField] private NativeAdPanel _nativeAdPanel;
     [SerializeField] private TextMeshProUGUI _versionName;
-    private void Start()
+    private void OnEnable()
     {
         StartCoroutine(WaitAndShowNativeAds());
+    }
+    private void OnDisable()
+    {
+        AdsController.Instance.HideNativeAd(_nativeAdPanel);
     }
     public void Init()
     {
@@ -62,8 +66,9 @@ public class SettingPanel : InterPopup
         {
             yield return null;
         }
-        if (_nativeAdPanel.IsNativeAdShowed)
+        if (AdsHandler.AdRemoved())
         {
+            AdsController.Instance.HideNativeAd(_nativeAdPanel);
             yield break;
         }
         else

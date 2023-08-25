@@ -72,6 +72,8 @@ namespace UI
         public void Disalbe()
         {
             Disabled = true;
+            Debug.Log
+                ((_image == null) + "image is null");
             _image.color = new Color(0, 0, 0, 0);
             _content.SetActive(false);
 

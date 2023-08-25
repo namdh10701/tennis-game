@@ -32,7 +32,7 @@
     <package>com.ironsource.adapters:pangleadapter:4.3.20</package>
     <package>com.ironsource.adapters:unityadsadapter:4.3.31</package>
     <package>com.ironsource.adapters:vungleadapter:4.3.21</package>
-    <package>com.ironsource.sdk:mediationsdk:7.3.1.1</package>
+    <package>com.ironsource.sdk:mediationsdk:7.4.0</package>
     <package>com.mbridge.msdk.oversea:mbbanner:16.4.61</package>
     <package>com.mbridge.msdk.oversea:mbbid:16.4.61</package>
     <package>com.mbridge.msdk.oversea:newinterstitial:16.4.61</package>

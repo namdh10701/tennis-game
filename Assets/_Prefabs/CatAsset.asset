@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: CatAsset
   m_EditorClassIdentifier: 
   CatSprites:
+  - {fileID: 21300000, guid: 44df1c404944edf44b104a8b197603ca, type: 3}
   - {fileID: 707406441, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
   - {fileID: 947760723, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
   - {fileID: -1791349459, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
@@ -23,4 +24,3 @@ MonoBehaviour:
   - {fileID: -142824790, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
   - {fileID: -852560913, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
   - {fileID: 1958042359, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
-  - {fileID: 21300000, guid: 44df1c404944edf44b104a8b197603ca, type: 3}

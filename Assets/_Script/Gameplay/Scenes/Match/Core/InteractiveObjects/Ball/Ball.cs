@@ -90,7 +90,6 @@ namespace Gameplay
                 if (side == Side.Player && IsAbleToBeHitByPlayer)
                 {
                     _lastHitBy = side;
-                    Debug.Log(side);
                     MoveToOpositeSite();
                     _matchManager.OnBallHitSuccess(side);
                 }

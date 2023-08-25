@@ -1,6 +1,10 @@
+using Common;
 using ListExtensions;
+using Monetization.Ads;
+using Monetization.Ads.UI;
 using Phoenix;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UI;
@@ -17,18 +21,37 @@ namespace Gameplay
         [SerializeField] private Transform skinRowsHolder;
         [SerializeField] private SceneTransition _sceneTransition;
         [SerializeField] private Transform _scrollRect;
+        [SerializeField] private List<SkinButton> _skinButtons;
 
-        private List<SkinButton> _skinButtons;
+        [SerializeField] private GameObject _nativeAdPanelHolder;
+        [SerializeField] private NativeAdPanel _nativeAdPanel;
         private List<Skin> _skins;
 
         public void Init(List<Skin> skins)
         {
             _skins = skins;
             CreateRows();
-
+            _nativeAdPanelHolder.SetActive(!AdsHandler.AdRemoved());
             _skinButtons = _scrollRect.GetComponentsInChildren<SkinButton>().ToList();
             HandleSkinButtons();
-
+            StartCoroutine(WaitAndShowNativeAds());
+        }
+        private IEnumerator WaitAndShowNativeAds()
+        {
+            while (!_nativeAdPanel.IsRegistered)
+            {
+                yield return null;
+            }
+            if (AdsHandler.AdRemoved())
+            {
+                AdsController.Instance.HideNativeAd(_nativeAdPanel);
+                yield break;
+            }
+            else
+            {
+                Debug.Log("show native ads from setting");
+                AdsController.Instance.ShowNativeAd(_nativeAdPanel);
+            }
         }
 
         private void HandleSkinButtons()

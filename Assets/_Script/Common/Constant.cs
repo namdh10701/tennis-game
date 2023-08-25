@@ -21,6 +21,7 @@
         public static string REVIVE_CLICK = "REWARD_AD_CLICK_REVIVE";
         public static string REVIVE_COMPLETE = "REWARD_AD_COMPLETE_REVIVE";
         public static string REWARD_FAILED = "REWARD_FAILED";
+        public static string REWARD_AD_SHOW = "SHOW_REWARD_AD";
         #endregion
         #region Gameplay
         #endregion

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,20 +8,48 @@ namespace Gameplay
     public class InputManager : MonoBehaviour
     {
         private MatchEvent _matchEvent;
-        private Vector2 touchStart;
         private Transform _player;
-        public void Init(MatchEvent matchEvent, Transform player)
+        private Vector3 offset;
+        private bool _isReversed;
+        private bool isDragging = false;
+        public void Init(MatchEvent matchEvent, Transform player, bool isReversed)
         {
+            _isReversed = isReversed;
+            offset = new Vector3(0, .4f, 0);
             _matchEvent = matchEvent;
             _player = player;
         }
 
         void Update()
         {
-            //ToDo: switch state here 
-
+#if UNITY_EDITOR
+            HandleMouseInput();
+#else
             HandleTouchInput();
+#endif
+        }
 
+        private void HandleMouseInput()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                isDragging = true;
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                isDragging = false;
+            }
+
+            if (isDragging)
+            {
+                switch (_matchEvent?.CurrentState)
+                {
+                    case MatchEvent.MatchState.PLAYING:
+                        Vector3 worldMouseDelta = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
+                        _player.position = _isReversed ? worldMouseDelta - offset : worldMouseDelta + offset;
+                        break;
+                }
+            }
         }
 
         private void HandleTouchInput()
@@ -32,7 +61,6 @@ namespace Gameplay
                 switch (touch.phase)
                 {
                     case TouchPhase.Began:
-                        touchStart = touch.position;
                         break;
                     case TouchPhase.Moved:
                         switch (_matchEvent?.CurrentState)
@@ -40,7 +68,7 @@ namespace Gameplay
                             case MatchEvent.MatchState.PLAYING:
 
                                 Vector3 worldTouchCurrent = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, Camera.main.nearClipPlane));
-                                _player.position = worldTouchCurrent;
+                                _player.position = _isReversed ? worldTouchCurrent - offset : worldTouchCurrent + offset;
 
                                 break;
                         }

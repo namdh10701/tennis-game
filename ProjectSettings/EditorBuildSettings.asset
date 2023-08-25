@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Scenes/MatchScene.unity
     guid: 1db45f9b329d937458ba3516bf151ddd
-  - enabled: 0
+  - enabled: 1
     path: Assets/_Scenes/SkinScene.unity
     guid: 59764fad392d37b4aa2167ed89b9c0a8
   m_configObjects:

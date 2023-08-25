@@ -6,10 +6,14 @@ using UnityEngine;
 
 public class AdsHandler : MonoBehaviour
 {
+    public static bool AdRemoved()
+    {
+        return PlayerPrefs.GetInt(Constant.ADS_REMOVED_KEY) == 1;
+    }
     private void Start()
     {
-        Debug.Log("..." + (PlayerPrefs.GetInt(Constant.ADS_REMOVED_KEY)));
-        AdsController.Instance.SetRemoveAds(PlayerPrefs.GetInt(Constant.ADS_REMOVED_KEY) == 1);
+        
+        AdsController.Instance.OnRemoveAds(AdRemoved());
         AdsController.Instance.Init();
         AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
         if (PlayerPrefs.GetInt(Constant.ADS_REMOVED_KEY) != 1)

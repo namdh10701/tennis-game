@@ -13,11 +13,8 @@ namespace Gameplay
         [SerializeField] private NativeAdPanel _adPanel;
         private void Start()
         {
-            AdsController.Instance.ShowNativeAd(_adPanel);
-        }
-        private void Awake()
-        {
             _skinUI.Init(GameDataManager.Instance.GameDatas.Skins);
+            AdsController.Instance.ShowNativeAd(_adPanel);
         }
 
         // Update is called once per frame

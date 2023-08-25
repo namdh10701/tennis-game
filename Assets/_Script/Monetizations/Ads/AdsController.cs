@@ -10,9 +10,8 @@ using Enviroments;
 namespace Monetization.Ads
 {
 
-    public class AdsController : MonoBehaviour
+    public class AdsController : SingletonPersistent<AdsController>
     {
-        public static AdsController Instance;
         public enum AdType
         {
             BANNER, INTER, REWARD, OPEN
@@ -33,20 +32,24 @@ namespace Monetization.Ads
 
         private bool _isFreeAdsTimeEnded = false;
 
-        public bool HasBanner { get; set; }
-        public bool IsShowingAd { get; set; }
+        public bool HasBanner;
+        public bool IsShowingOpenAd;
+        public bool IsShowingInterAd;
+        public bool IsShowingReward;
+        public bool RewardedAdJustClose;
         public bool HasInternet
         {
             get { return Application.internetReachability != NetworkReachability.NotReachable; }
         }
         public bool RemoveAds { get; set; }
 
-        private void Awake()
+        protected override void Awake()
         {
-            Instance = this;
+            base.Awake();
             _ironsource = GetComponent<IronSourceAds>();
             _admob = GetComponent<AdmobAds>();
-            IsShowingAd = false;
+            IsShowingOpenAd = false;
+            IsShowingInterAd = false;
         }
 
         public void Init()
@@ -199,7 +202,6 @@ namespace Monetization.Ads
             Debug.Log($"Removeads purchased: {RemoveAds}");
             if (RemoveAds)
             {
-                nativeAdPanel.gameObject.SetActive(false);
                 return;
             }
             if (_nativeAdPanels.Contains(nativeAdPanel))
@@ -226,8 +228,13 @@ namespace Monetization.Ads
         {
             if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
                 return;
-            if (IsShowingAd)
+            /*            if (IsShowingAd)
+                        {
+                            return;
+                        }*/
+            if (RewardedAdJustClose)
             {
+                RewardedAdJustClose = false;
                 return;
             }
             if (!AdsIntervalValidator.IsValidInterval(AdType.OPEN))
@@ -243,26 +250,21 @@ namespace Monetization.Ads
         #region Reward
         public void ShowReward(Action<bool> watched)
         {
-            if (IsShowingAd)
-            {
-                return;
-            }
             _onRewardClosed = watched;
             if (Enviroment.ENV == Enviroment.Env.DEV)
             {
                 _onRewardClosed.Invoke(true);
                 return;
             }
-            if (IsShowingAd)
+            if (IsShowingInterAd || IsShowingOpenAd)
             {
-                Debug.LogWarning("Another ad is being displayed");
                 return;
             }
             if (_ironsource.IsRewardReady)
             {
                 _ironsource.ShowReward();
             }
-            //else if(other ad source)
+
             else if (!HasInternet)
             {
                 _adsUIController.ShowRewardUnavailableBox();
@@ -274,7 +276,7 @@ namespace Monetization.Ads
 
             IEnumerator WaitForRewardVideo()
             {
-                _ironsource.LoadReward();
+                //_ironsource.LoadReward();
                 _adsUIController.ShowWaitingBox();
                 yield return new WaitForSecondsRealtime(3f);
                 _adsUIController.CloseWaitingBox().onComplete +=
@@ -293,7 +295,7 @@ namespace Monetization.Ads
         }
         public void InvokeOnRewarded(bool rewarded)
         {
-            _onRewardClosed.Invoke(rewarded);
+            _onRewardClosed?.Invoke(rewarded);
             _onRewardClosed = null;
         }
 
@@ -319,7 +321,8 @@ namespace Monetization.Ads
                 _onInterClosed.Invoke();
                 return;
             }
-            if (IsShowingAd)
+
+            if (IsShowingInterAd || IsShowingOpenAd)
             {
                 _onInterClosed.Invoke();
                 return;
@@ -334,11 +337,6 @@ namespace Monetization.Ads
                 _onInterClosed.Invoke();
                 return;
             }
-            if (IsShowingAd)
-            {
-                Debug.LogWarning("Another ad is being displayed");
-                return;
-            }
             if (_ironsource.IsInterReady)
             {
                 _ironsource.ShowInter();
@@ -350,22 +348,7 @@ namespace Monetization.Ads
         }
         #endregion
 
-        public void OnRemoveAds()
-        {
-            RemoveAds = true;
-            _ironsource.ToggleBanner(false);
-            if (_nativeAdPanels != null)
-            {
-                foreach (NativeAdPanel panel in _nativeAdPanels)
-                {
-                    panel.gameObject.SetActive(false);
-                }
-                _nativeAdPanels.Clear();
-            }
-            CachedNativeAds?.Clear();
-        }
-
-        public void SetRemoveAds(bool removeAdsPuchased)
+        public void OnRemoveAds(bool removeAdsPuchased)
         {
             RemoveAds = removeAdsPuchased;
             _ironsource.ToggleBanner(!removeAdsPuchased);

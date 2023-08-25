@@ -161,6 +161,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 853847999f7844845a0c190402427f5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HasBanner: 0
+  IsShowingOpenAd: 0
+  IsShowingInterAd: 0
+  IsShowingReward: 0
+  RewardedAdJustClose: 0
 --- !u!114 &541353747375314108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48cb437794d3fb44a981586ba71566fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  env: 1
+  env: 4
 --- !u!114 &8144893436711486449
 MonoBehaviour:
   m_ObjectHideFlags: 0

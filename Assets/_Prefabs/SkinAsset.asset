@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinSprites:
   - {fileID: -381069068, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
-  - {fileID: 21300000, guid: 81fdd5b3f79a8b74aa07d5512f712357, type: 3}
+  - {fileID: 21300000, guid: 3d1da394bac60d542b519c03595c1418, type: 3}
   - {fileID: 21300000, guid: 9976a167a70656245a404ce1395b9a6d, type: 3}
   - {fileID: 21300000, guid: a20c7604234cdc940993dea0e9a357ad, type: 3}
   - {fileID: 21300000, guid: 70d6267256aea2646a5e27a1bc758b80, type: 3}
   - {fileID: 21300000, guid: 5b058a75f146c3147a51cedc9520ffe7, type: 3}
   - {fileID: 21300000, guid: 045f82c0c0bfdaa42a27d037e68fedf5, type: 3}
-  - {fileID: 920135926, guid: 98ede1d23b591224fa42e63938f61385, type: 3}
+  - {fileID: 21300000, guid: 1f53f54d32928e7408f9ce02a8c826ad, type: 3}

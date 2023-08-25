@@ -66,6 +66,10 @@ namespace Audio
 
         private IEnumerator CrossfadeMusicCoroutine(AudioClip newClip, float fadeDuration)
         {
+            if (_musicSource.clip == newClip)
+            {
+                yield break;
+            }
             float startVolume = _musicSource.volume;
             float timer = 0f;
 

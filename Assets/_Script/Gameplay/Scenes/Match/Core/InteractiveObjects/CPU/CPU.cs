@@ -67,7 +67,7 @@ namespace Gameplay
             {
                 return;
             }
-            //ApplySkin();
+            ApplySkin();
         }
 
         private void ApplySkin()

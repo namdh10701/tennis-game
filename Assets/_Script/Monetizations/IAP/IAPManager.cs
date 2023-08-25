@@ -18,7 +18,7 @@ namespace Monetization.IAP
         {
             Debug.Log("purchased success");
             PlayerPrefs.SetInt(Constant.ADS_REMOVED_KEY, 1);
-            AdsController.Instance.SetRemoveAds(true);
+            AdsController.Instance.OnRemoveAds(true);
             FirebaseAnalytics.Instance.PushEvent("REMOVES_ADS_PURCHASED");
             FirebaseAnalytics.Instance.PushEvent("REMOVES_ADS_CLICK");
             StartCoroutine(HideButton());
@@ -43,7 +43,7 @@ namespace Monetization.IAP
                 Debug.Log("Player has purchased removed ads");
                 PlayerPrefs.SetInt(Constant.ADS_REMOVED_KEY, 1);
                 IAPButtons.gameObject.SetActive(false);
-                AdsController.Instance.SetRemoveAds(true);
+                AdsController.Instance.OnRemoveAds(true);
             }
 
         }

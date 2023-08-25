@@ -45,7 +45,6 @@ namespace Phoenix
             {
                 yield return null;
             }
-            Debug.Log("pkl");
             loadSceneOp.allowSceneActivation = true;
         }
 

@@ -7,8 +7,6 @@ using UnityEngine;
 using Enviroments;
 using Common;
 using GoogleMobileAds.Common;
-using Monetization.Ads.UI;
-using static Monetization.Ads.AdsController;
 
 namespace Monetization.Ads
 {
@@ -106,7 +104,7 @@ namespace Monetization.Ads
                     ad.OnAdFullScreenContentOpened += () =>
                     {
                         _isRequestingAppOpenAd = false;
-                        AdsController.Instance.IsShowingAd = true;
+                        AdsController.Instance.IsShowingOpenAd = true;
                         FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST_SUCCEED);
                         FirebaseAnalytics.Instance.PushEvent(Constant.APP_OPEN_SHOW);
                     };
@@ -120,11 +118,12 @@ namespace Monetization.Ads
                             AdsIntervalValidator.SetInterval(AdsController.AdType.OPEN);
                             LoadAppOpenAd();
                         });
-                        AdsController.Instance.IsShowingAd = false;
+                        AdsController.Instance.IsShowingOpenAd = false;
                     };
                 }
                 void HandleOpenAdShowFailed(AppOpenAd ad)
                 {
+                    AdsController.Instance.IsShowingOpenAd = false;
                     ad.OnAdFullScreenContentFailed += (AdError error) => LoadAppOpenAd();
                 }
             }
@@ -144,12 +143,19 @@ namespace Monetization.Ads
 
         public IEnumerator PassframeShowAd()
         {
-            yield return new WaitForEndOfFrame();
-            if (!AdsController.Instance.IsShowingAd)
+            yield return new WaitForSeconds(.05f);
+
+            Debug.Log("open ad show here");
+            if (AdsController.Instance.RewardedAdJustClose)
             {
-                AdsController.Instance.IsShowingAd = true;
-                appOpenAd.Show();
+                AdsController.Instance.RewardedAdJustClose = false;
+                yield break;
             }
+            if (AdsController.Instance.IsShowingInterAd || AdsController.Instance.IsShowingOpenAd)
+            {
+                yield break;
+            }
+            appOpenAd.Show();
         }
 
         #endregion
@@ -159,7 +165,8 @@ namespace Monetization.Ads
 
         public void LoadNativeAds()
         {
-            Debug.Log("is key 2 requesting: "+ _isNativeAdKey2Requesting);
+            Debug.Log("is key 2 requesting: " + _isNativeAdKey2Requesting);
+            Debug.Log("is key 1 requesting: " + _isNativeAdKey1Requesting);
             if (!_initilized)
             {
                 return;
@@ -201,6 +208,8 @@ namespace Monetization.Ads
                 FirebaseAnalytics.Instance.PushEvent(Constant.CLICK_NATIVE_AD);
             };
             adLoader2.LoadAd(new AdRequest());
+            Debug.Log("is key 2 requesting: " + _isNativeAdKey2Requesting);
+            Debug.Log("is key 1 requesting: " + _isNativeAdKey1Requesting);
 
         }
 

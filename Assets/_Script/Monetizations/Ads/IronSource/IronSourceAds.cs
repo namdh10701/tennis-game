@@ -5,6 +5,7 @@ using Services.Adjust;
 using Enviroments;
 using System.Collections;
 using Services.FirebaseService.Crashlytics;
+using System;
 
 namespace Monetization.Ads
 {
@@ -38,14 +39,14 @@ namespace Monetization.Ads
             {
                 if (!Initilized) return false;
                 bool ret = IronSource.Agent.isRewardedVideoAvailable();
-                if (!ret)
-                {
-                    LoadReward();
-                }
                 return ret;
             }
         }
 
+        private void Awake()
+        {
+            Initilized = false;
+        }
         public void Init()
         {
             if (Enviroment.ENV != Enviroment.Env.PROD)
@@ -53,7 +54,6 @@ namespace Monetization.Ads
                 string testKey = "85460dcd";
                 appkey = testKey;
             }
-            Initilized = false;
             #region Banner_Event
             IronSourceBannerEvents.onAdLoadedEvent += Banner_onLoaded;
             IronSourceBannerEvents.onAdLoadFailedEvent += Banner_onLoadFailed;
@@ -66,7 +66,6 @@ namespace Monetization.Ads
             IronSourceInterstitialEvents.onAdClosedEvent += Inter_onAdClosed;
             #endregion
             #region Reward_Event
-            IronSource.Agent.setManualLoadRewardedVideo(true);
             IronSourceRewardedVideoEvents.onAdUnavailableEvent += Reward_onUnavailable;
             IronSourceRewardedVideoEvents.onAdAvailableEvent += Reward_onAvailable;
             IronSourceRewardedVideoEvents.onAdLoadFailedEvent += Reward_onLoadFailed;
@@ -74,6 +73,7 @@ namespace Monetization.Ads
             IronSourceRewardedVideoEvents.onAdShowFailedEvent += Reward_onShowFailed;
             IronSourceRewardedVideoEvents.onAdClosedEvent += Reward_onClosed;
             IronSourceRewardedVideoEvents.onAdRewardedEvent += Reward_onReward;
+            IronSourceRewardedVideoEvents.onAdOpenedEvent += Reward_onOpen;
             #endregion
             IronSourceEvents.onImpressionDataReadyEvent += Impression_onDataReady;
             IronSourceEvents.onSdkInitializationCompletedEvent += OnInitilized;
@@ -91,7 +91,7 @@ namespace Monetization.Ads
         {
             Initilized = true;
             LoadInter();
-            LoadReward();
+            //LoadReward();
         }
 
         private void OnApplicationPause(bool pause)
@@ -140,7 +140,7 @@ namespace Monetization.Ads
             LoadInter();
             AdsController.Instance.InvokeOnInterClose();
             AdsIntervalValidator.SetInterval(AdsController.AdType.INTER);
-            AdsController.Instance.IsShowingAd = false;
+            AdsController.Instance.IsShowingInterAd = false;
         }
 
         private void Inter_onShowSucceeded(IronSourceAdInfo obj)
@@ -153,7 +153,7 @@ namespace Monetization.Ads
         {
             Debug.Log("Inter show failed with details: " + arg1);
             LoadInter();
-            AdsController.Instance.IsShowingAd = false;
+            AdsController.Instance.IsShowingInterAd = false;
         }
 
         private void Inter_onReady(IronSourceAdInfo obj)
@@ -181,21 +181,43 @@ namespace Monetization.Ads
         }
         public void ShowInter()
         {
-            AdsController.Instance.IsShowingAd = true;
+            AdsController.Instance.IsShowingInterAd = true;
             IronSource.Agent.showInterstitial();
         }
         #endregion
         #region Reward
+        private void Reward_onOpen(IronSourceAdInfo info)
+        {
+            Debug.Log("reward open");
+            Debug.Log("isReward false here");
+            FirebaseAnalytics.Instance.PushEvent(Constant.REWARD_AD_SHOW);
+            _isRewarded = false;
+            AdsController.Instance.IsShowingReward = true;
+
+        }
+
         private void Reward_onReward(IronSourcePlacement arg1, IronSourceAdInfo arg2)
         {
             AdsController.Instance.InvokeOnRewarded(true);
             _isRewarded = true;
+            Debug.Log("rewarded");
+            Debug.Log("isReward true here");
         }
 
         private void Reward_onClosed(IronSourceAdInfo obj)
         {
             Debug.Log("reward ad closed");
-            LoadReward(); StartCoroutine(WaitToResetAdsControllerState());
+            //LoadReward();
+            AdsController.Instance.IsShowingReward = false;
+            AdsController.Instance.RewardedAdJustClose = true;
+            //StartCoroutine(WaitToResetAdsControllerState());
+            StartCoroutine(CheckRewarded());
+        }
+
+        private IEnumerator CheckRewarded()
+        {
+            yield return new WaitForSeconds(.05f);
+            Debug.Log("isReward checking here");
             if (!_isRewarded)
             {
                 FirebaseAnalytics.Instance.PushEvent(Constant.REWARD_FAILED);
@@ -207,59 +229,56 @@ namespace Monetization.Ads
                 AdsIntervalValidator.SetInterval(AdsController.AdType.REWARD);
             }
         }
-        private IEnumerator WaitToResetAdsControllerState()
-        {
-            yield return new WaitForSeconds(1f);
-            AdsController.Instance.IsShowingAd = false;
-        }
 
         private void Reward_onShowFailed(IronSourceError arg1, IronSourceAdInfo arg2)
         {
-            Debug.Log("reward ad show failed");
-            LoadReward();
-            AdsController.Instance.IsShowingAd = false;
+            Debug.Log("reward ad show failed " + arg1.getDescription());
+            //LoadReward();
+            AdsController.Instance.IsShowingReward = false;
             AdsController.Instance.InvokeOnRewarded(false);
         }
 
         private void Reward_onReady(IronSourceAdInfo obj)
-        {
-            FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST_SUCCEED);
+        {/*
+            FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST_SUCCEED);*/
             Debug.Log("reward ad ready");
-            _isRequestingReward = false;
+            //_isRequestingReward = false;
         }
 
         private void Reward_onLoadFailed(IronSourceError obj)
         {
             Debug.Log("reward ad load failed" + obj.getDescription());
-            LoadReward();
-            _isRequestingReward = false;
+            Debug.Log("error code: " + obj.getErrorCode());
+            /*            
+                        LoadReward();
+                        _isRequestingReward = false;*/
         }
 
         private void Reward_onAvailable(IronSourceAdInfo obj)
         {
             Debug.Log("reward ad available");
-            _isRequestingReward = false;
+           
+            Debug.Log($"{obj.adNetwork}  {obj.segmentName} {obj.instanceName} {obj.ab}");
+            //_isRequestingReward = false;
         }
 
         private void Reward_onUnavailable()
         {
             Debug.Log("reward ad unavailable");
-            _isRequestingReward = false;
+            //_isRequestingReward = false;
         }
 
-        public void LoadReward()
-        {
-            Debug.Log(_isRequestingReward);
-            if (!Initilized || !AdsController.Instance.HasInternet || _isRequestingReward)
-                return;
-            _isRequestingReward = true;
-            FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
-            IronSource.Agent.loadRewardedVideo();
-        }
+        /*        public void LoadReward()
+                {
+                    Debug.Log(_isRequestingReward + "Is rewarded requesting in LoadReward");
+                    if (!Initilized || !AdsController.Instance.HasInternet || _isRequestingReward)
+                        return;
+                    _isRequestingReward = true;
+                    FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
+                    IronSource.Agent.loadRewardedVideo();
+                }*/
         public void ShowReward()
         {
-            AdsController.Instance.IsShowingAd = true;
-            _isRewarded = false;
             IronSource.Agent.showRewardedVideo();
         }
         #endregion
