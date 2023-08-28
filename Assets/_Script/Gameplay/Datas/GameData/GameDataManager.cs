@@ -31,7 +31,6 @@ namespace Gameplay
             if (!File.Exists(dataFilePath))
             {
                 GameDatas = CreateDefaultDatas();
-                Debug.Log(GameDatas.Skins.Count);
                 SaveDatas(); // Save default data to create the JSON file
             }
             GameDatas = LoadDatas();

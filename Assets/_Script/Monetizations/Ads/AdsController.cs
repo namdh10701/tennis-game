@@ -36,6 +36,8 @@ namespace Monetization.Ads
         public bool IsShowingInterAd;
         public bool IsShowingReward;
         public bool RewardedAdJustClose;
+
+
         public bool HasInternet
         {
             get { return Application.internetReachability != NetworkReachability.NotReachable; }
@@ -87,7 +89,7 @@ namespace Monetization.Ads
 
         #region NativeAd
         public List<CachedNativeAd> CachedNativeAds { get; private set; }
-        private const int NATIVE_AD_CACHED_TIMEOUT_MINUTES = 30;
+        private const int NATIVE_AD_CACHED_TIMEOUT_MINUTES = 2;
         public const int MAX_NATIVE_AD_CACHE_SIZE = 2;
 
         public void RegisterNativeAdPanel(NativeAdPanel nativeAdPanel)

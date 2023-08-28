@@ -3,7 +3,7 @@ using Gameplay;
 using JetBrains.Annotations;
 using UnityEngine.UI;
 using Monetization.Ads;
-using System;
+using Services.FirebaseService.Analytics;
 
 namespace UI
 {
@@ -31,6 +31,7 @@ namespace UI
             {
                 _button.SetOnClickEnvent(() =>
                 {
+                    FirebaseAnalytics.Instance.PushEvent("REWARD_AD_CLICKED_UNLOCK_SKIN");
                     AdsController.Instance.ShowReward(
                         (watched) =>
                         {
@@ -38,6 +39,7 @@ namespace UI
                             {
                                 _lock.SetActive(false);
                                 GameDataManager.Instance.UnlockSkin(Skin);
+                                FirebaseAnalytics.Instance.PushEvent("REWARD_AD_COMPLETED_SKIN_ID_" + Skin.ID);
                             }
                             _button.RemoveOnClickEvent();
                             _button.SetOnClickEnvent(() =>

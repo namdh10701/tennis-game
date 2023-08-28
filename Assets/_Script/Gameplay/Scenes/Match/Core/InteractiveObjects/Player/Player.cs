@@ -33,7 +33,7 @@ namespace Gameplay
             _originalPos = transform.position;
             _inputManager.Init(matchEvent, transform, isReversed);
             _matchEvent = matchEvent;
-            _originalScale = transform.localScale;
+            
             _flippedScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
             _playerCollider.Init(matchEvent);
             _matchEvent.BallMove += HandleFlipCharacter;
@@ -64,8 +64,13 @@ namespace Gameplay
                 if (skin.Unlocked && skin.BeingUsed && skin.Type == _skinType)
                 {
                     skinID = skin.ID;
+                    if(_skinType==SkinType.HAND && skinID != "5")
+                    {
+                        _spriteRenderer.transform.localScale = _spriteRenderer.transform.localScale * 1.3f;
+                    }
                 }
             }
+            _originalScale = transform.localScale;
             _spriteRenderer.sprite = SkinAsset.skinSprites[int.Parse(skinID) - 1];
         }
 

@@ -10,7 +10,7 @@ namespace Gameplay
     {
         public enum SkinType
         {
-            RACKET = 0, BASEBAT = 1, GLOVES = 2, HAND = 3
+            RACKET = 0, HAND = 1, GLOVES = 2, BASEBAT = 3
         }
 
         public string ID;
