@@ -12,6 +12,7 @@ namespace Monetization.Ads.UI
         [SerializeField] private GameObject adImage;
         private Button button;
         private bool _isButtonActive;
+        private bool _isClosingFirst;
         public bool IsButtonActive
         {
             get { return _isButtonActive; }
@@ -36,11 +37,18 @@ namespace Monetization.Ads.UI
             }
             if (popup)
             {
-                popup.Close().onComplete += ()
+                if (_isClosingFirst)
+                {
+                    popup.Close().onComplete += ()
                  =>
+                    {
+                        HandleShowRewardAd();
+                    };
+                }
+                else
                 {
                     HandleShowRewardAd();
-                };
+                }
             }
             else
             {
@@ -54,6 +62,7 @@ namespace Monetization.Ads.UI
                 if (watched)
                 {
                     reward.Invoke();
+                    popup?.Close();
                 }
                 else
                 {

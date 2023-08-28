@@ -18,7 +18,7 @@ public class AdsHandler : MonoBehaviour
         AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
         if (PlayerPrefs.GetInt(Constant.ADS_REMOVED_KEY) != 1)
         {
-            InvokeRepeating("TurnBannerOn", 10, 10);
+            InvokeRepeating("TurnBannerOn", 10, 5);
             InvokeRepeating("LoadNativeAd", 60, 60);
         }
     }

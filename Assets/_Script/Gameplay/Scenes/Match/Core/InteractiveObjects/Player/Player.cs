@@ -65,7 +65,6 @@ namespace Gameplay
                 {
                     skinID = skin.ID;
                 }
-                Debug.Log("Player is using skin: " + skinID);
             }
             _spriteRenderer.sprite = SkinAsset.skinSprites[int.Parse(skinID) - 1];
         }

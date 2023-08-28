@@ -4,7 +4,7 @@ namespace Enviroments
     {
         public enum Env
         {
-            DEV, TEST_TEST_ADS, TEST_REAL_ADS, TEST_SKIP_ADS, PROD
+            DEV, TEST, PROD
         }
         private static Env _env;
 

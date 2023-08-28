@@ -12,10 +12,9 @@ namespace Services.FirebaseService.Remote
     [System.Serializable]
     public class RemoteDouble : RemoteVariable
     {
-        public double Value { get { return _value; } set { _value = value; } }
-        public string Name { get { return _name; } set { _name = value; } }
-        public string _name;
-        public double _value;
+        public double Value { get { return _value; } }
+        private string _name;
+        private double _value;
         public RemoteDouble(string name, double initialValue)
         {
             _name = name;
@@ -38,10 +37,9 @@ namespace Services.FirebaseService.Remote
     [System.Serializable]
     public class RemoteBool : RemoteVariable
     {
-        public bool Value { get { return _value; } set { _value = value; } }
-        public string Name { get { return _name; } set { _name = value; } }
-        public string _name;
-        public bool _value;
+        public bool Value { get { return _value; } }
+        private string _name;
+        private bool _value;
         public RemoteBool(string name, bool initialValue)
         {
             _name = name;
@@ -64,12 +62,12 @@ namespace Services.FirebaseService.Remote
     [System.Serializable]
     public class RemoteJson : RemoteVariable
     {
-        public string Value { get { return _value; } set { _value = value; } }
-        public string Name { get { return _name; } set { _name = value; } }
-        public string _name;
-        public string _value;
+        public string Value { get { return _value; } }
+        private string _name;
+        private string _value;
         public RemoteJson(string name, string initialValue)
         {
+            _name = name;
             _value = initialValue;
         }
         public override object GetValue()
@@ -79,8 +77,6 @@ namespace Services.FirebaseService.Remote
         public override void SetValue(object value)
         {
             _value = (string)value;
-            Debug.Log(_value);
-            Debug.Log(Value);
         }
         public override string GetName()
         {

@@ -12,11 +12,11 @@ namespace UI
 {
     public class ToggleButton : MonoBehaviour
     {
-        public enum State
+        public enum ToggleState
         {
             ON, OFF
         }
-        private State _currentState;
+        private ToggleState _currentState;
         [SerializeField] private float _toggleDuration;
         [SerializeField] private Image _onImage;
         [SerializeField] private Image _offImage;
@@ -42,16 +42,15 @@ namespace UI
             );
         }
 
-        public void Init(State state)
+        public void Init(ToggleState state)
         {
             _currentState = state;
             SetDefaultPos(state);
         }
 
-        private void SetDefaultPos(State state)
+        private void SetDefaultPos(ToggleState state)
         {
-            Debug.Log("default pos");
-            if (state == State.ON)
+            if (state == ToggleState.ON)
             {
                 _onImage.gameObject.SetActive(true);
                 _offImage.gameObject.SetActive(false);
@@ -69,7 +68,7 @@ namespace UI
             _offAction = offAction;
         }
 
-        public void Toggle(State state)
+        public void Toggle(ToggleState state)
         {
             if (_isTransitioning)
             {
@@ -78,7 +77,7 @@ namespace UI
             _isTransitioning = true;
             _currentState = state;
 
-            if (state == State.ON)
+            if (state == ToggleState.ON)
             {
                 _onAction?.Invoke();
                 HandleToggleOnAnim();
@@ -154,7 +153,7 @@ namespace UI
         }
         public void Toggle()
         {
-            Toggle(_currentState == State.ON ? State.OFF : State.ON);
+            Toggle(_currentState == ToggleState.ON ? ToggleState.OFF : ToggleState.ON);
         }
     }
 }

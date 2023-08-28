@@ -12,7 +12,7 @@ public class RemoteVariable
 
     public static T Convert<T>(RemoteJson remoteJson)
     {
-        return JsonUtility.FromJson<T>(remoteJson.Value);
+        return JsonUtility.FromJson<T>((string)remoteJson.Value);
     }
     public static RemoteVariable Convert(MyRemoteVariableCollection myRemoteVariableCollection)
     {

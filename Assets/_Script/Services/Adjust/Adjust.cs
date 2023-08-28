@@ -12,7 +12,6 @@ namespace Services.Adjust
         {
             if (Enviroment.ENV != Enviroment.Env.PROD)
             {
-                //Debug.Log(impressionData.ToString());
                 return;
             }
 
@@ -22,14 +21,12 @@ namespace Services.Adjust
             adRevenue.setAdRevenueUnit(impressionData.adUnit);
             adRevenue.setAdRevenuePlacement(impressionData.placement);
             com.adjust.sdk.Adjust.trackAdRevenue(adRevenue);
-
         }
 
         public static void TrackAdmobRevenue(AdValue adValue)
         {
             if (Enviroment.ENV != Enviroment.Env.PROD)
             {
-                //Debug.Log(adValue.ToString());
                 return;
             }
             AdjustAdRevenue adRevenue = new AdjustAdRevenue(AdjustConfig.AdjustAdRevenueSourceAdMob);

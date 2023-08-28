@@ -66,13 +66,13 @@ namespace Monetization.Ads.UI
 
         public void Hide()
         {
+            Debug.Log("Hide");
             gameObject.SetActive(false);
         }
 
         private void Start()
         {
             Debug.Log("native ad panel register here");
-
             AdsController.Instance.RegisterNativeAdPanel(this);
             IsRegistered = true;
         }

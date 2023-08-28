@@ -1,34 +1,17 @@
 using Gameplay;
 using Services.FirebaseService;
-using UnityEngine;
 
-public class FirebaseHandler : MonoBehaviour
+public static class FirebaseHandler
 {
-    private void Awake()
+    public static void Init()
     {
         FirebaseManager.Instance.RemoteVariableCollection = RemoteVariableManager.Instance.MyRemoteVariables;
         FirebaseManager.Instance.Init();
         FirebaseManager.Instance.FirebaseRemote.OnFetchedCompleted += () => SaveRemoteVariable();
     }
-    private void SaveRemoteVariable()
+    private static void SaveRemoteVariable()
     {
         RemoteVariableManager.Instance.SaveDatas();
-        MatchSetting.MaxIncrementalIngame = (int)RemoteVariableManager.Instance.MyRemoteVariables.NewMaxIncrement.Value;
-    }
-
-    private void OnEnable()
-    {
-        if (FirebaseManager.Instance != null)
-        {
-            FirebaseManager.Instance.FirebaseRemote.OnFetchedCompleted += () => SaveRemoteVariable();
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (FirebaseManager.Instance != null)
-        {
-            FirebaseManager.Instance.FirebaseRemote.OnFetchedCompleted -= () => SaveRemoteVariable();
-        }
+        MatchSetting.MaxIncrementalIngame = (int)RemoteVariableManager.Instance.MyRemoteVariables.NewMaxIncrement.GetValue();
     }
 }

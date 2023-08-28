@@ -113,8 +113,7 @@ namespace Monetization.Ads
         }
         public void LoadBanner()
         {
-            if (!Initilized || !AdsController.Instance.HasInternet || _isRequestingBanner
-                || AdsController.Instance.HasBanner)
+            if (!Initilized || _isRequestingBanner)
                 return;
             _isRequestingBanner = true;
             FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
@@ -223,7 +222,6 @@ namespace Monetization.Ads
                 FirebaseAnalytics.Instance.PushEvent(Constant.REWARD_FAILED);
                 AdsController.Instance.OpenNotRewardedPanel();
             }
-
             if (_isRewarded)
             {
                 AdsIntervalValidator.SetInterval(AdsController.AdType.REWARD);

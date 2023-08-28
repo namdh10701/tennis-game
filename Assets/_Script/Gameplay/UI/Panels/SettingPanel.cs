@@ -26,10 +26,10 @@ public class SettingPanel : InterPopup
     }
     public void Init()
     {
-        _musicButton.Init(SettingManager.Instance.GameSettings.IsMusicOn ? State.ON : State.OFF);
-        _soundButton.Init(SettingManager.Instance.GameSettings.IsSoundOn ? State.ON : State.OFF);
-        _vibrateButton.Init(SettingManager.Instance.GameSettings.IsVibrationOn ? State.ON : State.OFF);
-        _reversedButton.Init(SettingManager.Instance.GameSettings.IsReversed ? State.ON : State.OFF);
+        _musicButton.Init(SettingManager.Instance.GameSettings.IsMusicOn ? ToggleState.ON : ToggleState.OFF);
+        _soundButton.Init(SettingManager.Instance.GameSettings.IsSoundOn ? ToggleState.ON : ToggleState.OFF);
+        _vibrateButton.Init(SettingManager.Instance.GameSettings.IsVibrationOn ? ToggleState.ON : ToggleState.OFF);
+        _reversedButton.Init(SettingManager.Instance.GameSettings.IsReversed ? ToggleState.ON : ToggleState.OFF);
 
         _versionName.text = "Version " + Application.version.ToString();
     }
@@ -68,6 +68,7 @@ public class SettingPanel : InterPopup
         }
         if (AdsHandler.AdRemoved())
         {
+            Debug.Log("Hide native");
             AdsController.Instance.HideNativeAd(_nativeAdPanel);
             yield break;
         }

@@ -17,7 +17,6 @@ namespace Monetization.Ads
             BANNER, INTER, REWARD, OPEN
         }
 
-        private bool hasBanner;
 
         private IronSourceAds _ironsource;
         private AdmobAds _admob;
@@ -46,6 +45,7 @@ namespace Monetization.Ads
         protected override void Awake()
         {
             base.Awake();
+            CachedNativeAds = new List<CachedNativeAd>();
             _ironsource = GetComponent<IronSourceAds>();
             _admob = GetComponent<AdmobAds>();
             IsShowingOpenAd = false;
@@ -56,7 +56,6 @@ namespace Monetization.Ads
         {
             if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
                 return;
-            CachedNativeAds = new List<CachedNativeAd>();
             _ironsource.Init();
             _admob.Init();
             Invoke("EndFreeAdsTime", 30);
@@ -93,30 +92,25 @@ namespace Monetization.Ads
 
         public void RegisterNativeAdPanel(NativeAdPanel nativeAdPanel)
         {
-            if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
-                return;
+            Debug.Log("register");
             _nativeAdPanels.Add(nativeAdPanel);
             CachedNativeAd cachedNativeAd;
             if (CachedNativeAds.GetFirst(out cachedNativeAd))
             {
-                Debug.Log("get one native ad");
                 if (IsCachedNativeAdTimeout(cachedNativeAd))
                 {
                     cachedNativeAd.Disolve();
-                    Debug.Log("get one native ad timeout");
                 }
 
                 else
                 {
-                    Debug.Log("assign a");
                     nativeAdPanel.CachedNativeAd = cachedNativeAd;
                 }
             }
         }
         public void UnRegisterNativeAdPanel(NativeAdPanel nativeAdPanel)
         {
-            if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
-                return;
+            Debug.Log("unregister");
             if (_nativeAdPanels.Contains(nativeAdPanel))
                 _nativeAdPanels.Remove(nativeAdPanel);
             if (!nativeAdPanel.IsNativeAdShowed && nativeAdPanel.CachedNativeAd != null)
@@ -199,7 +193,6 @@ namespace Monetization.Ads
         }
         public void ShowNativeAd(NativeAdPanel nativeAdPanel)
         {
-            Debug.Log($"Removeads purchased: {RemoveAds}");
             if (RemoveAds)
             {
                 return;
@@ -221,6 +214,7 @@ namespace Monetization.Ads
         {
             if (_nativeAdPanels.Contains(nativeAdPanel))
                 nativeAdPanel.Hide();
+            Debug.Log(_nativeAdPanels.Contains(nativeAdPanel));
         }
         #endregion
         #region OpenAd
@@ -305,6 +299,8 @@ namespace Monetization.Ads
         {
             if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
                 return;
+            if (HasBanner || !HasInternet)
+                return;
             _ironsource.LoadBanner();
         }
         public void ToggleBanner(bool visible)
@@ -350,6 +346,7 @@ namespace Monetization.Ads
 
         public void OnRemoveAds(bool removeAdsPuchased)
         {
+            Debug.Log("OnremoveQAds " + removeAdsPuchased);
             RemoveAds = removeAdsPuchased;
             _ironsource.ToggleBanner(!removeAdsPuchased);
             if (_nativeAdPanels != null)

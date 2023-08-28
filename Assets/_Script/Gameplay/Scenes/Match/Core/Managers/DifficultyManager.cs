@@ -22,7 +22,6 @@ namespace Gameplay
             _incrementalStep = incrementalStep;
             _matchData = matchData;
         }
-
         public void ApplyDifficulty()
         {
             Time.timeScale = ((float)_timescaleStep) * _matchData.MatchSettings.Incremental;
@@ -35,7 +34,6 @@ namespace Gameplay
             if (_matchData.Score >= _incrementalStep.Steps[_matchData.MatchSettings.Incremental - 1].TriggerScore)
             {
                 _matchData.MatchSettings.ChangeIncrementalInGame();
-                Debug.Log(_matchData.MatchSettings.Incremental);
                 ApplyDifficulty();
                 _matchManager.OnDifficultyChange();
                 if (_matchData.MatchSettings.Incremental > GameDataManager.Instance.GameDatas.UnlockedIncremental)

@@ -27,6 +27,7 @@ namespace Services.FirebaseService.Analytics
                 if (FirebaseManager.Instance.FirebaseInitialized)
                 {
                     Firebase.Analytics.FirebaseAnalytics.LogEvent(valueLog, parameters);
+                    Debug.Log("event: " + valueLog + " logged");
                 }
             }
             else
@@ -42,8 +43,12 @@ namespace Services.FirebaseService.Analytics
                 if (FirebaseManager.Instance.FirebaseInitialized)
                 {
                     Firebase.Analytics.FirebaseAnalytics.LogEvent(eventName);
-           
+                 
                     Debug.Log("event: " + eventName + " logged");
+                }
+                else
+                {
+                    Debug.Log("Firebase not initialized "+ eventName);
                 }
             }
             else

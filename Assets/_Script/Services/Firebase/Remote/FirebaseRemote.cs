@@ -19,21 +19,14 @@ namespace Services.FirebaseService.Remote
 
         public void Init(RemoteVariableCollection remoteVariableCollection)
         {
-          /*  if (Enviroment.ENV == Enviroment.Env.PROD)
-            {*/
-                if (remoteVariableCollection == null)
-                {
-                    Debug.Log("You havent provide your custom remove variable collection");
-                    return;
-                }
+            if (remoteVariableCollection == null)
+            {
+                Debug.Log("You havent provide your custom remove variable collection");
+                return;
+            }
             _remoteVariableCollection = remoteVariableCollection;
             _remoteVariableCollection.AddToFetchQueue();
             FetchDataAsync();
-  /*          }
-            else
-            {
-                Debug.Log("Firebase remote initilized");
-            }*/
         }
 
         public Task FetchDataAsync()
@@ -57,15 +50,15 @@ namespace Services.FirebaseService.Remote
                             string variableName = kvp.Key;
                             object variableValue = kvp.Value.GetValue();
 
-                            if (variableValue is double)
+                        if (variableValue.GetType() == typeof(double))
                             {
                                 kvp.Value.SetValue(FirebaseRemoteConfig.DefaultInstance.GetValue(variableName).DoubleValue);
                             }
-                            else if (variableValue is string)
+                            else if (variableValue.GetType() == typeof(string))
                             {
                                 kvp.Value.SetValue(FirebaseRemoteConfig.DefaultInstance.GetValue(variableName).StringValue);
                             }
-                            else if (variableValue is bool)
+                            else if (variableValue.GetType() == typeof(bool))
                             {
                                 kvp.Value.SetValue(FirebaseRemoteConfig.DefaultInstance.GetValue(variableName).BooleanValue);
                             }

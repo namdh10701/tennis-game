@@ -77,6 +77,14 @@ namespace Gameplay
             _cpu.Init(_matchEvent, matchData.MatchSettings, _ball, isMatchReversed, remoteVariables.MaxIncrement);
             _ball.Init(_matchEvent, matchData.MatchSettings, isMatchReversed);
 
+            if (isMatchReversed)
+            {
+                FirebaseAnalytics.Instance.PushEvent("MATCH_PLAYED_REVERSED");
+            }
+            else
+            {
+                FirebaseAnalytics.Instance.PushEvent("MATCH_PLAYED_NOT_REVERSED");
+            }
 
             PrepareMatch();
             StartCoroutine(CountdownCoroutine());

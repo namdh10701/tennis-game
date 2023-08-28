@@ -15,11 +15,6 @@ namespace Services.FirebaseService.Remote
         public abstract void AddToFetchQueue();
         protected void AddVariable(RemoteVariable variable)
         {
-            if (_variables.ContainsKey(variable.GetName()))
-            {
-                Debug.LogError($"Duplicate entry: Variable '{variable.GetName()}' already exists.");
-                return;
-            }
             _variables.Add(variable.GetName(), variable);
         }
     }

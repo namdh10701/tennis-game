@@ -16,11 +16,12 @@ namespace Services.FirebaseService
         public FirebaseAnalytics FirebaseAnalytics { get; private set; }
         public bool FirebaseInitialized { get; private set; }
 
+        public DependencyStatus dependencyStatus;
 
         public RemoteVariableCollection RemoteVariableCollection = null;
         protected override void Awake()
         {
-            base.Awake();
+            base.Awake(); dependencyStatus = DependencyStatus.UnavailableUpdating;
             FirebaseRemote = GetComponent<FirebaseRemote>();
             FirebaseCrashlytics = GetComponent<FirebaseCrashlytics>();
             FirebaseAnalytics = GetComponent<FirebaseAnalytics>();
@@ -28,15 +29,19 @@ namespace Services.FirebaseService
 
         public void Init()
         {
+            dependencyStatus = DependencyStatus.UnavilableMissing;
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
             {
+                Debug.Log("Finish check here "+ (task.Result == DependencyStatus.Available));
+
                 if (task.Result == DependencyStatus.Available)
                 {
                     var app = FirebaseApp.DefaultInstance;
+                    FirebaseInitialized = true;
+                    Debug.LogWarning("firebase Initialized");
                     FirebaseCrashlytics?.Init();
                     FirebaseAnalytics?.Init();
                     FirebaseRemote?.Init(RemoteVariableCollection);
-                    FirebaseInitialized = true;
                 }
                 else
                 {
