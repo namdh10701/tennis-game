@@ -9,6 +9,7 @@ public class RemoteVariable
     public float TimescaleStep;
     public int MaxIncrement;
     public int NewMaxIncrement;
+    public bool IsBannerOnMatchScene;
 
     public static T Convert<T>(RemoteJson remoteJson)
     {
@@ -22,6 +23,7 @@ public class RemoteVariable
         remoteVariable.BackgroundColorOrder = Convert<BackgroundColorOrder>(myRemoteVariableCollection.BackgroundColorOrder);
         remoteVariable.IncrementalStep = Convert<IncrementalStep>(myRemoteVariableCollection.IncrementalStep);
         remoteVariable.NewMaxIncrement = (int)myRemoteVariableCollection.NewMaxIncrement.Value;
+        remoteVariable.IsBannerOnMatchScene = myRemoteVariableCollection.IsBannerOnMatchScene.Value;
         return remoteVariable;
     }
 }

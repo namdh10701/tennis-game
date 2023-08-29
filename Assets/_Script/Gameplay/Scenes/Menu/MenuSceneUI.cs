@@ -146,7 +146,12 @@ namespace Gameplay
 
         public void OnSkinClick()
         {
-            _sceneTransition.ChangeScene("SkinScene");
+            AdsController.Instance.ShowInter(
+                () =>
+                {
+                    _sceneTransition.ChangeScene("SkinScene");
+                }
+                );
         }
 
         public void OpenNotUnlockedIncremental()

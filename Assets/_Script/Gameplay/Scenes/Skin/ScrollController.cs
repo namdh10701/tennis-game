@@ -33,6 +33,7 @@ namespace Gameplay
             {
                 _totalContentHeight += _verticalLayoutGroup.transform.GetChild(i).GetComponent<RectTransform>().rect.height;
             }
+            _totalContentHeight += 300;
         }
 
         private void UpdateContentHeight()

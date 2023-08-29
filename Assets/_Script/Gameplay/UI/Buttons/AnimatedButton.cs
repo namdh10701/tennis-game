@@ -6,17 +6,18 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class AnimatedButton : UIBehaviour, IPointerDownHandler, IPointerUpHandler
+public class AnimatedButton : UIBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerMoveHandler
 {
     private Button _button;
     private Transform _transform;
     [SerializeField] private UnityEvent _onClickEvent;
     [SerializeField] private bool _isSpamable;
     [SerializeField] private float _clickCooldownDuration = .5f; // Adjust the duration as needed
-
     private bool _isCooldown;
     private bool _clickedDown = false;
-
+    private bool _isDragging;
+    private Vector3 _pointerDownPos;
+    public bool IsClickable = true;
     protected override void Awake()
     {
         _clickCooldownDuration = .2f;
@@ -37,37 +38,42 @@ public class AnimatedButton : UIBehaviour, IPointerDownHandler, IPointerUpHandle
     }
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (_button.enabled && !_isCooldown)
+        if (_button.enabled && !_isCooldown && IsClickable)
         {
-            _clickedDown = true;
+            _pointerDownPos = eventData.position;
+            _clickedDown = true; _isDragging = false;
             _transform.localScale *= .9f;
         }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (_button.enabled && !_isCooldown && _clickedDown)
+        if (_button.enabled && !_isCooldown && _clickedDown && IsClickable)
         {
-            Vector2 localPoint;
             _transform.localScale /= .9f;
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                _button.GetComponent<RectTransform>(),
-                eventData.position, eventData.pressEventCamera, out localPoint))
+            if (!_isDragging)
             {
-                if (_button.GetComponent<RectTransform>().rect.Contains(localPoint))
+                Vector2 localPoint;
+                if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    _button.GetComponent<RectTransform>(),
+                    eventData.position, eventData.pressEventCamera, out localPoint))
                 {
-                    AudioController.Instance.PlaySound("button");
-                    _onClickEvent?.Invoke();
+                    if (_button.GetComponent<RectTransform>().rect.Contains(localPoint))
+                    {
+                        AudioController.Instance.PlaySound("button");
+                        _onClickEvent?.Invoke();
+                    }
                 }
-            }
-            _clickedDown = false;
+                _clickedDown = false;
 
-            if (!_isSpamable)
-            {
-                StartCoroutine(StartCooldown());
+                if (!_isSpamable)
+                {
+                    StartCoroutine(StartCooldown());
+                }
             }
         }
     }
+
     IEnumerator StartCooldown()
     {
         _isCooldown = true;
@@ -80,5 +86,16 @@ public class AnimatedButton : UIBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         _button.enabled = true;
         _isCooldown = false;
+    }
+
+    public void OnPointerMove(PointerEventData eventData)
+    {
+        if (_button.enabled && _clickedDown)
+        {
+            if (Vector2.Distance(_pointerDownPos, eventData.position) > EventSystem.current.pixelDragThreshold)
+            {
+                _isDragging = true;
+            }
+        }
     }
 }

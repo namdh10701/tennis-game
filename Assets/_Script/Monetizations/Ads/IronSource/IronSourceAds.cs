@@ -6,6 +6,7 @@ using Enviroments;
 using System.Collections;
 using Services.FirebaseService.Crashlytics;
 using System;
+using UnityEngine.SceneManagement;
 
 namespace Monetization.Ads
 {
@@ -104,7 +105,10 @@ namespace Monetization.Ads
             FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST_SUCCEED);
             AdsController.Instance.HasBanner = true;
             _isRequestingBanner = false;
-            IronSource.Agent.displayBanner();
+            if (SceneManager.GetActiveScene().name != "MatchScene")
+            {
+                IronSource.Agent.displayBanner();
+            }
         }
         private void Banner_onLoadFailed(IronSourceError obj)
         {
@@ -117,7 +121,7 @@ namespace Monetization.Ads
                 return;
             _isRequestingBanner = true;
             FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
-            IronSource.Agent.loadBanner(IronSourceBannerSize.SMART, IronSourceBannerPosition.BOTTOM);
+            IronSource.Agent.loadBanner(new IronSourceBannerSize(728, 90), IronSourceBannerPosition.BOTTOM);
         }
 
         public void ToggleBanner(bool visible)
@@ -255,7 +259,7 @@ namespace Monetization.Ads
         private void Reward_onAvailable(IronSourceAdInfo obj)
         {
             Debug.Log("reward ad available");
-           
+
             Debug.Log($"{obj.adNetwork}  {obj.segmentName} {obj.instanceName} {obj.ab}");
             //_isRequestingReward = false;
         }

@@ -11,6 +11,7 @@ namespace Gameplay
         public RemoteJson BackgroundColorOrder;
         public RemoteJson IncrementalStep;
         public RemoteDouble NewMaxIncrement;
+        public RemoteBool IsBannerOnMatchScene;
 
         public MyRemoteVariableCollection()
         {
@@ -18,7 +19,8 @@ namespace Gameplay
             TimescaleStep = new RemoteDouble("TimescaleStep", 1);
             MaxIncrement = new RemoteDouble("MaxIncrement", 10);
             BackgroundColorOrder = new RemoteJson("BackgroundColorOrder", JsonUtility.ToJson(new BackgroundColorOrder()));
-            NewMaxIncrement = new RemoteDouble("NewMaxIncrement",11);
+            NewMaxIncrement = new RemoteDouble("NewMaxIncrement", 11);
+            IsBannerOnMatchScene = new RemoteBool("IsBannerOnMatchScene", false);
         }
 
         public override void AddToFetchQueue()
@@ -28,6 +30,7 @@ namespace Gameplay
             AddVariable(IncrementalStep);
             AddVariable(BackgroundColorOrder);
             AddVariable(NewMaxIncrement);
+            AddVariable(IsBannerOnMatchScene);
         }
     }
 }

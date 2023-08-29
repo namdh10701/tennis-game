@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using static Gameplay.MatchSetting;
 using Audio;
 using Phoenix;
+using Monetization.Ads;
 
 namespace Gameplay
 {
@@ -18,6 +19,7 @@ namespace Gameplay
         [SerializeField] private SceneTransition _sceneTransition;
         private void Awake()
         {
+            AdsController.Instance.ToggleBanner(true);
             _gameManager = FindObjectOfType<GameManager>();
         }
         private void Start()

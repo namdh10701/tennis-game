@@ -26,6 +26,7 @@ namespace Gameplay
         [SerializeField] private GameObject _nativeAdPanelHolder;
         [SerializeField] private NativeAdPanel _nativeAdPanel;
         private List<Skin> _skins;
+        [SerializeField]private List<Sprite> icons;
 
         public void Init(List<Skin> skins)
         {
@@ -64,7 +65,7 @@ namespace Gameplay
             for (int i = 0; i < _skins.Count; i++)
             {
                 if (!_skinButtons[i].Disabled)
-                    _skinButtons[i].Init(this, _skins[i], SkinAsset.skinSprites[int.Parse(_skins[i].ID) - 1]);
+                    _skinButtons[i].Init(this, _skins[i], SkinAsset.skinSprites[int.Parse(_skins[i].ID) - 1], icons[(int)_skins[i].Type]);
             }
         }
 
@@ -82,7 +83,12 @@ namespace Gameplay
 
         public void OnBackButtonClick()
         {
-            _sceneTransition.ChangeScene("MenuScene");
+            AdsController.Instance.ShowInter(
+           () =>
+           {
+               _sceneTransition.ChangeScene("MenuScene");
+           }
+           );
         }
 
         public void OnSkinSelect(Skin skin)
