@@ -216,8 +216,8 @@ namespace Gameplay
         {
             float minX = -2.6f;
             float maxX = 2.6f;
-            float maxY = 4.2f;
-            float minY = 2.5f;
+            float maxY = 4.0f;
+            float minY = 2.4f;
 
             return new Vector2(UnityEngine.Random.Range(minX, maxX), UnityEngine.Random.Range(minY, maxY));
         }

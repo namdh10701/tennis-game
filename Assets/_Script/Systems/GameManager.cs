@@ -32,7 +32,7 @@ namespace Gameplay
             Enviroment.ENV = env;
             if (Enviroment.ENV == Enviroment.Env.PROD)
             {
-                //Debug.unityLogger.logEnabled = false;
+                Debug.unityLogger.logEnabled = false;
             }
         }
         private static void SpecifySystemsSetting()
@@ -41,7 +41,7 @@ namespace Gameplay
             AudioController.Instance.Init(SettingManager.Instance.GameSettings.IsMusicOn, SettingManager.Instance.GameSettings.IsSoundOn);
             Application.targetFrameRate = 60;
             FirebaseHandler.Init();
-            AdjustHandler.Init();
+            //AdjustHandler.Init();
         }
     }
 }

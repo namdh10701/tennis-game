@@ -42,14 +42,14 @@ namespace Gameplay
             _matchData = new MatchData(_matchSetting);
             _matchManager.Init(_matchEvent, _matchData);
             _matchSceneUI.Init(_matchData, _matchManager, this);
-            InvokeRepeating("HideBanner", .5f, .1f);
+            //InvokeRepeating("HideBanner", .5f, .1f);
         }
         public void HideBanner()
         {
-            if (!RemoteVariableManager.Instance.MyRemoteVariables.IsBannerOnMatchScene.Value)
+           /* if (!RemoteVariableManager.Instance.MyRemoteVariables.IsBannerOnMatchScene.Value)
             {
                 AdsController.Instance.ToggleBanner(false);
-            }
+            }*/
         }
 
 

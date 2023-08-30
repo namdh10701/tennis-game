@@ -5,7 +5,7 @@ public static class AdjustHandler
 {   
     public static void Init()
     {
-        AdjustEnvironment adjustEnvironment;
+       /* AdjustEnvironment adjustEnvironment;
         if (Enviroment.ENV != Enviroment.Env.PROD)
         {
             adjustEnvironment = AdjustEnvironment.Sandbox;
@@ -15,6 +15,6 @@ public static class AdjustHandler
             adjustEnvironment = AdjustEnvironment.Production;
         }
         AdjustConfig config = new AdjustConfig("2xsbg44bal4w", adjustEnvironment);
-        Adjust.start(config);
+        Adjust.start(config);*/
     }
 }

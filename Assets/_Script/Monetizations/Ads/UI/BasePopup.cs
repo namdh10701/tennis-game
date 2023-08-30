@@ -41,6 +41,7 @@ namespace Monetization.Ads.UI
             openTween = _contents.transform.DOScale(1, .2f).SetEase(Ease.OutBack).SetUpdate(true);
             openTween.onComplete += () =>
             {
+                openTween = null;
                 CurrentState = State.OPENED;
             };
             return openTween;
@@ -60,6 +61,7 @@ namespace Monetization.Ads.UI
             closeTween.onComplete += () =>
             {
                 gameObject.SetActive(false);
+                closeTween = null;
                 CurrentState = State.CLOSED;
             };
             return closeTween;

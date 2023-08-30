@@ -105,5 +105,10 @@ namespace Gameplay
         {
             transform.localPosition = Vector3.zero;
         }
+
+        public SpriteRenderer GetSpriteRenderer()
+        {
+            return _spriteRenderer;
+        }
     }
 }

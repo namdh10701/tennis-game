@@ -1,3 +1,4 @@
+using com.adjust.sdk;
 using Common;
 using GoogleMobileAds.Api;
 using GoogleMobileAds.Common;
@@ -12,13 +13,12 @@ public class AdsHandler : MonoBehaviour
     }
     private void Start()
     {
-        
         AdsController.Instance.OnRemoveAds(AdRemoved());
         AdsController.Instance.Init();
         AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
         if (PlayerPrefs.GetInt(Constant.ADS_REMOVED_KEY) != 1)
         {
-            InvokeRepeating("TurnBannerOn", 10, 5);
+            InvokeRepeating("TurnBannerOn", 6, 2);
             InvokeRepeating("LoadNativeAd", 60, 60);
         }
     }

@@ -89,7 +89,7 @@ namespace Monetization.Ads
 
         #region NativeAd
         public List<CachedNativeAd> CachedNativeAds { get; private set; }
-        private const int NATIVE_AD_CACHED_TIMEOUT_MINUTES = 2;
+        private const int NATIVE_AD_CACHED_TIMEOUT_MINUTES = 15;
         public const int MAX_NATIVE_AD_CACHE_SIZE = 2;
 
         public void RegisterNativeAdPanel(NativeAdPanel nativeAdPanel)

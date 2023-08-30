@@ -21,6 +21,9 @@ namespace com.adjust.sdk
 
         public static void Start(AdjustConfig adjustConfig)
         {
+            Debug.Log("Adjust android start");
+            Debug.Log(adjustConfig.appToken);
+            Debug.Log(adjustConfig.environment);
             // Thank you, Unity 2019.2.0, for breaking this.
             // AndroidJavaObject ajoEnvironment = adjustConfig.environment == AdjustEnvironment.Sandbox ? 
             //     new AndroidJavaClass("com.adjust.sdk.AdjustConfig").GetStatic<AndroidJavaObject>("ENVIRONMENT_SANDBOX") :
@@ -28,7 +31,7 @@ namespace com.adjust.sdk
 
             // Get environment variable.
             string ajoEnvironment = adjustConfig.environment == AdjustEnvironment.Production ? "production" : "sandbox";
-            
+
             // Create adjust config object.
             AndroidJavaObject ajoAdjustConfig;
 
@@ -194,8 +197,8 @@ namespace com.adjust.sdk
 
             // Check if user has enabled reading of IMEI and MEID.  
             // Obsolete method. 
-            if (adjustConfig.readImei.HasValue) 
-            {   
+            if (adjustConfig.readImei.HasValue)
+            {
                 // ajoAdjustConfig.Call("setReadMobileEquipmentIdentity", adjustConfig.readImei.Value); 
             }
 
@@ -380,7 +383,7 @@ namespace com.adjust.sdk
                     null : ajoAttribution.Get<string>(AdjustUtils.KeyFbInstallReferrer);
                 return adjustAttribution;
             }
-            catch (Exception) {}
+            catch (Exception) { }
 
             return null;
         }
@@ -439,7 +442,7 @@ namespace com.adjust.sdk
             ajcAdjust.CallStatic("resetSessionCallbackParameters");
         }
 
-        public static void AppWillOpenUrl(string url) 
+        public static void AppWillOpenUrl(string url)
         {
             AndroidJavaClass ajcUri = new AndroidJavaClass("android.net.Uri");
             AndroidJavaObject ajoUri = ajcUri.CallStatic<AndroidJavaObject>("parse", url);
@@ -610,7 +613,7 @@ namespace com.adjust.sdk
         {
             ajcAdjust.CallStatic("onPause");
         }
-        
+
         public static void OnResume()
         {
             ajcAdjust.CallStatic("onResume");
@@ -621,7 +624,7 @@ namespace com.adjust.sdk
             ajcAdjust.CallStatic("setReferrer", referrer, ajoCurrentActivity);
         }
 
-        public static void GetGoogleAdId(Action<string> onDeviceIdsRead) 
+        public static void GetGoogleAdId(Action<string> onDeviceIdsRead)
         {
             DeviceIdsReadListener onDeviceIdsReadProxy = new DeviceIdsReadListener(onDeviceIdsRead);
             ajcAdjust.CallStatic("getGoogleAdId", ajoCurrentActivity, onDeviceIdsReadProxy);
@@ -820,7 +823,7 @@ namespace com.adjust.sdk
                     // Native Android SDK should send empty JSON object if none available as of v4.12.5.
                     // Native Android SDK added special logic to send Unity friendly values as of v4.15.0.
                 }
-                
+
                 callback(adjustEventFailure);
             }
         }
@@ -955,7 +958,7 @@ namespace com.adjust.sdk
         // Private & helper methods.
         private static bool IsAppSecretSet(AdjustConfig adjustConfig)
         {
-            return adjustConfig.secretId.HasValue 
+            return adjustConfig.secretId.HasValue
                 && adjustConfig.info1.HasValue
                 && adjustConfig.info2.HasValue
                 && adjustConfig.info3.HasValue

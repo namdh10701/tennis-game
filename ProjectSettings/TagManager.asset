@@ -7,6 +7,7 @@ TagManager:
   - Ball
   - Net
   - BallScaleNet
+  - Boundary
   layers:
   - Default
   - TransparentFX

@@ -121,7 +121,7 @@ namespace Monetization.Ads
                 return;
             _isRequestingBanner = true;
             FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
-            IronSource.Agent.loadBanner(new IronSourceBannerSize(728, 90), IronSourceBannerPosition.BOTTOM);
+            IronSource.Agent.loadBanner(IronSourceBannerSize.SMART, IronSourceBannerPosition.BOTTOM);
         }
 
         public void ToggleBanner(bool visible)
