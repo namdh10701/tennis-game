@@ -1,6 +1,7 @@
 ﻿using Common;
 using GoogleMobileAds.Api;
 using Services.FirebaseService.Analytics;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace Monetization.Ads.UI
     {
         private CachedNativeAd _cachedNativeAd;
         private NativeAd _nativeAd;
+        [SerializeField] private int _id;
         [SerializeField] private GameObject loadingObject;
         [SerializeField] private GameObject loadedObject;
         [SerializeField] private RawImage icon;
@@ -22,8 +24,10 @@ namespace Monetization.Ads.UI
         [SerializeField] private Text callToAction;
         public bool IsRegistered = false;
 
-        public bool IsNativeAdShowed { get; private set; }
-
+        public int ID
+        {
+            get { return _id; }
+        }
         public CachedNativeAd CachedNativeAd
         {
             get
@@ -32,16 +36,12 @@ namespace Monetization.Ads.UI
             }
             set
             {
-                Debug.Log("set ad here");
                 _cachedNativeAd = value;
                 SetData(_cachedNativeAd);
-                IsNativeAdShowed = false;
             }
         }
         public void Show()
         {
-        
-            Debug.Log("native ad panel show request");
             gameObject.SetActive(true);
             loadedObject.SetActive(false);
             loadingObject.SetActive(true);
@@ -54,25 +54,25 @@ namespace Monetization.Ads.UI
             {
                 yield return null;
             }
-            Debug.Log("nativeads showed after loaded");
             loadedObject.SetActive(true);
             loadingObject.SetActive(false);
-            if (!IsNativeAdShowed)
+            if (_cachedNativeAd.TimeShown == 0)
             {
-                IsNativeAdShowed = true;
                 FirebaseAnalytics.Instance.PushEvent(Constant.SHOW_NATIVE_AD);
+            }
+            if (_cachedNativeAd.TimeShown < 2)
+            {
+                _cachedNativeAd.TimeShown++;
             }
         }
 
         public void Hide()
         {
-            Debug.Log("Hide");
             gameObject.SetActive(false);
         }
 
         private void Start()
         {
-            Debug.Log("native ad panel register here");
             AdsController.Instance.RegisterNativeAdPanel(this);
             IsRegistered = true;
         }
@@ -204,7 +204,7 @@ namespace Monetization.Ads.UI
 
         private Texture2D GetRandom(List<Texture2D> imageTexture2dList)
         {
-            return imageTexture2dList[Random.Range(0, imageTexture2dList.Count)];
+            return imageTexture2dList[UnityEngine.Random.Range(0, imageTexture2dList.Count)];
         }
         #endregion
     }

@@ -39,7 +39,7 @@ namespace Monetization.Ads
         private void HandleInitCompleteAction(InitializationStatus initstatus)
         {
             _initilized = true;
-            Debug.Log("Admob initilized");
+            AdsLogger.Log($"Admob initialized", AdsController.AdType.OPEN);
             LoadAppOpenAd();
             LoadNativeAds();
         }
@@ -79,7 +79,7 @@ namespace Monetization.Ads
             {
                 DestroyAppOpenAd();
             }
-            Debug.Log("load app open ad request");
+            AdsLogger.Log($"Requesting", AdsController.AdType.OPEN);
             FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
             _isRequestingAppOpenAd = true;
             AppOpenAd.Load(_appOpenAdId, new AdRequest(),
@@ -94,7 +94,11 @@ namespace Monetization.Ads
                 appOpenAd = ad;
                 appOpenExpireTime = DateTime.Now + APPOPEN_TIMEOUT;
 
-                Debug.Log("load app open ad loaded");
+                AdsLogger.Log($"Loaded", AdsController.AdType.OPEN);
+                if (loadError != null)
+                {
+                    AdsLogger.Log($"Error: {loadError.ToString()}", AdsController.AdType.OPEN);
+                }
                 HandleOpenAdOpened(ad);
                 HandleOpenAdClosed(ad);
                 HandleOpenAdShowFailed(ad);
@@ -103,6 +107,7 @@ namespace Monetization.Ads
                 {
                     ad.OnAdFullScreenContentOpened += () =>
                     {
+
                         _isRequestingAppOpenAd = false;
                         AdsController.Instance.IsShowingOpenAd = true;
                         FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST_SUCCEED);
@@ -144,8 +149,6 @@ namespace Monetization.Ads
         public IEnumerator PassframeShowAd()
         {
             yield return new WaitForSeconds(.05f);
-
-            Debug.Log("open ad show here");
             if (AdsController.Instance.RewardedAdJustClose)
             {
                 AdsController.Instance.RewardedAdJustClose = false;
@@ -155,6 +158,7 @@ namespace Monetization.Ads
             {
                 yield break;
             }
+            AdsLogger.Log("All conditions pass \n Show", AdsController.AdType.OPEN);
             appOpenAd.Show();
         }
 
@@ -165,52 +169,39 @@ namespace Monetization.Ads
 
         public void LoadNativeAds()
         {
-            Debug.Log("is key 2 requesting: " + _isNativeAdKey2Requesting);
-            Debug.Log("is key 1 requesting: " + _isNativeAdKey1Requesting);
             if (!_initilized)
             {
                 return;
             }
-            if (AdsController.Instance.CachedNativeAds.Count >= AdsController.MAX_NATIVE_AD_CACHE_SIZE)
+
+            if (!_isNativeAdKey1Requesting)
             {
-                Debug.Log("max native ad cached");
-                return;
+                _isNativeAdKey1Requesting = true;
+                FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
+                AdLoader adLoader1 = new AdLoader.Builder(_nativeAdId1).ForNativeAd().Build();
+                adLoader1.OnNativeAdLoaded += (sender, e) => HandleNativeAdLoaded(sender, e, _nativeAdId1);
+                adLoader1.OnAdFailedToLoad += (sender, e) => HandleAdFailedToLoad(sender, e, _nativeAdId1);
+                adLoader1.OnNativeAdClicked += (sender, e) =>
+                {
+                    FirebaseAnalytics.Instance.PushEvent(Constant.CLICK_NATIVE_AD);
+                };
+                AdsLogger.Log($"Requesting using key 1", AdsController.AdType.NATIVE);
+                adLoader1.LoadAd(new AdRequest());
             }
-
-            if (_isNativeAdKey1Requesting)
-                return;
-            Debug.Log("load native ad with key 1");
-            _isNativeAdKey1Requesting = true;
-            FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
-            AdLoader adLoader1 = new AdLoader.Builder(_nativeAdId1).ForNativeAd().Build();
-            adLoader1.OnNativeAdLoaded += (sender, e) => HandleNativeAdLoaded(sender, e, _nativeAdId1);
-            adLoader1.OnAdFailedToLoad += (sender, e) => HandleAdFailedToLoad(sender, e, _nativeAdId1);
-            adLoader1.OnNativeAdClicked += (sender, e) =>
+            if (!_isNativeAdKey2Requesting)
             {
-                FirebaseAnalytics.Instance.PushEvent(Constant.CLICK_NATIVE_AD);
-            };
-            adLoader1.LoadAd(new AdRequest());
-
-            if (AdsController.Instance.CachedNativeAds.Count == 1)
-            {
-                return;
+                _isNativeAdKey2Requesting = true;
+                FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
+                AdLoader adLoader2 = new AdLoader.Builder(_nativeAdId2).ForNativeAd().Build();
+                adLoader2.OnNativeAdLoaded += (sender, e) => HandleNativeAdLoaded(sender, e, _nativeAdId2);
+                adLoader2.OnAdFailedToLoad += (sender, e) => HandleAdFailedToLoad(sender, e, _nativeAdId2);
+                adLoader2.OnNativeAdClicked += (sender, e) =>
+                {
+                    FirebaseAnalytics.Instance.PushEvent(Constant.CLICK_NATIVE_AD);
+                };
+                AdsLogger.Log($"Requesting using key 2", AdsController.AdType.NATIVE);
+                adLoader2.LoadAd(new AdRequest());
             }
-            if (_isNativeAdKey2Requesting)
-                return;
-            Debug.Log("load native ad with key 2");
-            _isNativeAdKey2Requesting = true;
-            FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST);
-            AdLoader adLoader2 = new AdLoader.Builder(_nativeAdId2).ForNativeAd().Build();
-            adLoader2.OnNativeAdLoaded += (sender, e) => HandleNativeAdLoaded(sender, e, _nativeAdId2);
-            adLoader2.OnAdFailedToLoad += (sender, e) => HandleAdFailedToLoad(sender, e, _nativeAdId2);
-            adLoader2.OnNativeAdClicked += (sender, e) =>
-            {
-                FirebaseAnalytics.Instance.PushEvent(Constant.CLICK_NATIVE_AD);
-            };
-            adLoader2.LoadAd(new AdRequest());
-            Debug.Log("is key 2 requesting: " + _isNativeAdKey2Requesting);
-            Debug.Log("is key 1 requesting: " + _isNativeAdKey1Requesting);
-
         }
 
         private void HandleAdFailedToLoad(object sender, AdFailedToLoadEventArgs e, string key)
@@ -219,13 +210,12 @@ namespace Monetization.Ads
                 _isNativeAdKey1Requesting = false;
             else
                 _isNativeAdKey2Requesting = false;
-            Debug.Log(e.LoadAdError);
+            AdsLogger.Log($"Load failed {e.LoadAdError}", AdsController.AdType.NATIVE);
         }
 
         private void HandleNativeAdLoaded(object sender, NativeAdEventArgs e, string key)
         {
             FirebaseAnalytics.Instance.PushEvent(Constant.AD_REQUEST_SUCCEED);
-            Debug.Log("native ad load loaded");
             AdsController.Instance.OnNativeAdLoaded(e.nativeAd);
             e.nativeAd.OnPaidEvent += NativeAd_OnPaidEvent;
             if (key == _nativeAdId1)

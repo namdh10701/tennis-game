@@ -7,6 +7,7 @@ namespace Monetization.Ads
     {
         private NativeAd _nativeAd;
         public DateTime CachedTime { get; private set; }
+        public int TimeShown;
         public NativeAd NativeAd
         {
             get

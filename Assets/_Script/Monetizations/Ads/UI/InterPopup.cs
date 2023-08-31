@@ -22,9 +22,8 @@ namespace Monetization.Ads.UI
         {
             if (showAd)
             {
-                Tween openTween = base.Open().Pause();
                 AdsController.Instance.ShowInter(
-                     () => { openTween.Play(); });
+                     () => { base.Open(); });
             }
             else
             {
@@ -37,9 +36,8 @@ namespace Monetization.Ads.UI
         {
             if (showAd)
             {
-                Tween closeTween = base.Close().Pause();
                 AdsController.Instance.ShowInter(
-                     () => { closeTween.Play(); });
+                     () => { base.Close(); });
             }
             else
             {

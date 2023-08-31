@@ -22,7 +22,7 @@ public class SettingPanel : InterPopup
     }
     private void OnDisable()
     {
-        AdsController.Instance.HideNativeAd(_nativeAdPanel);
+        AdsController.Instance?.HideNativeAd(_nativeAdPanel);
     }
     public void Init()
     {

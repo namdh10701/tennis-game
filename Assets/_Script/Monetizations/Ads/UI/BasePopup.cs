@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using DG.Tweening;
 using Unity.VisualScripting;
+using System;
 
 namespace Monetization.Ads.UI
 {
@@ -65,6 +66,14 @@ namespace Monetization.Ads.UI
                 CurrentState = State.CLOSED;
             };
             return closeTween;
+        }
+
+        public virtual void Close(Action onClosed)
+        {
+            if (Close() != null)
+            {
+                closeTween.onComplete += () => { onClosed?.Invoke(); };
+            }
         }
 
         private void OnDestroy()

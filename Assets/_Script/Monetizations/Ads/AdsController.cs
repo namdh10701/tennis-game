@@ -7,6 +7,11 @@ using System.Collections.Generic;
 using GoogleMobileAds.Api;
 using ListExtensions;
 using Enviroments;
+using System.Linq;
+using System.Reflection;
+using JetBrains.Annotations;
+using UnityEditor;
+
 namespace Monetization.Ads
 {
 
@@ -14,28 +19,33 @@ namespace Monetization.Ads
     {
         public enum AdType
         {
-            BANNER, INTER, REWARD, OPEN
+            BANNER, INTER, REWARD, OPEN, NATIVE
         }
-
-
         private IronSourceAds _ironsource;
         private AdmobAds _admob;
 
         private Action _onInterClosed;
         private Action<bool> _onRewardClosed;
-        public Action OnRemoveAdsPurchased;
+        [HideInInspector] public Action OnRemoveAdsPurchased;
 
         private AdsUIController _adsUIController;
 
-        private List<NativeAdPanel> _nativeAdPanels = new List<NativeAdPanel>();
 
-        private bool _isFreeAdsTimeEnded = false;
+        [HideInInspector]public bool InterCanceled = false;
 
-        public bool HasBanner;
-        public bool IsShowingOpenAd;
-        public bool IsShowingInterAd;
-        public bool IsShowingReward;
-        public bool RewardedAdJustClose;
+        [HideInInspector] public bool HasBanner;
+        [HideInInspector] public bool IsShowingOpenAd;
+        [HideInInspector] public bool IsShowingInterAd;
+        [HideInInspector] public bool IsShowingReward;
+        [HideInInspector] public bool RewardedAdJustClose;
+
+        [SerializeField] private bool _isDebugNative;
+        [SerializeField] private bool _isDebugBanner;
+        [SerializeField] private bool _isDebugOpen;
+        [SerializeField] private bool _isDebugRewarded;
+        [SerializeField] private bool _isDebugInter;
+
+        [SerializeField] private int _nativeAdPanelNumber;
 
 
         public bool HasInternet
@@ -47,7 +57,14 @@ namespace Monetization.Ads
         protected override void Awake()
         {
             base.Awake();
-            CachedNativeAds = new List<CachedNativeAd>();
+            AdsLogger.IsDebugBanner = _isDebugBanner;
+            AdsLogger.IsDebugRewarded = _isDebugRewarded;
+            AdsLogger.IsDebugInter = _isDebugInter;
+            AdsLogger.IsDebugNative = _isDebugNative;
+            AdsLogger.IsDebugOpen = _isDebugOpen;
+
+            CachedNativeAds = new CachedNativeAd[_nativeAdPanelNumber];
+            _nativeAdPanels = new NativeAdPanel[_nativeAdPanelNumber];
             _ironsource = GetComponent<IronSourceAds>();
             _admob = GetComponent<AdmobAds>();
             IsShowingOpenAd = false;
@@ -60,23 +77,9 @@ namespace Monetization.Ads
                 return;
             _ironsource.Init();
             _admob.Init();
-            Invoke("EndFreeAdsTime", 30);
-        }
-        private void EndFreeAdsTime()
-        {
-            _isFreeAdsTimeEnded = true;
         }
 
-
-
-        public void SetBanner(bool hasBanner)
-        {
-            if (hasBanner)
-            {
-                InvokeRepeating(nameof(ShowBanner), 0, 60);
-            }
-        }
-
+        #region COMMON
         public void RegisterAdsUI(AdsUIController adsUI)
         {
             _adsUIController = adsUI;
@@ -86,101 +89,141 @@ namespace Monetization.Ads
             if (_adsUIController == adsUI)
                 _adsUIController = null;
         }
+        public void OnRemoveAds(bool removeAdsPuchased)
+        {
+            RemoveAds = removeAdsPuchased;
+            _ironsource.ToggleBanner(!removeAdsPuchased);
+            if (_nativeAdPanels != null)
+            {
+                foreach (NativeAdPanel panel in _nativeAdPanels)
+                {
+                    if (panel != null)
+                    {
+                        panel.gameObject.SetActive(!removeAdsPuchased);
+                    }
+                }
+            }
+        }
 
+        #endregion
         #region NativeAd
-        public List<CachedNativeAd> CachedNativeAds { get; private set; }
-        private const int NATIVE_AD_CACHED_TIMEOUT_MINUTES = 15;
-        public const int MAX_NATIVE_AD_CACHE_SIZE = 2;
+        public CachedNativeAd[] CachedNativeAds;
+        private NativeAdPanel[] _nativeAdPanels;
 
         public void RegisterNativeAdPanel(NativeAdPanel nativeAdPanel)
         {
-            Debug.Log("register");
-            _nativeAdPanels.Add(nativeAdPanel);
-            CachedNativeAd cachedNativeAd;
-            if (CachedNativeAds.GetFirst(out cachedNativeAd))
+            AdsLogger.Log($"Panel registered with ID: {nativeAdPanel.ID}", AdType.NATIVE);
+            _nativeAdPanels[0] = nativeAdPanel;
+            if (CachedNativeAds[nativeAdPanel.ID] != null)
             {
-                if (IsCachedNativeAdTimeout(cachedNativeAd))
-                {
-                    cachedNativeAd.Disolve();
-                }
-
-                else
-                {
-                    nativeAdPanel.CachedNativeAd = cachedNativeAd;
-                }
-            }
-        }
-        public void UnRegisterNativeAdPanel(NativeAdPanel nativeAdPanel)
-        {
-            Debug.Log("unregister");
-            if (_nativeAdPanels.Contains(nativeAdPanel))
-                _nativeAdPanels.Remove(nativeAdPanel);
-            if (!nativeAdPanel.IsNativeAdShowed && nativeAdPanel.CachedNativeAd != null)
-            {
-                if (IsCachedNativeAdTimeout(nativeAdPanel.CachedNativeAd))
-                {
-                    nativeAdPanel.CachedNativeAd.Disolve();
-                }
-                else
-                {
-                    TryCacheNativeAd(nativeAdPanel.CachedNativeAd);
-                }
-            }
-        }
-
-        private void TryCacheNativeAd(CachedNativeAd cachedNativeAd)
-        {
-            if (CachedNativeAds.Count < MAX_NATIVE_AD_CACHE_SIZE)
-            {
-                CachedNativeAds.AddFirst(cachedNativeAd);
-                Debug.Log($"cached native ad has {CachedNativeAds.Count}");
+                nativeAdPanel.CachedNativeAd = CachedNativeAds[nativeAdPanel.ID];
+                return;
             }
             else
             {
-                Debug.Log($"native ad disolve");
-                cachedNativeAd.Disolve();
+                int newIndex = -1;
+                for (int i = nativeAdPanel.ID + 1; i < CachedNativeAds.Length; i++)
+                {
+                    if (CachedNativeAds[i] != null)
+                    {
+                        newIndex = i;
+                        nativeAdPanel.CachedNativeAd = CachedNativeAds[i];
+                        break;
+                    }
+                }
+                if (newIndex == -1)
+                {
+                    for (int i = nativeAdPanel.ID - 1; i >= 0; i--)
+                    {
+                        if (CachedNativeAds[i] != null)
+                        {
+                            newIndex = i;
+                            break;
+                        }
+                    }
+                    if (newIndex != -1)
+                    {
+                        nativeAdPanel.CachedNativeAd = CachedNativeAds[newIndex];
+                        AdsLogger.Log($"Registered panel with ID: {nativeAdPanel.ID} has assigned cached native ad at pos: {nativeAdPanel.ID} ", AdType.NATIVE);
+                    }
+                    else
+                    {
+                        AdsLogger.Log($"Registered panel with ID: {nativeAdPanel.ID} has no available cached native ad", AdType.NATIVE);
+                    }
+                }
             }
-        }
 
-        public bool IsCachedNativeAdTimeout(CachedNativeAd cachedNativeAd)
+        }
+        public void UnRegisterNativeAdPanel(NativeAdPanel nativeAdPanel)
         {
-            return DateTime.Now > cachedNativeAd.CachedTime + TimeSpan.FromMinutes(NATIVE_AD_CACHED_TIMEOUT_MINUTES);
+            if (_nativeAdPanels.Contains(nativeAdPanel))
+            {
+                _nativeAdPanels[nativeAdPanel.ID] = null;
+            }
+            AdsLogger.Log($"Panel with ID: {nativeAdPanel.ID} unregisterd", AdType.NATIVE);
         }
 
         public void OnNativeAdLoaded(NativeAd nativeAd)
         {
+            AdsLogger.Log("Native ad unit loaded", AdType.NATIVE);
             CachedNativeAd cachedNativeAd = new CachedNativeAd(nativeAd);
-            if (!AssignToAvailablePanel(cachedNativeAd))
+            int lastPos = 0;
+            int emptySlotIndex = -1;
+            for (int i = 0; i < CachedNativeAds.Length; i++)
             {
-                CachedNativeAds.AddLast(cachedNativeAd);
-                Debug.Log(CachedNativeAds.Count + " cached has");
-            }
-        }
-
-        private bool AssignToAvailablePanel(CachedNativeAd cachedNativeAd)
-        {
-            bool isAssigned = false;
-            foreach (NativeAdPanel nativeAdPanel in _nativeAdPanels)
-            {
-                if (nativeAdPanel.CachedNativeAd == null)
+                if (CachedNativeAds[i] == null)
                 {
-                    Debug.Log("native ad assigned");
-                    nativeAdPanel.CachedNativeAd = cachedNativeAd;
-                    isAssigned = true;
+                    AdsLogger.Log("native ad loaded", AdType.NATIVE);
+                    emptySlotIndex = i;
+                    break;
                 }
             }
-            return isAssigned;
+            if (emptySlotIndex != -1)
+            {
+                AdsLogger.Log("native ad loaded", AdType.NATIVE);
+                Debug.Log(emptySlotIndex);
+                CachedNativeAds[emptySlotIndex] = cachedNativeAd;
+                AdsLogger.Log($"Native ad unit cached into pos: {emptySlotIndex}", AdType.NATIVE);
+                lastPos = emptySlotIndex;
+            }
+            else
+            {
+                int index = 0;
+                int maxTimeShown = CachedNativeAds[0].TimeShown;
+                for (int i = 1; i < CachedNativeAds.Length; i++)
+                {
+                    if (CachedNativeAds[i].TimeShown > maxTimeShown)
+                    {
+                        maxTimeShown = CachedNativeAds[i].TimeShown;
+                        index = i;
+                    }
+                }
+                CachedNativeAds[index] = cachedNativeAd;
+                AdsLogger.Log($"Native ad unit cached replace pos: {index}", AdType.NATIVE);
+                lastPos = index;
+            }
+            OnPanelAssignUpdate(lastPos);
+
         }
 
-        public void InvokeOnInterClose()
+        private void OnPanelAssignUpdate(int panelID)
         {
-            _onInterClosed?.Invoke();
-            _onInterClosed = null;
-        }
-
-        public void OpenNotRewardedPanel()
-        {
-            _adsUIController.ShowNotRewardedBox();
+            if (_nativeAdPanels[panelID] != null)
+            {
+                _nativeAdPanels[panelID].CachedNativeAd = CachedNativeAds[panelID];
+                AdsLogger.Log($"Panel with ID: {panelID} Updated native ad unit at pos : {panelID}", AdType.NATIVE);
+            }
+            else
+            {
+                for (int i = 0; i < _nativeAdPanels.Length; i++)
+                {
+                    if (_nativeAdPanels[i] != null && _nativeAdPanels[i].CachedNativeAd != null)
+                    {
+                        _nativeAdPanels[i].CachedNativeAd = CachedNativeAds[panelID];
+                        AdsLogger.Log($"Panel with ID: {_nativeAdPanels[i].ID} Updated native ad unit at pos : {panelID}", AdType.NATIVE);
+                    }
+                }
+            }
         }
 
         public void LoadNativeAds()
@@ -191,6 +234,7 @@ namespace Monetization.Ads
             {
                 return;
             }
+            AdsLogger.Log($"Load native ads", AdType.NATIVE);
             _admob.LoadNativeAds();
         }
         public void ShowNativeAd(NativeAdPanel nativeAdPanel)
@@ -201,22 +245,28 @@ namespace Monetization.Ads
             }
             if (_nativeAdPanels.Contains(nativeAdPanel))
             {
-
-                if (CachedNativeAds.Count == 0)
+                int count = 0;
+                for (int i = 0; i < CachedNativeAds.Length; i++)
                 {
-                    Debug.Log("native ad cache empty, need load");
-                    LoadNativeAds();
+                    if (CachedNativeAds[i] != null)
+                    {
+                        count++;
+                    }
+                }
+                if (count == 0)
+                {
+                    AdsLogger.Log($"Empty cached native ads", AdType.NATIVE);
+                    _admob.LoadNativeAds();
                 }
 
-                Debug.Log("native ads is waiting to be filled");
                 nativeAdPanel.Show();
+                AdsLogger.Log($"Panel with ID: {nativeAdPanel.ID} show", AdType.NATIVE);
             }
         }
         public void HideNativeAd(NativeAdPanel nativeAdPanel)
         {
             if (_nativeAdPanels.Contains(nativeAdPanel))
                 nativeAdPanel.Hide();
-            Debug.Log(_nativeAdPanels.Contains(nativeAdPanel));
         }
         #endregion
         #region OpenAd
@@ -224,10 +274,6 @@ namespace Monetization.Ads
         {
             if (RemoveAds || Enviroment.ENV == Enviroment.Env.DEV)
                 return;
-            /*            if (IsShowingAd)
-                        {
-                            return;
-                        }*/
             if (RewardedAdJustClose)
             {
                 RewardedAdJustClose = false;
@@ -239,11 +285,20 @@ namespace Monetization.Ads
             }
             if (_admob.IsAppOpenAdAvailable)
             {
+                AdsLogger.Log("Show", AdType.OPEN);
                 _admob.ShowAppOpenAd();
             }
         }
         #endregion
         #region Reward
+        public void OpenNotRewardedPanel()
+        {
+            _adsUIController.ShowNotRewardedBox();
+        }
+        public void OpenNotAvailableRewardedPanel()
+        {
+            _adsUIController.ShowRewardUnavailableBox();
+        }
         public void ShowReward(Action<bool> watched)
         {
             _onRewardClosed = watched;
@@ -311,10 +366,15 @@ namespace Monetization.Ads
         }
         #endregion
         #region Inter
+        public void InvokeOnInterClose()
+        {
+            _onInterClosed?.Invoke();
+            _onInterClosed = null;
+        }
         public void ShowInter(Action onInterClosed)
         {
             _onInterClosed = onInterClosed;
-            if (!_isFreeAdsTimeEnded)
+            if (InterCanceled)
             {
                 _onInterClosed.Invoke();
                 return;
@@ -346,20 +406,6 @@ namespace Monetization.Ads
         }
         #endregion
 
-        public void OnRemoveAds(bool removeAdsPuchased)
-        {
-            Debug.Log("OnremoveQAds " + removeAdsPuchased);
-            RemoveAds = removeAdsPuchased;
-            _ironsource.ToggleBanner(!removeAdsPuchased);
-            if (_nativeAdPanels != null)
-            {
-                foreach (NativeAdPanel panel in _nativeAdPanels)
-                {
-                    panel.gameObject.SetActive(!removeAdsPuchased);
-                }
-                if (!removeAdsPuchased) _nativeAdPanels.Clear();
-            }
-            if (!removeAdsPuchased) CachedNativeAds?.Clear();
-        }
+
     }
 }

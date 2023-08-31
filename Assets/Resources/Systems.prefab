@@ -180,6 +180,12 @@ MonoBehaviour:
   IsShowingInterAd: 0
   IsShowingReward: 0
   RewardedAdJustClose: 0
+  _isDebugNative: 1
+  _isDebugBanner: 1
+  _isDebugOpen: 1
+  _isDebugRewarded: 1
+  _isDebugInter: 1
+  _nativeAdPanelNumber: 2
 --- !u!114 &541353747375314108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,7 +260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48cb437794d3fb44a981586ba71566fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  env: 2
+  env: 1
 --- !u!114 &8144893436711486449
 MonoBehaviour:
   m_ObjectHideFlags: 0
