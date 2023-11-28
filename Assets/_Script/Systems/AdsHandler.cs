@@ -1,4 +1,4 @@
-using com.adjust.sdk;
+﻿using com.adjust.sdk;
 using Common;
 using GoogleMobileAds.Api;
 using GoogleMobileAds.Common;
@@ -22,6 +22,8 @@ public class AdsHandler : MonoBehaviour
             InvokeRepeating("TurnBannerOn", 6, 2);
             InvokeRepeating("LoadNativeAd", 30, 30);
         }
+
+        //30s đầu trong game k có Inter ads
         StartCoroutine(NonInterTime());
     }
     private IEnumerator NonInterTime()

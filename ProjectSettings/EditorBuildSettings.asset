@@ -18,4 +18,5 @@ EditorBuildSettings:
     path: Assets/_Scenes/SkinScene.unity
     guid: 59764fad392d37b4aa2167ed89b9c0a8
   m_configObjects:
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: f3bacb213208ccb4fa1f9f1d586d3b0b, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: ba9909ed9a88a8543803c21869620d3d, type: 2}

@@ -12,7 +12,7 @@ namespace Monetization.Ads.UI
         [SerializeField] private GameObject adImage;
         private Button button;
         private bool _isButtonActive;
-        private bool _isClosingFirst;
+        [SerializeField] private bool _isClosingFirst;
         public bool IsButtonActive
         {
             get { return _isButtonActive; }

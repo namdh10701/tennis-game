@@ -16,7 +16,7 @@ namespace Services.FirebaseService
         public FirebaseAnalytics FirebaseAnalytics { get; private set; }
         public bool FirebaseInitialized { get; private set; }
 
-        public DependencyStatus dependencyStatus;
+        private DependencyStatus dependencyStatus;
 
         public RemoteVariableCollection RemoteVariableCollection = null;
         protected override void Awake()

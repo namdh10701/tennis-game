@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dependencies>
+	<androidPackages>
+		<repositories>
+			<repository>https://anythink.jfrog.io/artifactory/android_sdk</repository>
+		</repositories>
+		<androidPackage spec="io.github.toponteam:ironsource-mediation-adapter:+"/>
+
+		<androidPackage spec="com.anythink.sdk:core:6.2.32"/>
+		<androidPackage spec="com.anythink.sdk:banner:6.2.32"/>
+		<androidPackage spec="com.anythink.sdk:interstitial:6.2.32"/>
+		<androidPackage spec="com.anythink.sdk:rewardedvideo:6.2.32"/>
+		<androidPackage spec="androidx.appcompat:appcompat:1.1.0"/>
+		<androidPackage spec="androidx.browser:browser:1.0.0"/>
+	</androidPackages>
+</dependencies>

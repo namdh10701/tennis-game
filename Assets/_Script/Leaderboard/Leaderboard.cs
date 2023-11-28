@@ -16,6 +16,7 @@ namespace Gameplay
             {
                 PlayGamesPlatform.DebugLogEnabled = false;
             }
+            
             PlayGamesPlatform.Activate();
             SignInToLeaderboardAutomatic();
         }

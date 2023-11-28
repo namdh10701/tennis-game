@@ -6,6 +6,7 @@ using System;
 
 namespace Monetization.Ads.UI
 {
+    //là cái popup có chức năng đóng, mở
     public class BasePopup : MonoBehaviour
     {
         [SerializeField] protected Image _panel;
